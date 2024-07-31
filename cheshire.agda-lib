@@ -1,0 +1,9 @@
+name: Cheshire
+depend: standard-library-2.0 agda-categories
+include: src
+
+flags:
+  --cubical-compatible
+  --exact-split
+  --keep-pattern-variables
+  --postfix-projections

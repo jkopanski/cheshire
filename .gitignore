@@ -1,0 +1,9 @@
+# agda
+*.agdai
+MAlonzo/**
+
+# nix
+result
+
+# direnv
+.direnv
