@@ -4,14 +4,25 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/24.05";
     utils.url = "github:numtide/flake-utils";
+    agda = {
+      url = "github:agda/agda/v2.7.0-rc3";
+      flake = false;
+    };
+    std-lib = {
+      url = "github:agda/agda-stdlib/experimental";
+      flake = false;
+    };
   };
 
-  outputs = { self, nixpkgs, utils }:
+  outputs = inputs@{ self, nixpkgs, utils, ... }:
     utils.lib.eachDefaultSystem (system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ self.overlays.${system}.default ];
+        };
         agdaWithLibraries = pkgs.agda.withPackages (p: [
-          p.agda-categories
+          # p.agda-categories
           p.standard-library
         ]);
 
@@ -25,6 +36,43 @@
             ${pkgs.haskellPackages.fix-whitespace}/bin/fix-whitespace --check
           '';
           installPhase = ''mkdir "$out"'';
+        };
+
+        overlays = rec {
+          agda = final: prev: {
+            haskellPackages = prev.haskellPackages.override {
+              overrides = hfinal: hprev:
+                let inherit (final.haskell.lib.compose)
+                  addBuildDepends enableCabalFlag overrideSrc;
+                in {
+                  Agda = final.lib.pipe hprev.Agda [
+                    (overrideSrc {
+                      src = inputs.agda;
+                      version = "2.6.20240806";
+                    })
+                    (addBuildDepends (with hfinal; [pqueue text-icu]))
+                    (enableCabalFlag "enable-cluster-counting")
+                  ];
+                };
+            };
+          };
+
+          standard-library = final: prev: {
+            agdaPackages = prev.agdaPackages.overrideScope (
+              finalAgda: prevAgda: {
+                standard-library = prevAgda.standard-library.overrideAttrs {
+                  version = "2.1";
+                  src = inputs.std-lib;
+                };
+              }
+            );
+          };
+
+          # pkgs.lib.composeExtensions, but how to get it without infinte recursion?
+          default = final: prev:
+            let agda' = agda final prev;
+                prev' = prev // agda';
+            in agda' // standard-library final prev';
         };
 
         devShells.default = pkgs.mkShell {
@@ -42,8 +90,8 @@
           everythingFile = "./src/Everything.agda";
 
           buildInputs = with pkgs.agdaPackages; [
-            agda-categories
-            standard-library
+            # agda-categories
+            # standard-library
           ];
 
           meta = with pkgs.lib; {
