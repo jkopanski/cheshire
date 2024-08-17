@@ -3,16 +3,16 @@
     "agda": {
       "flake": false,
       "locked": {
-        "lastModified": 1722947385,
-        "narHash": "sha256-jAEw/k0CefCerT2Z9CbjzXoBH+h86edHqgFbvgEBlnc=",
+        "lastModified": 1726161230,
+        "narHash": "sha256-IupM/HJk1vpHTRWOakYDDliKn+RLzPjNzGlLTlF0CbY=",
         "owner": "agda",
         "repo": "agda",
-        "rev": "e19509f5dd51e9458f4b78074993a86bc9ca6158",
+        "rev": "a6fc20c27ae953149b53a8997ba4a1c8b17d628a",
         "type": "github"
       },
       "original": {
         "owner": "agda",
-        "ref": "v2.7.0-rc3",
+        "ref": "v2.7.0.1",
         "repo": "agda",
         "type": "github"
       }

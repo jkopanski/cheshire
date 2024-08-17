@@ -5,7 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/24.05";
     utils.url = "github:numtide/flake-utils";
     agda = {
-      url = "github:agda/agda/v2.7.0-rc3";
+      url = "github:agda/agda/v2.7.0.1";
       flake = false;
     };
     std-lib = {
@@ -48,7 +48,7 @@
                   Agda = final.lib.pipe hprev.Agda [
                     (overrideSrc {
                       src = inputs.agda;
-                      version = "2.6.20240806";
+                      version = "2.7.0.1";
                     })
                     (addBuildDepends (with hfinal; [pqueue text-icu]))
                     (enableCabalFlag "enable-cluster-counting")
