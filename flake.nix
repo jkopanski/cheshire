@@ -9,7 +9,7 @@
       flake = false;
     };
     std-lib = {
-      url = "github:agda/agda-stdlib/experimental";
+      url = "github:agda/agda-stdlib/v2.1.1";
       flake = false;
     };
   };

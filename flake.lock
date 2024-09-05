@@ -44,16 +44,16 @@
     "std-lib": {
       "flake": false,
       "locked": {
-        "lastModified": 1720601032,
-        "narHash": "sha256-7i98epTFZ757ciBOcnV9/uNh9VEaXmdUGcKyidmiy8E=",
+        "lastModified": 1725330014,
+        "narHash": "sha256-4HfwNAkIhk1yC/oSxZ30xilzUM5/22nzbUSqTjcW5Ng=",
         "owner": "agda",
         "repo": "agda-stdlib",
-        "rev": "96d44779bdd34e61624c2fe5ae161df223748238",
+        "rev": "039e1f4abda49f307f7ed1f5e15232a1c8e9c48c",
         "type": "github"
       },
       "original": {
         "owner": "agda",
-        "ref": "experimental",
+        "ref": "v2.1.1",
         "repo": "agda-stdlib",
         "type": "github"
       }

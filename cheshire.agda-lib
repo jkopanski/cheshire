@@ -1,6 +1,7 @@
 name: cheshire
-depend: standard-library-2.1
+depend: standard-library
 include: src
 
 flags:
   --cubical-compatible
+  --exact-split
