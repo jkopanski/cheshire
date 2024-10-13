@@ -50,11 +50,11 @@ record Cartesian : Set (𝕃.suc (o ⊔ ℓ)) where
     terminal : Terminal
     products : BinaryProducts
 
-  open Terminal terminal using (⊤) public
+  private instance
+    _ = terminal; _ = products
   field
     ! : ∀ {A} → A ⇒ ⊤
 
-  open BinaryProducts products using (_×_) public
   infix 11 ⟨_,_⟩
   field
     π₁    : ∀ {A B} → A × B ⇒ A

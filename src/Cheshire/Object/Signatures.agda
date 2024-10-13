@@ -14,42 +14,54 @@ record Terminal : Set o where
   field
     ⊤ : Ob
 
+open Terminal ⦃ … ⦄ public
+
 record Product (A B : Ob) : Set o where
   field
     A×B : Ob
 
+open Product ⦃ … ⦄ public
+
 record BinaryProducts : Set o where
-  field
-    product : ∀ {A B} → Product A B
-
-  private
-    module product {A} {B} = Product (product {A} {B})
-
   infixr 7 _×_
-  _×_ : Ob → Ob → Ob
-  A × B = Product.A×B (product {A} {B})
+  field
+    _×_ : Ob → Ob → Ob
+
+  product : ∀ {A B} → Product A B
+  product {A} {B} = record { A×B = A × B }
+
+open BinaryProducts ⦃ … ⦄ public
+
+instance
+  productBinaryProducts : ∀ {A B} → ⦃ BinaryProducts ⦄ → Product A B
+  productBinaryProducts {A} {B} = product
 
 record Coproduct (A B : Ob) : Set o where
   field
     A+B : Ob
 
-record BinaryCoProducts : Set o where
-  field
-    coproduct : ∀ {A B} → Coproduct A B
+open Coproduct ⦃ … ⦄ public
 
-  private
-    module coproduct {A} {B} = Coproduct (coproduct {A} {B})
-
+record BinaryCoproducts : Set o where
   infixr 6 _+_
-  _+_ : Ob → Ob → Ob
-  A + B = coproduct.A+B {A} {B}
-
-record Exponential (A B : Ob) : Set o where
   field
-    B^A : Ob
-    product : Product B^A A
+    _+_ : Ob → Ob → Ob
 
-  module product = Product product
+  coproduct : ∀ {A B} → Coproduct A B
+  coproduct {A} {B} = record { A+B = A + B }
 
-  B^A×A : Ob
-  B^A×A = product.A×B
+open BinaryCoproducts ⦃ … ⦄ public
+
+instance
+  coproductBinaryCoproducts : ∀ {A B} → ⦃ BinaryCoproducts ⦄ → Coproduct A B
+  coproductBinaryCoproducts {A} {B} = coproduct
+
+-- Wait for actual usage
+-- record Exponential (A B : Ob) : Set o where
+--   field
+--     B^A : Ob
+--     B^A×A : Product B^A A
+
+--   module product = Product B^A×A
+
+-- open Exponential ⦃ … ⦄ public
