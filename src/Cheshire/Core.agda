@@ -57,12 +57,6 @@ module _ (𝒬 : Quiver o ℓ) where
     module Equiv {A B : Ob} = Rel₂.IsEquivalence (equiv {A} {B})
     module EdgeReasoning {A B : Ob} = Rel₂.SetoidReasoning (setoid {A} {B})
 
-module Isomorphism (𝒬 : Quiver o ℓ) where
+    open Equiv public
 
-  open Quiver 𝒬
-
-  infix 4 _≅_
-  record _≅_ (A B : Ob) : Set (o ⊔ ℓ) where
-    field
-      from : A ⇒ B
-      to   : B ⇒ A
+  open Equivalence ⦃ … ⦄ public
