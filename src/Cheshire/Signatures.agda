@@ -47,11 +47,9 @@ record Cartesian : Set (𝕃.suc (o ⊔ ℓ)) where
     id : ∀ {A} → A ⇒ A
     _∘_ : ∀ {A B C} → B ⇒ C → A ⇒ B → A ⇒ C
 
-    terminal : Terminal
-    products : BinaryProducts
+    ⦃ terminal ⦄ : Terminal
+    ⦃ products ⦄ : BinaryProducts
 
-  private instance
-    _ = terminal; _ = products
   field
     ! : ∀ {A} → A ⇒ ⊤
 
@@ -82,7 +80,7 @@ record Cartesian : Set (𝕃.suc (o ⊔ ℓ)) where
   monoidal : Monoidal
   monoidal = record
     { Category category
-    ; unit = terminal .Terminal.⊤
+    ; unit = ⊤
     ; _⊗₀_ = _×_
     ; _⊗₁_ = _⁂_
     }
