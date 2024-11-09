@@ -10,3 +10,6 @@ import Cheshire.Morphism.Structures
 import Cheshire.Morphism.Bundles
 import Cheshire.Homomorphism.Signatures
 import Cheshire.Homomorphism.Structures
+
+import Cheshire.Instance.One
+import Cheshire.Instance.Sets
