@@ -14,8 +14,7 @@ import Cheshire.Object.Signatures as Object
 𝒬 : Quiver (𝕃.suc o) o
 𝒬 = mk⇒ λ c d → c → d
 
-open Quiver 𝒬
-open Object Ob
+open Object (𝒬 .Ob)
 
 terminal : Terminal
 terminal = record { ⊤ = 𝟙.t }

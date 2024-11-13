@@ -25,4 +25,4 @@ record IsNatural
   open Quiver 𝒮
   private instance _ = eqₜ
   field
-    commute : ∀ {X Y : Ob} (f : X ⇒ Y) → η Y ∘ F.₁ f ≈ G.₁ f ∘ η X
+    commute : ∀ {X Y : 𝒮 .Ob} (f : X ⇒ Y) → η Y ∘ F.₁ f ≈ G.₁ f ∘ η X
