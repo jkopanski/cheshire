@@ -7,13 +7,13 @@ module Cheshire.Morphism.Structures
   {o ℓ} {𝒬 : Quiver o ℓ} (𝒞 : Category 𝒬)
   where
 
-open Quiver 𝒬
+open Quiver 𝒬 using (_⇒_)
 open Category 𝒞
 
 private
   variable
     e : 𝕃.t
-    A B C : Ob
+    A B C : 𝒬 .Ob
 
 IsMono : ⦃ Equivalence 𝒬 e ⦄ → ∀ (f : A ⇒ B) → Set (o ⊔ ℓ ⊔ e)
 IsMono {A = A} f = ∀ {C} → (g₁ g₂ : C ⇒ A) →

@@ -69,7 +69,7 @@ record IsCartesian {e e′}
     -- F-resp-× : ∀ {A B} → F₀ A × F₀ B ≅ F₀ (A × B)
 
     ⊤-iso : ⊤ ≅ F₀ ⊤
-    ×-iso : ∀ (A B : Ob) → F₀ A × F₀ B ≅ F₀ (A × B )
+    ×-iso : ∀ (A B : 𝒮 .Ob) → F₀ A × F₀ B ≅ F₀ (A × B )
 
     F-resp-id : ∀ {A} → F₁ (S.id {A}) ≈ T.id
     F-resp-∘ : ∀ {X Y Z} → {f : X ⇒ Y} {g : Y ⇒ Z} →

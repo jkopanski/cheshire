@@ -8,11 +8,11 @@ module Cheshire.Signatures
 
 open Quiver 𝒬
 
-open import Cheshire.Object.Signatures Ob
+open import Cheshire.Object.Signatures (𝒬 .Ob)
 
 private
   variable
-    A B C D W X Y Z : Ob
+    A B C D W X Y Z : 𝒬 .Ob
     f g h : X ⇒ Y
 
 record Category : Set (𝕃.suc (o ⊔ ℓ)) where
@@ -30,11 +30,11 @@ record Monoidal : Set (𝕃.suc (o ⊔ ℓ)) where
     id : ∀ {A} → A ⇒ A
     _∘_ : ∀ {A B C} → B ⇒ C → A ⇒ B → A ⇒ C
 
-    unit : Ob
+    unit : 𝒬 .Ob
     -- implement with this?
     -- ⊗  : Bifunctor C C C
 
-    _⊗₀_ : Ob → Ob → Ob
+    _⊗₀_ : 𝒬 .Ob → 𝒬 .Ob → 𝒬 .Ob
     _⊗₁_ : X ⇒ Y → Z ⇒ W → X ⊗₀ Z ⇒ Y ⊗₀ W
 
   category : Category

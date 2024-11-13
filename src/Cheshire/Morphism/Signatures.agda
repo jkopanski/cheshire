@@ -9,7 +9,7 @@ module Cheshire.Morphism.Signatures
 open Quiver 𝒬
 
 infix 4 _⇔_
-record _⇔_ (A B : Ob) : Set (o ⊔ ℓ) where
+record _⇔_ (A B : 𝒬 .Ob) : Set (o ⊔ ℓ) where
   field
     from : A ⇒ B
     to   : B ⇒ A
