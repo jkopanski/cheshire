@@ -41,26 +41,23 @@ private
 _[_,_] : (𝒬 : Quiver o ℓ) → Rel (𝒬 .Ob) ℓ
 𝒬 [ a , b ] = 𝒬 .Hom a b
 
-module _ (𝒬 : Quiver o ℓ) where
+record Equivalence (𝒬 : Quiver o ℓ) (e : 𝕃.t) : Set (o ⊔ ℓ ⊔ 𝕃.suc e) where
+  infix  4 _≈_
+  open Quiver 𝒬 using (_⇒_)
+  field
+    _≈_ : ∀ {A B} → Rel (A ⇒ B) e
+    equiv : ∀ {A B} → Rel₂.IsEquivalence (_≈_ {A} {B})
 
-  open Quiver 𝒬
+  setoid : {A B : 𝒬 .Ob} → Rel₂.Setoid ℓ e
+  setoid {A} {B} = record
+    { Carrier       = A ⇒ B
+    ; _≈_           = _≈_
+    ; isEquivalence = equiv
+    }
 
-  record Equivalence (e : 𝕃.t) : Set (o ⊔ ℓ ⊔ 𝕃.suc e) where
-    infix  4 _≈_
-    field
-      _≈_ : ∀ {A B} → Rel (A ⇒ B) e
-      equiv : ∀ {A B} → Rel₂.IsEquivalence (_≈_ {A} {B})
+  module Equiv {A B : 𝒬 .Ob} = Rel₂.IsEquivalence (equiv {A} {B})
+  module EdgeReasoning {A B : 𝒬 .Ob} = Rel₂.SetoidReasoning (setoid {A} {B})
 
-    setoid : {A B : 𝒬 .Ob} → Rel₂.Setoid ℓ e
-    setoid {A} {B} = record
-      { Carrier       = A ⇒ B
-      ; _≈_           = _≈_
-      ; isEquivalence = equiv
-      }
+  open Equiv public
 
-    module Equiv {A B : 𝒬 .Ob} = Rel₂.IsEquivalence (equiv {A} {B})
-    module EdgeReasoning {A B : 𝒬 .Ob} = Rel₂.SetoidReasoning (setoid {A} {B})
-
-    open Equiv public
-
-  open Equivalence ⦃ … ⦄ public
+open Equivalence ⦃ … ⦄ public
