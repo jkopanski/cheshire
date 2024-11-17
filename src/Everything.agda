@@ -9,6 +9,8 @@ import Cheshire.Object.Signatures
 import Cheshire.Morphism.Signatures
 import Cheshire.Morphism.Structures
 import Cheshire.Morphism.Bundles
+import Cheshire.Morphism.Reasoning.Core
+import Cheshire.Morphism.Reasoning
 import Cheshire.Homomorphism.Signatures
 import Cheshire.Homomorphism.Structures
 

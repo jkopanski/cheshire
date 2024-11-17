@@ -21,6 +21,8 @@ module Rel₂ where
 open 𝕃 using (_⊔_) public
 open Rel₂ using (Rel) public
 
+open import Function using (flip; _on_; _$_) public
+
 record Quiver o ℓ : Set (𝕃.suc (o ⊔ ℓ)) where
   no-eta-equality
   constructor mk⇒
