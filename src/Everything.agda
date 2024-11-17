@@ -4,6 +4,7 @@ module Everything where
 
 import Cheshire.Core
 import Cheshire.Signatures
+import Cheshire.Structures.Core
 import Cheshire.Object.Signatures
 import Cheshire.Morphism.Signatures
 import Cheshire.Morphism.Structures
