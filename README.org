@@ -1,0 +1,68 @@
+#+title: Cheshire: Yet another category theory library
+
+#+name: Cheshire cat
+#+caption: The Cheshire Cat illustrated by John Tenniel for the 1865 publication of Alice's Adventures in Wonderland
+#+attr_org: :align center
+[[./static/cheshire_cat.png]]
+
+* Motivation for another library
+I've been [[https://github.com/conal/Collaboration][playing/learning/working with Conal Elliott]].  During that
+time I've mainly used his category theory library: [[https://github.com/conal/felix][Felix]].  However it
+had a lot of Haskell influence and I've run into some troubles with
+it.  Mainly due to the heavy use of instance arguments.  [[https://github.com/conal/felix/pull/9][Updating Agda
+was a pain]], and I've run into instance resolution problems a lot.
+
+** Trying out [[https://agda.github.io/agda-categories/][agda-categories]]
+I was motivated to use agda-categories to mitigate problems that I've
+run into using Felix.  However its bundling categories properties
+(structure, or [[https://github.com/conal/felix/blob/main/src/Felix/Laws.agda][laws in Felix terms]]) with its operations (signatures,
+or [[https://github.com/conal/felix/blob/main/src/Felix/Raw.agda][Raw records in Felix]]).  I think this is the most common convention
+right now in Agda.  It was problematic because for my use case I am
+able to [[https://github.com/conal/felix/blob/main/src/Felix/MakeLawful.agda][derive properties automatically]].  So this put some additional
+work (filling in the properties) that was discarded in the end.
+
+In order to mitigate it I was hoping to just introduce =Raw= variants of
+the category records.  This is similar to some of the [[https://github.com/agda/agda-categories/blob/43d32468fe6b5deab2e5c58d927bf920e463431a/src/Categories/Category/Helper.agda#L13][helper records]]
+from agda-categories.  Unfortunately the amount of additional code was
+quite substantial, basically like separate category theory library.
+
+This didn't mitigate another problem with the fact that
+agda-categories structures are Setoid-enriched.  This is similar
+problem to properties being entangled with categories records.  Often
+times I'm able to derive the [[https://github.com/conal/felix/blob/main/src/Felix/Equiv.agda#L112][Equivalence relation automatically]].  If
+there is another one bundled with the category structure I was forced
+to discard one at times in order for stuff to work out.
+
+* Cheshire design
+** Split Sginatures and Structures
+Significant shift in my thinking came from [[https://agda.zulipchat.com/#narrow/channel/259644-newcomers/topic/TotalOrder.20and.20Semigroup.20constraints/near/454446260][James McKinna comment on
+Agda Zulip]][fn:1].  In the Zulip message he also links the
+[[https://github.com/agda/agda-stdlib/issues/2252][standard-library github issue]] which goes into much more detail into
+this design pattern(?).  This set me free to break off the structure
+from the signatures, which is *the thing* this library does.
+
+** Hierarchy inversion
+Other common problem is with structure hierarchy dependencies.  If
+some structure depends on two other, and both of them have a common
+dependency, there is nothing to enforce that this common ancestor /is
+the same/ in both of the direct dependencies.
+
+Alternative approach is used in the [[https://agda.github.io/agda-stdlib/v2.1.1/Algebra.Bundles.Raw.html][Algebra.Bundles]] hierarchy of Agda
+standard library.  Where there are no dependencies between records,
+but instead more /powerful/ one contains all the definitions of it /would
+be/ dependency.  Those more /powerful/ structures then define the would
+be dependency, so one can access the /underlying/ structure.
+
+Going other way is pretty convenient using [[https://agda.readthedocs.io/en/latest/language/record-types.html#building-records-from-modules][building records from
+module names]] Agda feature.
+
+** Familiarity with agda-categories
+I wanted this library to have the same organization and naming
+convention with agda-categories, when possible, so that perhaps other
+people will be able to navigate it more easily coming from
+agda-categories.  However this can't interfere with the goals above.
+
+* Footnotes
+
+[fn:1] It's an amazing thread, I was struggling with this a lot when I've
+started my Agda adventure
