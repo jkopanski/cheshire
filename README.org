@@ -6,7 +6,7 @@
 [[./static/cheshire_cat.png]]
 
 * Motivation for another library
-I've been [[https://github.com/conal/Collaboration][playing/learning/working with Conal Elliot]].  During that
+I've been [[https://github.com/conal/Collaboration][playing/learning/working with Conal Elliot]]t.  During that
 time I've mainly used his category theory library: [[https://github.com/conal/felix][Felix]].  However it
 had a lot of Haskell influence and I've run into some troubles with
 it.  Mainly due to the heavy use of instance arguments.  [[https://github.com/conal/felix/pull/9][Updating Agda
@@ -14,8 +14,8 @@ was a pain]], and I've run into instance resolution problems a lot.
 
 ** Trying out [[https://agda.github.io/agda-categories/][agda-categories]]
 I was motivated to use agda-categories to mitigate problems that I've
-run into using Felix.  However it's bundling categories properties
-(structure, or [[https://github.com/conal/felix/blob/main/src/Felix/Laws.agda][laws in Felix terms]]) with it's operations (signatures,
+run into using Felix.  However its bundling categories properties
+(structure, or [[https://github.com/conal/felix/blob/main/src/Felix/Laws.agda][laws in Felix terms]]) with its operations (signatures,
 or [[https://github.com/conal/felix/blob/main/src/Felix/Raw.agda][Raw records in Felix]]).  I think this is the most common convention
 right now in Agda.  It was problematic because for my use case I am
 able to [[https://github.com/conal/felix/blob/main/src/Felix/MakeLawful.agda][derive properties automatically]].  So this put some additional
