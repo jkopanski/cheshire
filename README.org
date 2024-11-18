@@ -6,7 +6,7 @@
 [[./static/cheshire_cat.png]]
 
 * Motivation for another library
-I've been [[https://github.com/conal/Collaboration][playing/learning/working with Conal Elliot]]t.  During that
+I've been [[https://github.com/conal/Collaboration][playing/learning/working with Conal Elliott]].  During that
 time I've mainly used his category theory library: [[https://github.com/conal/felix][Felix]].  However it
 had a lot of Haskell influence and I've run into some troubles with
 it.  Mainly due to the heavy use of instance arguments.  [[https://github.com/conal/felix/pull/9][Updating Agda
