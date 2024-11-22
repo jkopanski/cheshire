@@ -22,7 +22,6 @@
           overlays = [ self.overlays.${system}.default ];
         };
         agdaWithLibraries = pkgs.agda.withPackages (p: [
-          # p.agda-categories
           p.standard-library
         ]);
 
@@ -90,8 +89,7 @@
           everythingFile = "./src/Everything.agda";
 
           buildInputs = with pkgs.agdaPackages; [
-            # agda-categories
-            # standard-library
+            standard-library
           ];
 
           meta = with pkgs.lib; {
