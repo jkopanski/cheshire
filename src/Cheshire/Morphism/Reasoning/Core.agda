@@ -12,18 +12,17 @@ open import Cheshire.Structures.Core
 module Cheshire.Morphism.Reasoning.Core
   {o ℓ} {𝒬 : Quiver o ℓ}
   {𝒞 : Category 𝒬 }
-  {e} {eq : Equivalence 𝒬 e}
-  (is-𝒞 : IsCategory eq 𝒞)
+  {e} ⦃ eq : Equivalence 𝒬 e ⦄
+  (is-𝒞 : IsCategory 𝒞)
   where
 
 open Quiver 𝒬 using (_⇒_)
 open Category 𝒞
 open IsCategory is-𝒞
-open Definitions eq 𝒞
+open Definitions 𝒞
 open HomReasoning
 
 private
-  instance _ = eq
   variable
     A B C D : 𝒬 .Ob
     U V W X Y Z : 𝒬 .Ob
