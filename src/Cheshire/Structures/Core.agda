@@ -10,11 +10,10 @@ open import Cheshire.Object.Signatures
 open Quiver 𝒬
 
 module Definitions
-  {e} (eq : Equivalence 𝒬 e)
+  {e} ⦃ eq : Equivalence 𝒬 e ⦄
   (𝒞 : Category 𝒬)
   where
 
-  instance _ = eq
   open Category 𝒞
 
   -- A -- f --> B
@@ -28,11 +27,10 @@ module Definitions
 
 -- put this in the same module?
 module Commutation
-  {e} (eq : Equivalence 𝒬 e)
+  {e} ⦃ eq : Equivalence 𝒬 e ⦄
   (𝒞 : Category 𝒬)
   where
 
-  instance _ = eq
   open Category 𝒞
 
   infix 1 [_⇒_]⟨_≈_⟩
@@ -45,9 +43,8 @@ module Commutation
 
   syntax connect B f g = f ⇒⟨ B ⟩ g
 
-record IsCategory {e} (eq : Equivalence 𝒬 e) (𝒞 : Category 𝒬) : Set (o ⊔ ℓ ⊔ e) where
+record IsCategory {e} ⦃ eq : Equivalence 𝒬 e ⦄ (𝒞 : Category 𝒬) : Set (o ⊔ ℓ ⊔ e) where
   open Category 𝒞
-  private instance _ = eq
   field
     assoc :
       ∀ {A B C D} {f : A ⇒ B} {g : B ⇒ C} {h : C ⇒ D} →

@@ -18,11 +18,9 @@ open Ob
 open Morphism ℳ
 
 module _ {e e′}
-  (eqₛ : Equivalence 𝒮 e)
-  (eqₜ : Equivalence 𝒯 e′) where
-
-  instance
-    _ = eqₛ; _ = eqₜ
+  ⦃ eqₛ : Equivalence 𝒮 e ⦄
+  ⦃ eqₜ : Equivalence 𝒯 e′ ⦄
+  where
 
   -- IsHomomorphism ?
   record IsMorphism : Set (o ⊔ ℓ ⊔ e ⊔ e′) where
