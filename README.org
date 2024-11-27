@@ -62,6 +62,29 @@ convention with agda-categories, when possible, so that perhaps other
 people will be able to navigate it more easily coming from
 agda-categories.  However this can't interfere with the goals above.
 
+* Development environment
+Cheshire uses [[https://nixos.org/][nix]] to manage dependencies.  One can get a working
+development environment, with appropriate version of Agda and required
+libraries/tools by executing:
+
+#+begin_src sh
+
+nix develop
+
+#+end_src
+
+Development environment artifacts are available via [[https://www.cachix.org/][cachix]].  In order
+to use them follow [[https://app.cachix.org/cache/famisoft][these instructions]].  But it is as simple as
+running:
+
+#+begin_src sh
+
+cachix use famisoft
+
+#+end_src
+
+If the cachix binary is available.
+
 * Footnotes
 
 [fn:1] It's an amazing thread, I was struggling with this a lot when I've
