@@ -65,7 +65,7 @@ record IsCategory {e} ⦃ eq : Equivalence 𝒬 e ⦄ (𝒞 : Category 𝒬) : S
     infixr 4 _⟩∘⟨_ refl⟩∘⟨_
     infixl 5 _⟩∘⟨refl
     _⟩∘⟨_ :
-      ∀ {A B M : 𝒬 .Ob} {f h : M ⇒ B} {g i : A ⇒ M} →
+      ∀ {M} {f h : M ⇒ B} {g i : A ⇒ M} →
       f ≈ h → g ≈ i → f ∘ g ≈ h ∘ i
     _⟩∘⟨_ = ∘-resp-≈
 
