@@ -74,6 +74,15 @@ record Cartesian : Set (𝕃.suc (o ⊔ ℓ)) where
   -- second g = id ⁂ g
   second g = ⟨ π₁ , g ∘ π₂ ⟩
 
+  assocˡ : (A × B) × C ⇒ A × B × C
+  assocˡ = ⟨ π₁ ∘ π₁ , first π₂ ⟩
+
+  assocʳ : A × B × C ⇒ (A × B) × C
+  assocʳ = ⟨ second π₁ , π₂ ∘ π₂ ⟩
+
+  Δ : ∀ {C} → C ⇒ C × C
+  Δ {C} = ⟨ id , id ⟩
+
   category : Category
   category = record { id = id; _∘_ = _∘_ }
 
