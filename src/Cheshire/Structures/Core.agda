@@ -1,51 +1,17 @@
 {-# OPTIONS --safe #-}
 
+module Cheshire.Structures.Core where
+
 open import Cheshire.Core
-
-module Cheshire.Structures.Core {o ℓ} {𝒬 : Quiver o ℓ} where
-
 open import Cheshire.Signatures
 open import Cheshire.Object.Signatures
 
-open Quiver 𝒬
-
-module Definitions
-  {e} ⦃ eq : Equivalence 𝒬 e ⦄
-  (𝒞 : Category 𝒬)
-  where
-
-  open Category 𝒞
-
-  -- A -- f --> B
-  -- |          |
-  -- g          h
-  -- |          |
-  -- V          V
-  -- C -- i --> D
-  CommutativeSquare : {A B C D : 𝒬 .Ob} → (f : A ⇒ B) (g : A ⇒ C) (h : B ⇒ D) (i : C ⇒ D) → Set e
-  CommutativeSquare f g h i = h ∘ f ≈ i ∘ g
-
--- put this in the same module?
-module Commutation
-  {e} ⦃ eq : Equivalence 𝒬 e ⦄
-  (𝒞 : Category 𝒬)
-  where
-
-  open Category 𝒞
-
-  infix 1 [_⇒_]⟨_≈_⟩
-  [_⇒_]⟨_≈_⟩ : ∀ (A B : 𝒬 .Ob) → A ⇒ B → A ⇒ B → Set e
-  [ A ⇒ B ]⟨ f ≈ g ⟩ = f ≈ g
-
-  infixl 2 connect
-  connect : ∀ {A C : 𝒬 .Ob} (B : 𝒬 .Ob) → A ⇒ B → B ⇒ C → A ⇒ C
-  connect B f g = g ∘ f
-
-  syntax connect B f g = f ⇒⟨ B ⟩ g
-
-record IsCategory {e} ⦃ eq : Equivalence 𝒬 e ⦄ (𝒞 : Category 𝒬) : Set (o ⊔ ℓ ⊔ e) where
+record IsCategory {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Category 𝒬) : Set (o ⊔ ℓ ⊔ 𝕃.suc e) where
+  open Quiver 𝒬 using (_⇒_)
   open Category 𝒞
   field
+    ⦃ eq ⦄ : Equivalence 𝒬 e
+
     assoc :
       ∀ {A B C D} {f : A ⇒ B} {g : B ⇒ C} {h : C ⇒ D} →
       (h ∘ g) ∘ f ≈ h ∘ (g ∘ f)
@@ -81,3 +47,25 @@ record IsCategory {e} ⦃ eq : Equivalence 𝒬 e ⦄ (𝒞 : Category 𝒬) : S
     ⟺ = sym
     _○_ : {f g h : A ⇒ B} → f ≈ g → g ≈ h → f ≈ h
     _○_ = trans
+
+  module Commutation where
+
+    -- A -- f --> B
+    -- |          |
+    -- g          h
+    -- |          |
+    -- V          V
+    -- C -- i --> D
+    CommutativeSquare : {A B C D : 𝒬 .Ob} → (f : A ⇒ B) (g : A ⇒ C) (h : B ⇒ D) (i : C ⇒ D) → Set e
+    CommutativeSquare f g h i = h ∘ f ≈ i ∘ g
+
+    infix 1 [_⇒_]⟨_≈_⟩
+    [_⇒_]⟨_≈_⟩ : ∀ (A B : 𝒬 .Ob) → A ⇒ B → A ⇒ B → Set e
+    [ A ⇒ B ]⟨ f ≈ g ⟩ = f ≈ g
+
+    infixl 2 connect
+    connect : ∀ {A C : 𝒬 .Ob} (B : 𝒬 .Ob) → A ⇒ B → B ⇒ C → A ⇒ C
+    connect B f g = g ∘ f
+
+    syntax connect B f g = f ⇒⟨ B ⟩ g
+

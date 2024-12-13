@@ -2,25 +2,23 @@
 -- https://agda.github.io/agda-categories/Categories.Morphism.Reasoning.Core.html
 -- which is licensed under the MIT license.
 --   Copyright (c) 2019 Agda Github Community
-
 {-# OPTIONS --safe #-}
 
 open import Cheshire.Core
 open import Cheshire.Signatures
-open import Cheshire.Structures.Core
+import Cheshire.Structures.Core as Structures
 
 module Cheshire.Morphism.Reasoning.Core
   {o ℓ} {𝒬 : Quiver o ℓ}
   {𝒞 : Category 𝒬 }
-  {e} ⦃ eq : Equivalence 𝒬 e ⦄
-  (is-𝒞 : IsCategory 𝒞)
+  {e : 𝕃.t} (is-𝒞 : Structures.IsCategory e 𝒞)
   where
 
 open Quiver 𝒬 using (_⇒_)
 open Category 𝒞
-open IsCategory is-𝒞
-open Definitions 𝒞
+open Structures.IsCategory is-𝒞
 open HomReasoning
+open Commutation
 
 private
   variable

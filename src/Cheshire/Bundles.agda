@@ -3,20 +3,25 @@
 open import Cheshire.Core
 
 module Cheshire.Bundles
-  {o ℓ e} (𝒬 : Quiver o ℓ)
-  ⦃ eq : Equivalence 𝒬 e ⦄
+  {o ℓ} (𝒬 : Quiver o ℓ)
   where
 
 import Data.Product as ×
 open × using (Σ-syntax)
 
+import Cheshire.Morphism.Reasoning as MorReasoning
 import Cheshire.Signatures 𝒬 as Signatures
 open import Cheshire.Structures
 
-record Category : Set (𝕃.suc o ⊔ 𝕃.suc ℓ ⊔ e) where
+record Category (e : 𝕃.t) : Set (𝕃.suc o ⊔ 𝕃.suc ℓ ⊔ 𝕃.suc e) where
   field
     signature : Signatures.Category
-    structure : IsCategory signature
+    structure : IsCategory e signature
 
   open Signatures.Category signature public
   open IsCategory structure public
+
+  open HomReasoning public
+  open Commutation public
+
+  module Reasoning = MorReasoning structure
