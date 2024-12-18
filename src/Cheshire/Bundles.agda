@@ -25,3 +25,20 @@ record Category (e : 𝕃.t) : Set (𝕃.suc o ⊔ 𝕃.suc ℓ ⊔ 𝕃.suc e) 
   open Commutation public
 
   module Reasoning = MorReasoning structure
+
+record Cartesian (e : 𝕃.t) : Set (𝕃.suc o ⊔ 𝕃.suc ℓ ⊔ 𝕃.suc e) where
+  field
+    signature : Signatures.Cartesian
+    structure : IsCartesian e signature
+
+  open Signatures.Cartesian signature public hiding (category)
+  open IsCartesian structure public
+
+  category : Category e
+  category = record
+    { signature = Signatures.Cartesian.category signature
+    ; structure = isCategory
+    }
+
+  open Category category public
+
