@@ -16,6 +16,7 @@ import Cheshire.Morphism.Reasoning
 import Cheshire.Homomorphism.Signatures
 import Cheshire.Homomorphism.Structures
 import Cheshire.Homomorphism.Bundles
+import Cheshire.Homomorphism
 import Cheshire.Natural.Signatures
 import Cheshire.Natural.Structures
 
