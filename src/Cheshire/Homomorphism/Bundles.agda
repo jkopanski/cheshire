@@ -4,7 +4,7 @@ open import Cheshire.Core
 
 module Cheshire.Homomorphism.Bundles
   {o ℓ e o′ ℓ′ e′} {𝒮 : Quiver o ℓ} {𝒯 : Quiver o′ ℓ′}
-  ⦃ eq : Equivalence 𝒮 e ⦄ ⦃ eq′ : Equivalence 𝒯 e′ ⦄
+  (eqₛ : Equivalence 𝒮 e) (eqₜ : Equivalence 𝒯 e′)
   where
 
 import Data.Product as ×
@@ -17,7 +17,7 @@ open import Cheshire.Homomorphism.Structures
 record Homomorphism : Set (o ⊔ ℓ ⊔ e ⊔ o′ ⊔ ℓ′ ⊔ e′) where
   field
     signature : Signatures.Morphism 𝒮 𝒯
-    structure : IsMorphism signature
+    structure : IsMorphism signature eqₛ eqₜ
 
   open Signatures.Morphism signature public
   open IsMorphism structure public
@@ -28,7 +28,7 @@ record Functor
   Set (o ⊔ ℓ ⊔ e ⊔ o′ ⊔ ℓ′ ⊔ e′) where
   field
     signature : Signatures.Morphism 𝒮 𝒯
-    structure : IsFunctor signature S T
+    structure : IsFunctor signature eqₛ eqₜ S T
 
   open Signatures.Morphism signature public
   open IsFunctor structure public
@@ -45,7 +45,7 @@ record Cartesian
   Set (o ⊔ ℓ ⊔ e ⊔ o′ ⊔ ℓ′ ⊔ e′) where
   field
     signature : Signatures.Morphism 𝒮 𝒯
-    structure : IsCartesian signature S T
+    structure : IsCartesian signature eqₛ eqₜ S T
 
   open Signatures.Morphism signature public
   open IsCartesian structure public

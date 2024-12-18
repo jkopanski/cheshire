@@ -9,6 +9,7 @@ module Cheshire.Homomorphism.Structures
   where
 
 import Data.Product as ×
+import Relation.Binary.Construct.On as On
 
 open import Cheshire.Signatures
 import Cheshire.Object.Signatures as Ob
@@ -17,10 +18,22 @@ import Cheshire.Morphism.Bundles as Bundles
 open Ob
 open Morphism ℳ
 
+module _ {e} (eqₛ : Equivalence 𝒯 e) where
+  equivalence : Equivalence 𝒮 e
+  equivalence = record
+    { _≈_ = _≈_ on F₁
+    ; equiv = On.isEquivalence F₁ equiv
+    } where instance _ = eqₛ
+
 module _ {e e′}
-  ⦃ eqₛ : Equivalence 𝒮 e ⦄
-  ⦃ eqₜ : Equivalence 𝒯 e′ ⦄
+  (eqₛ : Equivalence 𝒮 e)
+  (eqₜ : Equivalence 𝒯 e′)
   where
+
+  private
+    instance
+      _ = eqₛ
+      - = eqₜ
 
   -- IsHomomorphism ?
   record IsMorphism : Set (o ⊔ ℓ ⊔ e ⊔ e′) where
