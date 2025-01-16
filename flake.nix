@@ -9,7 +9,7 @@
       flake = false;
     };
     std-lib = {
-      url = "github:agda/agda-stdlib/v2.1.1";
+      url = "github:agda/agda-stdlib/v2.2";
       flake = false;
     };
   };
@@ -60,7 +60,7 @@
             agdaPackages = prev.agdaPackages.overrideScope (
               finalAgda: prevAgda: {
                 standard-library = prevAgda.standard-library.overrideAttrs {
-                  version = "2.1";
+                  version = "2.2";
                   src = inputs.std-lib;
                 };
               }
