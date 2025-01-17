@@ -15,11 +15,11 @@
   };
 
   outputs = inputs@{ self, nixpkgs, utils, ... }:
-    utils.lib.eachDefaultSystem (system:
+    (utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [ self.overlays.${system}.default ];
+          overlays = [ self.overlays.default ];
         };
         agdaWithLibraries = pkgs.agda.withPackages (p: [
           p.standard-library
@@ -35,43 +35,6 @@
             ${pkgs.haskellPackages.fix-whitespace}/bin/fix-whitespace --check
           '';
           installPhase = ''mkdir "$out"'';
-        };
-
-        overlays = rec {
-          agda = final: prev: {
-            haskellPackages = prev.haskellPackages.override {
-              overrides = hfinal: hprev:
-                let inherit (final.haskell.lib.compose)
-                  addBuildDepends enableCabalFlag overrideSrc;
-                in {
-                  Agda = final.lib.pipe hprev.Agda [
-                    (overrideSrc {
-                      src = inputs.agda;
-                      version = "2.7.0.1";
-                    })
-                    (addBuildDepends (with hfinal; [pqueue text-icu]))
-                    (enableCabalFlag "enable-cluster-counting")
-                  ];
-                };
-            };
-          };
-
-          standard-library = final: prev: {
-            agdaPackages = prev.agdaPackages.overrideScope (
-              finalAgda: prevAgda: {
-                standard-library = prevAgda.standard-library.overrideAttrs {
-                  version = "2.2";
-                  src = inputs.std-lib;
-                };
-              }
-            );
-          };
-
-          # pkgs.lib.composeExtensions, but how to get it without infinte recursion?
-          default = final: prev:
-            let agda' = agda final prev;
-                prev' = prev // agda';
-            in agda' // standard-library final prev';
         };
 
         devShells.default = pkgs.mkShell {
@@ -98,5 +61,42 @@
           };
         };
       }
-    );
+    )) // {
+      overlays = rec {
+        agda = final: prev: {
+          haskellPackages = prev.haskellPackages.override {
+            overrides = hfinal: hprev:
+              let inherit (final.haskell.lib.compose)
+                addBuildDepends enableCabalFlag overrideSrc;
+              in {
+                Agda = final.lib.pipe hprev.Agda [
+                  (overrideSrc {
+                    src = inputs.agda;
+                    version = "2.7.0.1";
+                  })
+                  (addBuildDepends (with hfinal; [pqueue text-icu]))
+                  (enableCabalFlag "enable-cluster-counting")
+                ];
+              };
+          };
+        };
+
+        standard-library = final: prev: {
+          agdaPackages = prev.agdaPackages.overrideScope (
+            finalAgda: prevAgda: {
+              standard-library = prevAgda.standard-library.overrideAttrs {
+                version = "2.2";
+                src = inputs.std-lib;
+              };
+            }
+          );
+        };
+
+        # pkgs.lib.composeExtensions, but how to get it without infinte recursion?
+        default = final: prev:
+          let agda' = agda final prev;
+              prev' = prev // agda';
+          in agda' // standard-library final prev';
+      };
+    };
 }
