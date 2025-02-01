@@ -8,8 +8,16 @@
       url = "github:agda/agda/v2.7.0.1";
       flake = false;
     };
-    std-lib = {
+    stdlib = {
       url = "github:agda/agda-stdlib/v2.2";
+      flake = false;
+    };
+    stdlib-classes = {
+      url = "github:agda/agda-stdlib-classes/v2.1.1";
+      flake = false;
+    };
+    stdlib-meta = {
+      url = "github:agda/agda-stdlib-meta/v2.1.1";
       flake = false;
     };
   };
@@ -22,7 +30,7 @@
           overlays = [ self.overlays.default ];
         };
         agdaWithLibraries = pkgs.agda.withPackages (p: [
-          p.standard-library
+          p.standard-library p.standard-library-classes p.standard-library-meta
         ]);
 
       in {
@@ -52,7 +60,7 @@
           everythingFile = "./src/Everything.agda";
 
           buildInputs = with pkgs.agdaPackages; [
-            standard-library
+            standard-library standard-library-classes standard-library-meta
           ];
 
           meta = with pkgs.lib; {
@@ -81,13 +89,54 @@
           };
         };
 
-        standard-library = final: prev: {
+        packages = final: prev: {
           agdaPackages = prev.agdaPackages.overrideScope (
             finalAgda: prevAgda: {
               standard-library = prevAgda.standard-library.overrideAttrs {
                 version = "2.2";
-                src = inputs.std-lib;
+                src = inputs.stdlib;
               };
+
+              standard-library-classes = final.agdaPackages.mkDerivation {
+                pname = "standard-library-classes";
+                version = "2.1.1";
+                src = inputs.stdlib-classes;
+
+                everythingFile = "./standard-library-classes.agda";
+                libraryFile = "agda-stdlib-classes.agda-lib";
+
+                buildInputs = with final.agdaPackages; [
+                  standard-library
+                ];
+
+                meta = with final.lib; {
+                  description = "Type-classes for the Agda standard library";
+                  homepage = "https://github.com/agda/agda-stdlib-classes";
+                  license = licenses.mit;
+                };
+              };
+
+              standard-library-meta = final.agdaPackages.mkDerivation {
+                pname = "standard-library-meta";
+                version = "2.1.1";
+                src = inputs.stdlib-meta;
+
+                # next release
+                # everythingFile = "standard-library-meta.agda";
+                everythingFile = "./Main.agda";
+                libraryFile = "agda-stdlib-meta.agda-lib";
+
+                buildInputs = with final.agdaPackages; [
+                  standard-library standard-library-classes
+                ];
+
+                meta = with final.lib; {
+                  description = "Meta-programming utilities for Agda";
+                  homepage = "https://github.com/agda/agda-stdlib-meta";
+                  license = licenses.mit;
+                };
+              };
+
             }
           );
         };
@@ -96,7 +145,7 @@
         default = final: prev:
           let agda' = agda final prev;
               prev' = prev // agda';
-          in agda' // standard-library final prev';
+          in agda' // packages final prev';
       };
     };
 }

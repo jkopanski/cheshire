@@ -37,11 +37,13 @@
       "inputs": {
         "agda": "agda",
         "nixpkgs": "nixpkgs",
-        "std-lib": "std-lib",
+        "stdlib": "stdlib",
+        "stdlib-classes": "stdlib-classes",
+        "stdlib-meta": "stdlib-meta",
         "utils": "utils"
       }
     },
-    "std-lib": {
+    "stdlib": {
       "flake": false,
       "locked": {
         "lastModified": 1736905527,
@@ -55,6 +57,40 @@
         "owner": "agda",
         "ref": "v2.2",
         "repo": "agda-stdlib",
+        "type": "github"
+      }
+    },
+    "stdlib-classes": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1726237583,
+        "narHash": "sha256-YGHPuOb73W40G7SDU7sbhwxYQ+rKVHlgjfu0Qn7MK3Q=",
+        "owner": "agda",
+        "repo": "agda-stdlib-classes",
+        "rev": "7cd9de3ae30878eb14ccb64f5e87e22b635ad768",
+        "type": "github"
+      },
+      "original": {
+        "owner": "agda",
+        "ref": "v2.1.1",
+        "repo": "agda-stdlib-classes",
+        "type": "github"
+      }
+    },
+    "stdlib-meta": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1725969231,
+        "narHash": "sha256-qOoThYMG0dzjKvwmzzVZmGcerfb++MApbaGRzLEq3/4=",
+        "owner": "agda",
+        "repo": "agda-stdlib-meta",
+        "rev": "a4a279e6a3162354398083f24d93fa6388f37652",
+        "type": "github"
+      },
+      "original": {
+        "owner": "agda",
+        "ref": "v2.1.1",
+        "repo": "agda-stdlib-meta",
         "type": "github"
       }
     },
