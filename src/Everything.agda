@@ -22,3 +22,4 @@ import Cheshire.Natural.Structures
 
 import Cheshire.Instance.One
 import Cheshire.Instance.Sets
+import Cheshire.Instance.Syntactic
