@@ -22,7 +22,7 @@ open 𝕃 using (_⊔_) public
 open Rel₂ using (Rel) public
 
 module Function where
-  open import Function public
+  open import Function renaming (_∘_ to _⊙_) public
 
 open Function using (const; flip; _on_; _$_) public
 

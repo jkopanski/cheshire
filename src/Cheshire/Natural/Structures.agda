@@ -2,7 +2,7 @@
 
 open import Cheshire.Core
 open import Cheshire.Natural.Signatures
-open import Cheshire.Homomorphism.Signatures
+open import Cheshire.Homomorphism.Signatures hiding (_∘_)
 
 module Cheshire.Natural.Structures
   {o ℓ o′ ℓ′ : 𝕃.t} {𝒮 : Quiver o  ℓ } {𝒯 : Quiver o′ ℓ′}
