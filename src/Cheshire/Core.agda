@@ -46,6 +46,9 @@ private
 _[_,_] : (𝒬 : Quiver o ℓ) → Rel (𝒬 .Ob) ℓ
 𝒬 [ a , b ] = 𝒬 .Hom a b
 
+{-# DISPLAY Hom 𝒬 A B = 𝒬 [ A , B ] #-}
+{-# DISPLAY Quiver._⇒_ 𝒬 A B = 𝒬 [ A , B ] #-}
+
 record Equivalence (𝒬 : Quiver o ℓ) (e : 𝕃.t) : Set (o ⊔ ℓ ⊔ 𝕃.suc e) where
   infix  4 _≈_
   open Quiver 𝒬 using (_⇒_)
@@ -66,3 +69,11 @@ record Equivalence (𝒬 : Quiver o ℓ) (e : 𝕃.t) : Set (o ⊔ ℓ ⊔ 𝕃.
   open Equiv public
 
 open Equivalence ⦃ … ⦄ public
+
+{-# DISPLAY Equivalence._≈_ _ f g = f ≈ g #-}
+
+_[_≈_] :
+  ∀ {𝒬 : Quiver o ℓ} {e} {A B : 𝒬 .Ob } →
+  (eq : Equivalence 𝒬 e) → (f g : 𝒬 .Hom A B) → Set e
+_[_≈_] eq = Equivalence._≈_ eq
+
