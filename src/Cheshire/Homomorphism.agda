@@ -4,6 +4,7 @@ open import Cheshire.Core
 
 module Cheshire.Homomorphism where
 
+import Data.Product as ×
 open import Relation.Binary.PropositionalEquality.Subst.Properties
   using (module Shorthands)
 open import Cheshire.Homomorphism.Signatures renaming (id to idM; _∘_ to _∘M_) public
@@ -15,6 +16,7 @@ open import Cheshire.Homomorphism.Bundles public
 -- which is licensed under the MIT license.
 --   Copyright (c) 2019 Agda Github Community
 
+open × using (Σ-syntax)
 open Rel₂ using (_≡_)
 
 private
@@ -36,3 +38,13 @@ record _≃_
   field
     F₀≡ : ∀ {X} → M.₀ X ≡ M′.₀ X
     F₁≡ : ∀ {A B} {f : 𝒬 .Hom A B} → M.₁ f ▸ F₀≡ ≈ F₀≡ ◂ M′.₁ f
+
+module _
+  {A : Quiver o ℓ} {B : Quiver o′ ℓ′} {C : Quiver o″ ℓ″}
+  ⦃ eq : Equivalence C e′ ⦄
+  where
+
+  infix 5 _∣ˡ_
+  _∣ˡ_ : Morphism B C → Morphism A C → Set (o ⊔ ℓ ⊔ o′ ⊔ ℓ′ ⊔ e′ ⊔ o″ ⊔ ℓ″)
+  G ∣ˡ F = Σ[ J ∈ Morphism A B ] G ∘M J ≃ F
+
