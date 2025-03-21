@@ -21,5 +21,6 @@ import Cheshire.Natural.Signatures
 import Cheshire.Natural.Structures
 
 import Cheshire.Instance.One
+import Cheshire.Instance.Setoids
 import Cheshire.Instance.Sets
 import Cheshire.Instance.Syntactic

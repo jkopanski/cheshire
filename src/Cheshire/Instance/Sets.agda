@@ -19,10 +19,10 @@ instance
   eq = record
     { _≈_ = Rel₂._≗_
     ; equiv = record
-     { refl = λ _ → Rel₂.refl
-     ; trans = λ eq₁ eq₂ x → Rel₂.trans (eq₁ x) (eq₂ x)
-     ; sym = λ eq x → Rel₂.sym (eq x)
-     }
+      { refl = λ _ → Rel₂.refl
+      ; trans = λ eq₁ eq₂ x → Rel₂.trans (eq₁ x) (eq₂ x)
+      ; sym = λ eq x → Rel₂.sym (eq x)
+      }
     }
 
 open Object (𝒬 .Ob)
