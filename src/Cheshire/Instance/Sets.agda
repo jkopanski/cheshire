@@ -6,7 +6,7 @@ module Cheshire.Instance.Sets (o : 𝕃.t) where
 
 import Function
 import Data.Product as ×
-import Data.Sum as +
+import Data.Sum as ⊎
 
 import Cheshire.Signatures as Sig
 import Cheshire.Object.Signatures as Object
@@ -34,7 +34,7 @@ products : BinaryProducts
 products = record { _×_ = ×._×_ }
 
 coproducts : BinaryCoproducts
-coproducts = record { _+_ = +._⊎_ }
+coproducts = record { _⊎_ = ⊎._⊎_ }
 
 Sets : Sig.Cartesian 𝒬
 Sets = record

@@ -43,12 +43,12 @@ record Coproduct (A B : Ob) : Set o where
 open Coproduct ⦃ … ⦄ public
 
 record BinaryCoproducts : Set o where
-  infixr 6 _+_
+  infixr 6 _⊎_
   field
-    _+_ : Ob → Ob → Ob
+    _⊎_ : Ob → Ob → Ob
 
   coproduct : ∀ {A B} → Coproduct A B
-  coproduct {A} {B} = record { A+B = A + B }
+  coproduct {A} {B} = record { A+B = A ⊎ B }
 
 open BinaryCoproducts ⦃ … ⦄ public
 

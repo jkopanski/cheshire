@@ -17,7 +17,7 @@ module ×ₛ where
   open import Data.Product.Function.NonDependent.Setoid public
   open import Data.Product.Relation.Binary.Pointwise.NonDependent public
 
-module +ₛ where
+module ⊎ₛ where
   open import Data.Sum.Relation.Binary.Pointwise public
 
 import Cheshire.Signatures as Sig
@@ -46,7 +46,7 @@ instance
   products = record { _×_ = ×ₛ.×-setoid }
 
   coproducts : BinaryCoproducts
-  coproducts = record {_+_ = +ₛ.⊎-setoid }
+  coproducts = record {_⊎_ = ⊎ₛ.⊎-setoid }
 
 Setoids : Sig.Cartesian 𝒬
 Setoids = record
