@@ -4,8 +4,6 @@ open import Cheshire.Core
 
 module Cheshire.Instance.Setoids (o ℓ : 𝕃.t) where
 
-import Function.Bundles as Func renaming (Func to t)
-
 open import Relation.Binary.Bundles using (Setoid)
 import Data.Unit.Polymorphic.Properties as 𝟙ₛ
 import Function.Construct.Composition as Comp
@@ -24,7 +22,7 @@ import Cheshire.Signatures as Sig
 import Cheshire.Object.Signatures as Object
 
 𝒬 : Quiver (𝕃.suc (o ⊔ ℓ)) (o ⊔ ℓ)
-𝒬 = mk⇒ {Ob = Setoid o (o ⊔ ℓ)} Func.t
+𝒬 = mk⇒ {Ob = Setoid (o ⊔ ℓ) (o ⊔ ℓ)} Func.t
 
 instance
   eq : Equivalence 𝒬 (o ⊔ ℓ)

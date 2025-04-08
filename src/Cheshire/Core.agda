@@ -2,24 +2,80 @@
 
 module Cheshire.Core where
 
+import Algebra
+
+open Algebra using (Op₁; Op₂)
+
 module 𝕃 where
   open import Level renaming (Level to t) public
 
+open 𝕃 using (_⊔_) public
+
 module 𝟙 where
-  open import Data.Unit.Polymorphic renaming (⊤ to t) public
+  import Data.Unit as 𝟙0ℓ
+  open import Data.Unit.Polymorphic renaming (⊤ to t; tt to tt-lift) public
+  pattern tt = 𝕃.lift 𝟙0ℓ.tt
+
+module Rel₀ where
+  open import Relation.Nullary public
 
 module Rel₁ where
   open import Relation.Unary hiding (∅; U) public
   open import Relation.Unary.Polymorphic public
 
 module Rel₂ where
-  open import Relation.Binary public
+  open import Relation.Binary public hiding (Setoid)
   open import Relation.Binary.PropositionalEquality public
-  import Relation.Binary.Reasoning.Setoid as SetoidR
-  module SetoidReasoning {s₁ s₂} (S : Setoid s₁ s₂) = SetoidR S
 
-open 𝕃 using (_⊔_) public
 open Rel₂ using (Rel) public
+
+module Setoid where
+  open import Relation.Binary.Bundles using () renaming (Setoid to t) public
+  import Relation.Binary.Reasoning.Setoid as SetoidR
+  module Reasoning {s₁ s₂} (S : t s₁ s₂) = SetoidR S
+
+  lift : ∀ {c ℓ} (o r : 𝕃.t) → t c ℓ → t (o 𝕃.⊔ c) (r 𝕃.⊔ ℓ)
+  lift o r S = record
+    { Carrier = 𝕃.Lift o Carrier
+    ; _≈_ = λ where
+      (𝕃.lift x) (𝕃.lift y) → 𝕃.Lift r (x ≈ y)
+    ; isEquivalence = record
+      { refl = 𝕃.lift (Rel₂.IsEquivalence.refl (t.isEquivalence S))
+      ; sym = λ where
+        (𝕃.lift eq) → 𝕃.lift (Rel₂.IsEquivalence.sym (t.isEquivalence S) eq)
+      ; trans = λ where
+        (𝕃.lift eq) (𝕃.lift eq′) → 𝕃.lift (Rel₂.IsEquivalence.trans (t.isEquivalence S) eq eq′)
+      }
+    } where open t S
+
+module Func where
+  open import Function.Bundles renaming (Func to t) public
+  open import Function.Relation.Binary.Setoid.Equality public
+
+  module _ {c ℓ} (S : Setoid.t c ℓ) where
+    open Setoid.t S renaming (Carrier to X; _≈_ to eq)
+
+    unary : {f : Op₁ X} → Algebra.Congruent₁ eq f → S ⟶ₛ S
+    unary {f} _ .t.to = f
+    unary cong .t.cong = cong
+
+  module _ {c ℓ} (S : Setoid.t c ℓ) where
+    open Setoid.t S renaming (Carrier to X; _≈_ to eq; isEquivalence to isEq)
+
+    binary : {f : Op₂ X} → Algebra.Congruent₂ eq f → S ⟶ₛ (S ⇨ S)
+    binary {f} eq .t.to = λ x → record
+      { to = λ y → f x y
+      ; cong = eq (Rel₂.IsEquivalence.refl isEq)
+      }
+    binary eq .t.cong = λ x≈y _ → eq x≈y (Rel₂.IsEquivalence.refl isEq)
+
+  module _ {c ℓ} (m : Algebra.Magma c ℓ) where
+    open Algebra.Magma m renaming (setoid to S)
+
+    magma : S ⟶ₛ (S ⇨ S)
+    magma = binary S ∙-cong
+
+open Func using (_⟨$⟩_; _⟶ₛ_; _⇨_) public
 
 module Function where
   open import Function renaming (_∘_ to _⊙_) public
@@ -56,7 +112,7 @@ record Equivalence (𝒬 : Quiver o ℓ) (e : 𝕃.t) : Set (o ⊔ ℓ ⊔ 𝕃.
     _≈_ : ∀ {A B} → Rel (A ⇒ B) e
     equiv : ∀ {A B} → Rel₂.IsEquivalence (_≈_ {A} {B})
 
-  setoid : {A B : 𝒬 .Ob} → Rel₂.Setoid ℓ e
+  setoid : {A B : 𝒬 .Ob} → Setoid.t ℓ e
   setoid {A} {B} = record
     { Carrier       = A ⇒ B
     ; _≈_           = _≈_
@@ -64,7 +120,7 @@ record Equivalence (𝒬 : Quiver o ℓ) (e : 𝕃.t) : Set (o ⊔ ℓ ⊔ 𝕃.
     }
 
   module Equiv {A B : 𝒬 .Ob} = Rel₂.IsEquivalence (equiv {A} {B})
-  module EdgeReasoning {A B : 𝒬 .Ob} = Rel₂.SetoidReasoning (setoid {A} {B})
+  module EdgeReasoning {A B : 𝒬 .Ob} = Setoid.Reasoning (setoid {A} {B})
 
   open Equiv public
 

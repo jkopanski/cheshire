@@ -26,7 +26,7 @@ record IsCategory {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Category �
   ∘-resp-≈ʳ pf = ∘-resp-≈ refl pf
 
   module HomReasoning {A B : 𝒬 .Ob} where
-    open Rel₂.SetoidReasoning (setoid {A = A} {B = B}) public
+    open Setoid.Reasoning (setoid {A = A} {B = B}) public
 
     infixr 4 _⟩∘⟨_ refl⟩∘⟨_
     infixl 5 _⟩∘⟨refl
