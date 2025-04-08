@@ -42,6 +42,9 @@ module _ {e e′}
     field
       F-resp-≈ : ∀ {A B} {f g : A ⇒ B} → f ≈ g → M.₁ f ≈ M.₁ g
 
+    -- for nicer module use: F.resp-≈
+    resp-≈ = F-resp-≈
+
   record IsFunctor
     (S : Category 𝒮) (T : Category 𝒯) :
     Set (o ⊔ ℓ ⊔ e ⊔ e′) where
@@ -57,6 +60,10 @@ module _ {e e′}
 
     isMorphism : IsMorphism
     isMorphism = record { F-resp-≈ = F-resp-≈ }
+
+    resp-id = F-resp-id
+    resp-∘  = F-resp-∘
+    resp-≈  = F-resp-≈
 
   record IsCartesian
     (S : Cartesian 𝒮) (T : Cartesian 𝒯)
@@ -98,3 +105,7 @@ module _ {e e′}
 
     isMorphism : IsMorphism
     isMorphism = record { F-resp-≈ = F-resp-≈ }
+
+    resp-id = F-resp-id
+    resp-∘  = F-resp-∘
+    resp-≈  = F-resp-≈
