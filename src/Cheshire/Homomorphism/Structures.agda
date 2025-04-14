@@ -36,8 +36,7 @@ module _ {e e′}
       _ = eqₛ
       - = eqₜ
 
-  -- IsHomomorphism ?
-  record IsMorphism : Set (o ⊔ ℓ ⊔ e ⊔ e′) where
+  record IsHomomorphism : Set (o ⊔ ℓ ⊔ e ⊔ e′) where
     open Quiver 𝒮
     field
       F-resp-≈ : ∀ {A B} {f g : A ⇒ B} → f ≈ g → M.₁ f ≈ M.₁ g
@@ -58,8 +57,8 @@ module _ {e e′}
                  M.₁ (g S.∘ f) ≈ M.₁ g ∘ M.₁ f
       F-resp-≈ : ∀ {A B} {f g : A ⇒ B} → f ≈ g → M.₁ f ≈ M.₁ g
 
-    isMorphism : IsMorphism
-    isMorphism = record { F-resp-≈ = F-resp-≈ }
+    isHomomorphism : IsHomomorphism
+    isHomomorphism = record { F-resp-≈ = F-resp-≈ }
 
     resp-id = F-resp-id
     resp-∘  = F-resp-∘
@@ -103,8 +102,8 @@ module _ {e e′}
     isFunctor = record
       { F-resp-id = F-resp-id; F-resp-∘ = F-resp-∘; F-resp-≈ = F-resp-≈ }
 
-    isMorphism : IsMorphism
-    isMorphism = record { F-resp-≈ = F-resp-≈ }
+    isHomomorphism : IsHomomorphism
+    isHomomorphism = record { F-resp-≈ = F-resp-≈ }
 
     resp-id = F-resp-id
     resp-∘  = F-resp-∘

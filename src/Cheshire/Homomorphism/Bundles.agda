@@ -17,10 +17,10 @@ open import Cheshire.Homomorphism.Structures
 record Homomorphism : Set (o ⊔ ℓ ⊔ e ⊔ o′ ⊔ ℓ′ ⊔ e′) where
   field
     signature : Signatures.Morphism 𝒮 𝒯
-    structure : IsMorphism signature eqₛ eqₜ
+    structure : IsHomomorphism signature eqₛ eqₜ
 
   open Signatures.Morphism signature public
-  open IsMorphism structure public
+  open IsHomomorphism structure public
 
 record Functor
   (S : Signatures.Category 𝒮)
