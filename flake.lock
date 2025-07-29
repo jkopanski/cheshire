@@ -1,78 +1,42 @@
 {
   "nodes": {
-    "agda": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1726161230,
-        "narHash": "sha256-IupM/HJk1vpHTRWOakYDDliKn+RLzPjNzGlLTlF0CbY=",
-        "owner": "agda",
-        "repo": "agda",
-        "rev": "a6fc20c27ae953149b53a8997ba4a1c8b17d628a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "agda",
-        "ref": "v2.7.0.1",
-        "repo": "agda",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1736408508,
-        "narHash": "sha256-WIGZ3DPw5H+SPszUXVacK+KTh3sJZShP1vGtDwhquNM=",
+        "lastModified": 1753815631,
+        "narHash": "sha256-cxTtNwYWTctTnXlTU1B5tDx7VOD2GorO6YBWH7RIxJs=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "530de2c83360057c1650fb8a37ef48cb9ad8f6a6",
+        "rev": "b62d813730d04c616d6ec6367790cfc7cd0f8087",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "release-24.11",
+        "ref": "release-25.05",
         "repo": "nixpkgs",
         "type": "github"
       }
     },
     "root": {
       "inputs": {
-        "agda": "agda",
         "nixpkgs": "nixpkgs",
-        "stdlib": "stdlib",
         "stdlib-classes": "stdlib-classes",
         "stdlib-meta": "stdlib-meta",
         "utils": "utils"
       }
     },
-    "stdlib": {
+    "stdlib-classes": {
       "flake": false,
       "locked": {
-        "lastModified": 1736905527,
-        "narHash": "sha256-/Fy5EOSbVNXt6Jq0yKSnlNPW4SYfn+eCTAYFnMZrbR0=",
+        "lastModified": 1741280693,
+        "narHash": "sha256-iaxCETpDKVhiprhRf+3jWJYFZU7D6D4/teYdHZ5Qw24=",
         "owner": "agda",
-        "repo": "agda-stdlib",
-        "rev": "6cd04e46e5f8c740a5ec584a108bbb3380fa92d7",
+        "repo": "agda-stdlib-classes",
+        "rev": "7915f0f49b0d37acae09d53b523582df3cbcbf65",
         "type": "github"
       },
       "original": {
         "owner": "agda",
         "ref": "v2.2",
-        "repo": "agda-stdlib",
-        "type": "github"
-      }
-    },
-    "stdlib-classes": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1726237583,
-        "narHash": "sha256-YGHPuOb73W40G7SDU7sbhwxYQ+rKVHlgjfu0Qn7MK3Q=",
-        "owner": "agda",
-        "repo": "agda-stdlib-classes",
-        "rev": "7cd9de3ae30878eb14ccb64f5e87e22b635ad768",
-        "type": "github"
-      },
-      "original": {
-        "owner": "agda",
-        "ref": "v2.1.1",
         "repo": "agda-stdlib-classes",
         "type": "github"
       }
@@ -80,16 +44,16 @@
     "stdlib-meta": {
       "flake": false,
       "locked": {
-        "lastModified": 1725969231,
-        "narHash": "sha256-qOoThYMG0dzjKvwmzzVZmGcerfb++MApbaGRzLEq3/4=",
+        "lastModified": 1741370543,
+        "narHash": "sha256-1i/lfwmYrntxGhLitQ3Pq6Dy0izIe/Pl1aah87ujiV4=",
         "owner": "agda",
         "repo": "agda-stdlib-meta",
-        "rev": "a4a279e6a3162354398083f24d93fa6388f37652",
+        "rev": "8996a64f04ecd2faa068e993b90cbdcb351722ff",
         "type": "github"
       },
       "original": {
         "owner": "agda",
-        "ref": "v2.1.1",
+        "ref": "v2.2",
         "repo": "agda-stdlib-meta",
         "type": "github"
       }
