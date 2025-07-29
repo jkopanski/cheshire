@@ -2,22 +2,14 @@
   description = "Yet another category theory library";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-25.05";
     utils.url = "github:numtide/flake-utils";
-    agda = {
-      url = "github:agda/agda/v2.7.0.1";
-      flake = false;
-    };
-    stdlib = {
-      url = "github:agda/agda-stdlib/v2.2";
-      flake = false;
-    };
     stdlib-classes = {
-      url = "github:agda/agda-stdlib-classes/v2.1.1";
+      url = "github:agda/agda-stdlib-classes/v2.2";
       flake = false;
     };
     stdlib-meta = {
-      url = "github:agda/agda-stdlib-meta/v2.1.1";
+      url = "github:agda/agda-stdlib-meta/v2.2";
       flake = false;
     };
   };
@@ -63,7 +55,7 @@
             standard-library standard-library-classes standard-library-meta
           ];
 
-          meta = with pkgs.lib; {
+          meta = {
             description = "Yet another category theory library";
             homepage = "https://github.com/Perspicuous-Computing/cheshire";
           };
@@ -71,35 +63,12 @@
       }
     )) // {
       overlays = rec {
-        agda = final: prev: {
-          haskellPackages = prev.haskellPackages.override {
-            overrides = hfinal: hprev:
-              let inherit (final.haskell.lib.compose)
-                addBuildDepends enableCabalFlag overrideSrc;
-              in {
-                Agda = final.lib.pipe hprev.Agda [
-                  (overrideSrc {
-                    src = inputs.agda;
-                    version = "2.7.0.1";
-                  })
-                  (addBuildDepends (with hfinal; [pqueue text-icu]))
-                  (enableCabalFlag "enable-cluster-counting")
-                ];
-              };
-          };
-        };
-
         packages = final: prev: {
           agdaPackages = prev.agdaPackages.overrideScope (
             finalAgda: prevAgda: {
-              standard-library = prevAgda.standard-library.overrideAttrs {
-                version = "2.2";
-                src = inputs.stdlib;
-              };
-
               standard-library-classes = final.agdaPackages.mkDerivation {
                 pname = "standard-library-classes";
-                version = "2.1.1";
+                version = "2.2";
                 src = inputs.stdlib-classes;
 
                 everythingFile = "./standard-library-classes.agda";
@@ -118,12 +87,10 @@
 
               standard-library-meta = final.agdaPackages.mkDerivation {
                 pname = "standard-library-meta";
-                version = "2.1.1";
+                version = "2.2";
                 src = inputs.stdlib-meta;
 
-                # next release
-                # everythingFile = "standard-library-meta.agda";
-                everythingFile = "./Main.agda";
+                everythingFile = "standard-library-meta.agda";
                 libraryFile = "agda-stdlib-meta.agda-lib";
 
                 buildInputs = with final.agdaPackages; [
@@ -136,16 +103,11 @@
                   license = licenses.mit;
                 };
               };
-
             }
           );
         };
 
-        # pkgs.lib.composeExtensions, but how to get it without infinte recursion?
-        default = final: prev:
-          let agda' = agda final prev;
-              prev' = prev // agda';
-          in agda' // packages final prev';
+        default = packages;
       };
     };
 }
