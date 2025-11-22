@@ -11,6 +11,10 @@ module 𝕃 where
 
 open 𝕃 using (_⊔_) public
 
+module 𝟘 where
+  import Data.Empty as 𝟘0ℓ
+  open import Data.Empty.Polymorphic renaming (⊥ to t) public
+
 module 𝟙 where
   import Data.Unit as 𝟙0ℓ
   open import Data.Unit.Polymorphic renaming (⊤ to t; tt to tt-lift) public
@@ -80,7 +84,7 @@ open Func using (_⟨$⟩_; _⟶ₛ_; _⇨_) public
 module Function where
   open import Function renaming (_∘_ to _⊙_) public
 
-open Function using (const; flip; _on_; _$_) public
+open Function using (case_of_; case_returning_of_; const; flip; _on_; _$_) public
 
 record Quiver o ℓ : Set (𝕃.suc (o ⊔ ℓ)) where
   no-eta-equality
