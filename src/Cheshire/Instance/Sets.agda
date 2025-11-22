@@ -13,6 +13,7 @@ import Cheshire.Object.Signatures as Object
 
 𝒬 : Quiver (𝕃.suc o) o
 𝒬 = mk⇒ λ c d → c → d
+open Object (𝒬 .Ob)
 
 instance
   eq : Equivalence 𝒬 o
@@ -25,16 +26,17 @@ instance
       }
     }
 
-open Object (𝒬 .Ob)
+  terminal : Terminal
+  terminal = record { ⊤ = 𝟙.t }
 
-terminal : Terminal
-terminal = record { ⊤ = 𝟙.t }
+  initial : Initial
+  initial = record { ⊥ = 𝟘.t }
 
-products : BinaryProducts
-products = record { _×_ = ×._×_ }
+  products : BinaryProducts
+  products = record { _×_ = ×._×_ }
 
-coproducts : BinaryCoproducts
-coproducts = record { _⊎_ = ⊎._⊎_ }
+  coproducts : BinaryCoproducts
+  coproducts = record { _⊎_ = ⊎._⊎_ }
 
 Sets : Sig.Cartesian 𝒬
 Sets = record

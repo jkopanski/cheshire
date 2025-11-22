@@ -16,6 +16,12 @@ record Terminal : Set o where
 
 open Terminal ⦃ … ⦄ public
 
+record Initial : Set o where
+  field
+    ⊥ : Ob
+
+open Initial ⦃ … ⦄ public
+
 record Product (A B : Ob) : Set o where
   field
     A×B : Ob
