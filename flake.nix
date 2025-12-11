@@ -2,14 +2,14 @@
   description = "Yet another category theory library";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/release-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-25.11";
     utils.url = "github:numtide/flake-utils";
     stdlib-classes = {
-      url = "github:agda/agda-stdlib-classes/v2.2";
+      url = "github:agda/agda-stdlib-classes/v2.3";
       flake = false;
     };
     stdlib-meta = {
-      url = "github:agda/agda-stdlib-meta/v2.2";
+      url = "github:agda/agda-stdlib-meta/v2.3";
       flake = false;
     };
   };
@@ -32,7 +32,7 @@
           src = ./.;
           doCheck = true;
           checkPhase = ''
-            ${pkgs.haskellPackages.fix-whitespace}/bin/fix-whitespace --check
+            ${pkgs.haskellPackages.fix-whitespace.bin}/bin/fix-whitespace --check
           '';
           installPhase = ''mkdir "$out"'';
         };
