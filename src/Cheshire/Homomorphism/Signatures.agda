@@ -4,8 +4,6 @@ open import Cheshire.Core
 
 module Cheshire.Homomorphism.Signatures where
 
-open Function using (_⊙_)
-
 private
   variable
     o ℓ o′ ℓ′ o″ ℓ″ : 𝕃.t

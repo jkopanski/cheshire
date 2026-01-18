@@ -1,5 +1,5 @@
 name: cheshire
-depend: standard-library
+depend: standard-library overture
 include: src
 
 flags:

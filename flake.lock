@@ -2,11 +2,11 @@
   "nodes": {
     "nixpkgs": {
       "locked": {
-        "lastModified": 1765468806,
-        "narHash": "sha256-bmho1gMxFM50KId5wCya6b+XAxxtmJQzKfCnne2UQB8=",
+        "lastModified": 1768555036,
+        "narHash": "sha256-Wqc7jJw2Jt92icx/HR7njCk6bzEXyUgOESp8+3MDQbs=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "f482661b6e79e475081ce7871728c15df4dad5ca",
+        "rev": "1d2851ebcd64734ef057e8c80e05dd5600323792",
         "type": "github"
       },
       "original": {
@@ -16,12 +16,38 @@
         "type": "github"
       }
     },
-    "root": {
+    "overture": {
       "inputs": {
         "nixpkgs": "nixpkgs",
         "stdlib-classes": "stdlib-classes",
         "stdlib-meta": "stdlib-meta",
         "utils": "utils"
+      },
+      "locked": {
+        "lastModified": 1768679428,
+        "narHash": "sha256-WdIVRZIzdA4MPt7Udu6/bJuVhDqcgzFpytxgF+Cy4KU=",
+        "owner": "~madnat",
+        "repo": "overture",
+        "rev": "051278f37e30fe24e52c0af1c35a992602c440d2",
+        "type": "sourcehut"
+      },
+      "original": {
+        "owner": "~madnat",
+        "repo": "overture",
+        "type": "sourcehut"
+      }
+    },
+    "root": {
+      "inputs": {
+        "nixpkgs": [
+          "overture",
+          "nixpkgs"
+        ],
+        "overture": "overture",
+        "utils": [
+          "overture",
+          "utils"
+        ]
       }
     },
     "stdlib-classes": {
