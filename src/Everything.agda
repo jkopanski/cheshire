@@ -22,6 +22,8 @@ import Cheshire.Natural.Structures
 import Cheshire.Natural.Bundles
 import Cheshire.Natural
 
+import Cheshire.Construction.Product
+
 import Cheshire.Instance.One
 import Cheshire.Instance.Setoids
 import Cheshire.Instance.Sets
