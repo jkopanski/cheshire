@@ -10,12 +10,12 @@ import Data.Product as ×
 open × using (Σ-syntax)
 
 import Cheshire.Morphism.Reasoning as MorReasoning
-import Cheshire.Signatures 𝒬 as Signatures
+import Cheshire.Signatures as Signatures
 open import Cheshire.Structures
 
 record Category (e : 𝕃.t) : Set (𝕃.suc o ⊔ 𝕃.suc ℓ ⊔ 𝕃.suc e) where
   field
-    signature : Signatures.Category
+    signature : Signatures.Category 𝒬
     structure : IsCategory e signature
 
   open Signatures.Category signature public
@@ -28,7 +28,7 @@ record Category (e : 𝕃.t) : Set (𝕃.suc o ⊔ 𝕃.suc ℓ ⊔ 𝕃.suc e) 
 
 record Cartesian (e : 𝕃.t) : Set (𝕃.suc o ⊔ 𝕃.suc ℓ ⊔ 𝕃.suc e) where
   field
-    signature : Signatures.Cartesian
+    signature : Signatures.Cartesian 𝒬
     structure : IsCartesian e signature
 
   open Signatures.Cartesian signature public hiding (category)

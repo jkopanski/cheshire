@@ -2,94 +2,101 @@
 
 open import Cheshire.Core
 
-module Cheshire.Signatures
-  {o ℓ} (𝒬 : Quiver o ℓ)
-  where
+module Cheshire.Signatures where
 
-open Quiver 𝒬
+import Cheshire.Object.Signatures as Object
 
-open import Cheshire.Object.Signatures (𝒬 .Ob)
-
-private
-  variable
-    A B C D W X Y Z : 𝒬 .Ob
-    f g h : X ⇒ Y
-
-record Category : Set (𝕃.suc (o ⊔ ℓ)) where
+record Category {o ℓ} (𝒬 : Quiver o ℓ) : Set (𝕃.suc (o ⊔ ℓ)) where
   no-eta-equality
   infixr 9 _∘_
+  open Quiver 𝒬
   field
     id : ∀ {A} → A ⇒ A
     _∘_ : ∀ {A B C} → B ⇒ C → A ⇒ B → A ⇒ C
 
-record Monoidal : Set (𝕃.suc (o ⊔ ℓ)) where
-  no-eta-equality
-  infixr 9 _∘_
-  infixr 10 _⊗₀_ _⊗₁_
-  field
-    id : ∀ {A} → A ⇒ A
-    _∘_ : ∀ {A B C} → B ⇒ C → A ⇒ B → A ⇒ C
+infix 10 _[_∘_]
+_[_∘_] :
+  ∀ {o ℓ} → {𝒬 : Quiver o ℓ} → Category 𝒬 →
+  ∀ {A B C} → 𝒬 [ B , C ] → 𝒬 [ A , B ] → 𝒬 [ A , C ]
+_[_∘_] = Category._∘_
 
-    unit : 𝒬 .Ob
-    -- implement with this?
-    -- ⊗  : Bifunctor C C C
+module _ {o ℓ} (𝒬 : Quiver o ℓ) where
+  open Quiver 𝒬
+  open Object (𝒬 .Ob)
 
-    _⊗₀_ : 𝒬 .Ob → 𝒬 .Ob → 𝒬 .Ob
-    _⊗₁_ : X ⇒ Y → Z ⇒ W → X ⊗₀ Z ⇒ Y ⊗₀ W
+  private
+    variable
+      A B C D W X Y Z : 𝒬 .Ob
+      f g h : X ⇒ Y
 
-  category : Category
-  category = record { id = id; _∘_ = _∘_ }
+  record Monoidal : Set (𝕃.suc (o ⊔ ℓ)) where
+    no-eta-equality
+    infixr 9 _∘_
+    infixr 10 _⊗₀_ _⊗₁_
+    field
+      id : ∀ {A} → A ⇒ A
+      _∘_ : ∀ {A B C} → B ⇒ C → A ⇒ B → A ⇒ C
 
-record Cartesian : Set (𝕃.suc (o ⊔ ℓ)) where
-  no-eta-equality
-  infixr 9 _∘_
-  field
-    id : ∀ {A} → A ⇒ A
-    _∘_ : ∀ {A B C} → B ⇒ C → A ⇒ B → A ⇒ C
+      unit : 𝒬 .Ob
+      -- implement with this?
+      -- ⊗  : Bifunctor C C C
 
-    ⦃ terminal ⦄ : Terminal
-    ⦃ products ⦄ : BinaryProducts
+      _⊗₀_ : 𝒬 .Ob → 𝒬 .Ob → 𝒬 .Ob
+      _⊗₁_ : X ⇒ Y → Z ⇒ W → X ⊗₀ Z ⇒ Y ⊗₀ W
 
-  field
-    ! : ∀ {A} → A ⇒ ⊤
+    category : Category 𝒬
+    category = record { id = id; _∘_ = _∘_ }
 
-  infix 11 ⟨_,_⟩
-  field
-    π₁    : ∀ {A B} → A × B ⇒ A
-    π₂    : ∀ {A B} → A × B ⇒ B
-    ⟨_,_⟩ : ∀ {A B C} → C ⇒ A → C ⇒ B → C ⇒ A × B
+  record Cartesian : Set (𝕃.suc (o ⊔ ℓ)) where
+    no-eta-equality
+    infixr 9 _∘_
+    field
+      id : ∀ {A} → A ⇒ A
+      _∘_ : ∀ {A B C} → B ⇒ C → A ⇒ B → A ⇒ C
 
-  swap : A × B ⇒ B × A
-  swap = ⟨ π₂ , π₁ ⟩
+      ⦃ terminal ⦄ : Terminal
+      ⦃ products ⦄ : BinaryProducts
 
-  infixr 8 _⁂_
-  _⁂_ : A ⇒ B → C ⇒ D → A × C ⇒ B × D
-  f ⁂ g = ⟨ f ∘ π₁ , g ∘ π₂ ⟩
+    field
+      ! : ∀ {A} → A ⇒ ⊤
 
-  first : A ⇒ B → A × C ⇒ B × C
-  -- first f = f ⁂ id
-  first f = ⟨ f ∘ π₁ , π₂ ⟩
+    infix 11 ⟨_,_⟩
+    field
+      π₁    : ∀ {A B} → A × B ⇒ A
+      π₂    : ∀ {A B} → A × B ⇒ B
+      ⟨_,_⟩ : ∀ {A B C} → C ⇒ A → C ⇒ B → C ⇒ A × B
 
-  second : C ⇒ D → A × C ⇒ A × D
-  -- second g = id ⁂ g
-  second g = ⟨ π₁ , g ∘ π₂ ⟩
+    swap : A × B ⇒ B × A
+    swap = ⟨ π₂ , π₁ ⟩
 
-  assocˡ : (A × B) × C ⇒ A × B × C
-  assocˡ = ⟨ π₁ ∘ π₁ , first π₂ ⟩
+    infixr 8 _⁂_
+    _⁂_ : A ⇒ B → C ⇒ D → A × C ⇒ B × D
+    f ⁂ g = ⟨ f ∘ π₁ , g ∘ π₂ ⟩
 
-  assocʳ : A × B × C ⇒ (A × B) × C
-  assocʳ = ⟨ second π₁ , π₂ ∘ π₂ ⟩
+    first : A ⇒ B → A × C ⇒ B × C
+    -- first f = f ⁂ id
+    first f = ⟨ f ∘ π₁ , π₂ ⟩
 
-  Δ : ∀ {C} → C ⇒ C × C
-  Δ {C} = ⟨ id , id ⟩
+    second : C ⇒ D → A × C ⇒ A × D
+    -- second g = id ⁂ g
+    second g = ⟨ π₁ , g ∘ π₂ ⟩
 
-  category : Category
-  category = record { id = id; _∘_ = _∘_ }
+    assocˡ : (A × B) × C ⇒ A × B × C
+    assocˡ = ⟨ π₁ ∘ π₁ , first π₂ ⟩
 
-  monoidal : Monoidal
-  monoidal = record
-    { Category category
-    ; unit = ⊤
-    ; _⊗₀_ = _×_
-    ; _⊗₁_ = _⁂_
-    }
+    assocʳ : A × B × C ⇒ (A × B) × C
+    assocʳ = ⟨ second π₁ , π₂ ∘ π₂ ⟩
+
+    Δ : ∀ {C} → C ⇒ C × C
+    Δ {C} = ⟨ id , id ⟩
+
+    category : Category 𝒬
+    category = record { id = id; _∘_ = _∘_ }
+
+    monoidal : Monoidal
+    monoidal = record
+      { Category category
+      ; unit = ⊤
+      ; _⊗₀_ = _×_
+      ; _⊗₁_ = _⁂_
+      }
