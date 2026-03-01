@@ -19,6 +19,8 @@ import Cheshire.Homomorphism.Bundles
 import Cheshire.Homomorphism
 import Cheshire.Natural.Signatures
 import Cheshire.Natural.Structures
+import Cheshire.Natural.Bundles
+import Cheshire.Natural
 
 import Cheshire.Instance.One
 import Cheshire.Instance.Setoids
