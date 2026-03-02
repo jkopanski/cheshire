@@ -17,7 +17,7 @@ import Cheshire.Structures as Structures
 import Cheshire.Bundles as Bundles
 import Cheshire.Homomorphism as Homo
 
-open × using (_×_; _,_; <_,_>)
+open × using (_×_; _,_; <_,_>; proj₁; proj₂)
 
 private
   variable
@@ -59,6 +59,41 @@ module Signature where
     ; F₁ = ×.map F.₁ G.₁
     } where module F = Homo.Morphism F
             module G = Homo.Morphism G
+
+  module _
+    {o″ ℓ″}
+    (C₁ : Quiver o ℓ) (C₂ : Quiver o′ ℓ′) (C₃ : Quiver o″ ℓ″)
+    where
+
+    assocˡ : Homo.Morphism (𝒬 (𝒬 C₁ C₂) C₃) (𝒬 C₁ (𝒬 C₂ C₃))
+    assocˡ = record
+      { F₀ = < proj₁ ⊙ proj₁ , < proj₂ ⊙ proj₁ , proj₂ > >
+      ; F₁ = < proj₁ ⊙ proj₁ , < proj₂ ⊙ proj₁ , proj₂ > >
+      }
+
+    assocʳ : Homo.Morphism (𝒬 C₁ (𝒬 C₂ C₃)) (𝒬 (𝒬 C₁ C₂) C₃)
+    assocʳ = record
+      { F₀ = < < proj₁ , proj₁ ⊙ proj₂ > , proj₂ ⊙ proj₂ >
+      ; F₁ = < < proj₁ , proj₁ ⊙ proj₂ > , proj₂ ⊙ proj₂ >
+      }
+
+  πˡ : (𝒮 : Quiver o ℓ) (𝒯 : Quiver o′ ℓ′) → Homo.Morphism (𝒬 𝒮 𝒯) 𝒮
+  πˡ _ _ = record
+    { F₀ = proj₁
+    ; F₁ = proj₁
+    }
+
+  πʳ : (𝒮 : Quiver o ℓ) (𝒯 : Quiver o′ ℓ′) →  Homo.Morphism (𝒬 𝒮 𝒯) 𝒯
+  πʳ _ _ = record
+    { F₀ = proj₂
+    ; F₁ = proj₂
+    }
+
+  Swap : (𝒮 : Quiver o ℓ) (𝒯 : Quiver o′ ℓ′) →  Homo.Morphism (𝒬 𝒮 𝒯) (𝒬 𝒯 𝒮)
+  Swap _ _ = record
+    { F₀ = ×.swap
+    ; F₁ = ×.swap
+    }
 
 module Structure where
 
@@ -141,6 +176,113 @@ module Structure where
               module G = Homo.IsFunctor isG
               isHomomorphism = ⁂-isHomomorphism F.isHomomorphism G.isHomomorphism
 
+  module _
+    {o″ ℓ″ e e′ e″}
+    {C₁ : Quiver o ℓ} {C₂ : Quiver o′ ℓ′} {C₃ : Quiver o″ ℓ″}
+    (eq₁ : Equivalence C₁ e) (eq₂ : Equivalence C₂ e′) (eq₃ : Equivalence C₃ e″)
+    where
+
+    module eq₁ = Equivalence eq₁
+    module eq₂ = Equivalence eq₂
+    module eq₃ = Equivalence eq₃
+
+    assocˡ-isHomomorphism :
+      Homo.IsHomomorphism
+        (Signature.assocˡ C₁ C₂ C₃)
+        (equivalence (equivalence eq₁ eq₂) eq₃)
+        (equivalence eq₁ (equivalence eq₂ eq₃))
+    assocˡ-isHomomorphism = record
+      { F-resp-≈ = < proj₁ ⊙ proj₁ , < proj₂ ⊙ proj₁ , proj₂ > > }
+
+    assocˡ-isFunctor :
+      (C₁′ : Signatures.Category C₁) (C₂′ : Signatures.Category C₂) (C₃′ : Signatures.Category C₃) →
+      Homo.IsFunctor
+        (Signature.assocˡ C₁ C₂ C₃)
+        (equivalence (equivalence eq₁ eq₂) eq₃)
+        (equivalence eq₁ (equivalence eq₂ eq₃))
+        (Signature.Category (Signature.Category C₁′ C₂′) C₃′)
+        (Signature.Category C₁′ (Signature.Category C₂′ C₃′))
+    assocˡ-isFunctor _ _ _ = record
+      { Homo.IsHomomorphism assocˡ-isHomomorphism
+      ; F-resp-id = eq₁.refl , (eq₂.refl , eq₃.refl)
+      ; F-resp-∘ = eq₁.refl , (eq₂.refl , eq₃.refl)
+      }
+
+    assocʳ-isHomomorphism :
+      Homo.IsHomomorphism
+        (Signature.assocʳ C₁ C₂ C₃)
+        (equivalence eq₁ (equivalence eq₂ eq₃))
+        (equivalence (equivalence eq₁ eq₂) eq₃)
+    assocʳ-isHomomorphism = record
+      { F-resp-≈ = < < proj₁ , proj₁ ⊙ proj₂ > , proj₂ ⊙ proj₂ > }
+
+    assocʳ-isFunctor :
+      (C₁′ : Signatures.Category C₁) (C₂′ : Signatures.Category C₂) (C₃′ : Signatures.Category C₃) →
+      Homo.IsFunctor
+        (Signature.assocʳ C₁ C₂ C₃)
+        (equivalence eq₁ (equivalence eq₂ eq₃))
+        (equivalence (equivalence eq₁ eq₂) eq₃)
+        (Signature.Category C₁′ (Signature.Category C₂′ C₃′))
+        (Signature.Category (Signature.Category C₁′ C₂′) C₃′)
+    assocʳ-isFunctor _ _ _ = record
+      { Homo.IsHomomorphism assocʳ-isHomomorphism
+      ; F-resp-id = (eq₁.refl , eq₂.refl) , eq₃.refl
+      ; F-resp-∘ = (eq₁.refl , eq₂.refl) , eq₃.refl
+      }
+
+  module _
+    {e e′ : 𝕃.t}
+    (eqₛ : Equivalence 𝒮 e) (eqₜ : Equivalence 𝒯 e′)
+    where
+
+    module eqₛ = Equivalence eqₛ
+    module eqₜ = Equivalence eqₜ
+
+    πˡ-isHomomorphism :
+      Homo.IsHomomorphism (Signature.πˡ 𝒮 𝒯) (equivalence eqₛ eqₜ) eqₛ
+    πˡ-isHomomorphism = record
+      { F-resp-≈ = proj₁ }
+
+    πˡ-isFunctor :
+      (S : Signatures.Category 𝒮) (T : Signatures.Category 𝒯) →
+      Homo.IsFunctor (Signature.πˡ 𝒮 𝒯) (equivalence eqₛ eqₜ) eqₛ (Signature.Category S T) S
+    πˡ-isFunctor _ _ = record
+      { Homo.IsHomomorphism πˡ-isHomomorphism
+      ; F-resp-id = eqₛ.refl
+      ; F-resp-∘ = eqₛ.refl
+      }
+
+    πʳ-isHomomorphism :
+      Homo.IsHomomorphism (Signature.πʳ 𝒮 𝒯) (equivalence eqₛ eqₜ) eqₜ
+    πʳ-isHomomorphism = record
+      { F-resp-≈ = proj₂ }
+
+    πʳ-isFunctor :
+      (S : Signatures.Category 𝒮) (T : Signatures.Category 𝒯) →
+      Homo.IsFunctor (Signature.πʳ 𝒮 𝒯) (equivalence eqₛ eqₜ) eqₜ (Signature.Category S T) T
+    πʳ-isFunctor _ _ = record
+      { Homo.IsHomomorphism πʳ-isHomomorphism
+      ; F-resp-id = eqₜ.refl
+      ; F-resp-∘ = eqₜ.refl
+      }
+
+    Swap-isHomomorphism :
+      Homo.IsHomomorphism (Signature.Swap 𝒮 𝒯) (equivalence eqₛ eqₜ) (equivalence eqₜ eqₛ)
+    Swap-isHomomorphism = record
+      { F-resp-≈ = ×.swap }
+
+    Swap-isFunctor :
+      (S : Signatures.Category 𝒮) (T : Signatures.Category 𝒯) →
+      Homo.IsFunctor
+        (Signature.Swap 𝒮 𝒯)
+        (equivalence eqₛ eqₜ) (equivalence eqₜ eqₛ)
+        (Signature.Category S T) (Signature.Category T S)
+    Swap-isFunctor _ _ = record
+      { Homo.IsHomomorphism Swap-isHomomorphism
+      ; F-resp-id = eqₜ.refl , eqₛ.refl
+      ; F-resp-∘ = eqₜ.refl , eqₛ.refl
+      }
+
 module Bundle where
 
   open Homo using (Homomorphism; Functor)
@@ -205,3 +347,104 @@ module Bundle where
       ; structure = Structure.⁂-isFunctor F.structure G.structure
       } where module F = Functor F
               module G = Functor G
+
+  module _
+    {o″ ℓ″ e e′ e″}
+    {C₁ : Quiver o ℓ} {C₂ : Quiver o′ ℓ′} {C₃ : Quiver o″ ℓ″}
+    (eq₁ : Equivalence C₁ e) (eq₂ : Equivalence C₂ e′) (eq₃ : Equivalence C₃ e″)
+    where
+
+    assocˡ-Homomorphism :
+      Homomorphism
+        (Structure.equivalence (Structure.equivalence eq₁ eq₂) eq₃)
+        (Structure.equivalence eq₁ (Structure.equivalence eq₂ eq₃))
+    assocˡ-Homomorphism = record
+      { signature = Signature.assocˡ C₁ C₂ C₃
+      ; structure = Structure.assocˡ-isHomomorphism eq₁ eq₂ eq₃
+      }
+
+    assocˡ-Functor :
+      (C₁′ : Signatures.Category C₁) (C₂′ : Signatures.Category C₂) (C₃′ : Signatures.Category C₃) →
+      Functor
+        (Structure.equivalence (Structure.equivalence eq₁ eq₂) eq₃)
+        (Structure.equivalence eq₁ (Structure.equivalence eq₂ eq₃))
+        (Signature.Category (Signature.Category C₁′ C₂′) C₃′)
+        (Signature.Category C₁′ (Signature.Category C₂′ C₃′))
+    assocˡ-Functor C₁′ C₂′ C₃′ = record
+      { signature = Signature.assocˡ C₁ C₂ C₃
+      ; structure = Structure.assocˡ-isFunctor eq₁ eq₂ eq₃ C₁′ C₂′ C₃′
+      }
+
+    assocʳ-Homomorphism :
+      Homomorphism
+        (Structure.equivalence eq₁ (Structure.equivalence eq₂ eq₃))
+        (Structure.equivalence (Structure.equivalence eq₁ eq₂) eq₃)
+    assocʳ-Homomorphism = record
+      { signature = Signature.assocʳ C₁ C₂ C₃
+      ; structure = Structure.assocʳ-isHomomorphism eq₁ eq₂ eq₃
+      }
+
+    assocʳ-Functor :
+      (C₁′ : Signatures.Category C₁) (C₂′ : Signatures.Category C₂) (C₃′ : Signatures.Category C₃) →
+      Functor
+        (Structure.equivalence eq₁ (Structure.equivalence eq₂ eq₃))
+        (Structure.equivalence (Structure.equivalence eq₁ eq₂) eq₃)
+        (Signature.Category C₁′ (Signature.Category C₂′ C₃′))
+        (Signature.Category (Signature.Category C₁′ C₂′) C₃′)
+    assocʳ-Functor C₁′ C₂′ C₃′ = record
+      { signature = Signature.assocʳ C₁ C₂ C₃
+      ; structure = Structure.assocʳ-isFunctor eq₁ eq₂ eq₃ C₁′ C₂′ C₃′
+      }
+
+  module _
+    {e e′ : 𝕃.t}
+    (eqₛ : Equivalence 𝒮 e) (eqₜ : Equivalence 𝒯 e′)
+    where
+
+    module eqₛ = Equivalence eqₛ
+    module eqₜ = Equivalence eqₜ
+
+    πˡ-Homomorphism :
+      Homomorphism (Structure.equivalence eqₛ eqₜ) eqₛ
+    πˡ-Homomorphism = record
+      { signature = Signature.πˡ 𝒮 𝒯
+      ; structure = Structure.πˡ-isHomomorphism eqₛ eqₜ
+      }
+
+    πˡ-Functor :
+      (S : Signatures.Category 𝒮) (T : Signatures.Category 𝒯) →
+      Functor (Structure.equivalence eqₛ eqₜ) eqₛ (Signature.Category S T) S
+    πˡ-Functor S T = record
+      { signature = Signature.πˡ 𝒮 𝒯
+      ; structure = Structure.πˡ-isFunctor eqₛ eqₜ S T
+      }
+
+    πʳ-Homomorphism :
+      Homomorphism (Structure.equivalence eqₛ eqₜ) eqₜ
+    πʳ-Homomorphism = record
+      { signature = Signature.πʳ 𝒮 𝒯
+      ; structure = Structure.πʳ-isHomomorphism eqₛ eqₜ
+      }
+
+    πʳ-Functor :
+      (S : Signatures.Category 𝒮) (T : Signatures.Category 𝒯) →
+      Functor (Structure.equivalence eqₛ eqₜ) eqₜ (Signature.Category S T) T
+    πʳ-Functor S T = record
+      { signature = Signature.πʳ 𝒮 𝒯
+      ; structure = Structure.πʳ-isFunctor eqₛ eqₜ S T
+      }
+
+    Swap-Homomorphism :
+      Homomorphism (Structure.equivalence eqₛ eqₜ) (Structure.equivalence eqₜ eqₛ)
+    Swap-Homomorphism = record
+      { signature = Signature.Swap 𝒮 𝒯
+      ; structure = Structure.Swap-isHomomorphism eqₛ eqₜ
+      }
+
+    Swap-Functor :
+      (S : Signatures.Category 𝒮) (T : Signatures.Category 𝒯) →
+      Functor (Structure.equivalence eqₛ eqₜ) (Structure.equivalence eqₜ eqₛ) (Signature.Category S T) (Signature.Category T S)
+    Swap-Functor S T = record
+      { signature = Signature.Swap 𝒮 𝒯
+      ; structure = Structure.Swap-isFunctor eqₛ eqₜ S T
+      }
