@@ -49,7 +49,7 @@ instance
 Setoids : Sig.Cartesian 𝒬
 Setoids = record
   { id = λ {A} → Id.function A
-  ; _∘_ = flip Comp.function
+  ; _∘_ = Function.flip Comp.function
   ; terminal = terminal
   ; ! = λ {A} → Const.function A ⊤ 𝟙.tt
   ; products = products

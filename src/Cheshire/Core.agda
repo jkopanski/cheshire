@@ -41,7 +41,7 @@ module Func where
 open Func using (_⟨$⟩_; _⟶ₛ_; _⇨_) public
 
 open Function
-  using (case_of_; case_returning_of_; const; flip; _on_; _$_)
+  using (case_of_; case_returning_of_; const; _on_; _$_)
   renaming (_∘_ to _⊙_) public
 
 record Quiver o ℓ : Set (𝕃.suc (o 𝕃.⊔ ℓ)) where
