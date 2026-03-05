@@ -2,31 +2,8 @@
 
 open import Cheshire.Core
 
-module Cheshire.Bundles
-  {o ℓ} (𝒬 : Quiver o ℓ)
-  where
+module Cheshire.Bundles where
 
-import Data.Product as ×
-open × using (Σ-syntax)
-
-import Cheshire.Morphism.Reasoning as MorReasoning
-import Cheshire.Signatures as Signatures
-open import Cheshire.Structures
 open import Cheshire.Category.Bundle public
-
-record Cartesian (e : 𝕃.t) : Set (𝕃.suc o ⊔ 𝕃.suc ℓ ⊔ 𝕃.suc e) where
-  field
-    signature : Signatures.Cartesian 𝒬
-    structure : IsCartesian e signature
-
-  open Signatures.Cartesian signature public hiding (category)
-  open IsCartesian structure public
-
-  category : Category e 𝒬
-  category = record
-    { signature = Signatures.Cartesian.category signature
-    ; structure = isCategory
-    }
-
-  open Category category public
+open import Cheshire.Cartesian.Bundle public
 
