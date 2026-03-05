@@ -48,3 +48,16 @@ module _
   _∣ˡ_ : Morphism B C → Morphism A C → Set (o ⊔ ℓ ⊔ o′ ⊔ ℓ′ ⊔ e′ ⊔ o″ ⊔ ℓ″)
   G ∣ˡ F = Σ[ J ∈ Morphism A B ] G ∘M J ≃ F
 
+id-isHomomorphism : {𝒬 : Quiver o ℓ} → (eq : Equivalence 𝒬 e′) → IsHomomorphism idM eq eq
+id-isHomomorphism eq = record { F-resp-≈ = Function.id }
+
+id-isFunctor :
+  {𝒬 : Quiver o ℓ} →
+  (C : Signatures.Category 𝒬) (eq : Equivalence 𝒬 e′) →
+  IsFunctor idM eq eq C C
+id-isFunctor _ eq = record
+  { IsHomomorphism (id-isHomomorphism eq)
+  ; F-resp-id = eq.refl
+  ; F-resp-∘ = eq.refl
+  } where module eq = Equivalence eq
+
