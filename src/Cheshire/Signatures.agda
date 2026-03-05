@@ -7,6 +7,7 @@ module Cheshire.Signatures where
 import Cheshire.Object.Signatures as Object
 
 open import Cheshire.Category.Signature public
+open import Cheshire.Monoidal.Signature public
 
 module _ {o ℓ} (𝒬 : Quiver o ℓ) where
   open Quiver 𝒬
@@ -17,23 +18,8 @@ module _ {o ℓ} (𝒬 : Quiver o ℓ) where
       A B C D W X Y Z : 𝒬 .Ob
       f g h : X ⇒ Y
 
-  record Monoidal : Set (𝕃.suc (o ⊔ ℓ)) where
-    no-eta-equality
-    infixr 9 _∘_
-    infixr 10 _⊗₀_ _⊗₁_
-    field
-      id : ∀ {A} → A ⇒ A
-      _∘_ : ∀ {A B C} → B ⇒ C → A ⇒ B → A ⇒ C
 
-      unit : 𝒬 .Ob
-      -- implement with this?
-      -- ⊗  : Bifunctor C C C
 
-      _⊗₀_ : 𝒬 .Ob → 𝒬 .Ob → 𝒬 .Ob
-      _⊗₁_ : X ⇒ Y → Z ⇒ W → X ⊗₀ Z ⇒ Y ⊗₀ W
-
-    category : Category 𝒬
-    category = record { id = id; _∘_ = _∘_ }
 
   record Cartesian : Set (𝕃.suc (o ⊔ ℓ)) where
     no-eta-equality
@@ -81,7 +67,7 @@ module _ {o ℓ} (𝒬 : Quiver o ℓ) where
     category : Category 𝒬
     category = record { id = id; _∘_ = _∘_ }
 
-    monoidal : Monoidal
+    monoidal : Monoidal 𝒬
     monoidal = record
       { Category category
       ; unit = ⊤

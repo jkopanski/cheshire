@@ -9,6 +9,9 @@ import Cheshire.Category.Structure
 import Cheshire.Category.Bundle
 import Cheshire.Category
 
+import Cheshire.Monoidal.Signature
+import Cheshire.Monoidal
+
 import Cheshire.Signatures
 import Cheshire.Structures
 import Cheshire.Bundles
