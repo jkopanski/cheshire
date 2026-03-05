@@ -7,6 +7,8 @@ module Cheshire.Homomorphism where
 import Data.Product as ×
 open import Relation.Binary.PropositionalEquality.Subst.Properties
   using (module Shorthands)
+import Cheshire.Signatures as Signatures
+
 open import Cheshire.Homomorphism.Signatures renaming (id to idM; _∘_ to _∘M_) public
 open import Cheshire.Homomorphism.Structures public
 open import Cheshire.Homomorphism.Bundles public

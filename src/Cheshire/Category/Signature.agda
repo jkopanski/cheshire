@@ -2,9 +2,7 @@
 
 open import Cheshire.Core
 
-module Cheshire.Signatures.Core where
-
-import Cheshire.Object.Signatures as Object
+module Cheshire.Category.Signature where
 
 record Category {o ℓ} (𝒬 : Quiver o ℓ) : Set (𝕃.suc (o ⊔ ℓ)) where
   no-eta-equality

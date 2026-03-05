@@ -1,8 +1,8 @@
 {-# OPTIONS --safe #-}
 
 open import Cheshire.Core
-open import Cheshire.Signatures
-open import Cheshire.Structures.Core
+open import Cheshire.Category.Signature
+open import Cheshire.Category.Structure
 
 module Cheshire.Morphism.Reasoning
   {o ℓ} {𝒬 : Quiver o ℓ}

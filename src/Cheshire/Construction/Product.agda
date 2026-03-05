@@ -12,7 +12,8 @@ open import Cheshire.Core
 module Cheshire.Construction.Product where
 
 import Data.Product as ×
-import Cheshire.Signatures.Core as Signatures
+import Cheshire.Category.Signature as Signatures
+import Cheshire.Category.Structure as IsCategory renaming (IsCategory to t)
 import Cheshire.Structures as Structures
 import Cheshire.Bundles as Bundles
 import Cheshire.Homomorphism as Homo
@@ -113,16 +114,16 @@ module Structure where
   IsCategory :
     {e e′ : 𝕃.t} →
     {S : Signatures.Category 𝒮} {T : Signatures.Category 𝒯} →
-    (isS : Structures.IsCategory e S) (isT : Structures.IsCategory e′ T) →
-    Structures.IsCategory (e ⊔ e′) (Signature.Category S T)
+    (isS : IsCategory.t e S) (isT : IsCategory.t e′ T) →
+    IsCategory.t (e ⊔ e′) (Signature.Category S T)
   IsCategory S T = record
     { eq = equivalence S.eq T.eq
     ; assoc = S.assoc , T.assoc
     ; identityˡ = S.identityˡ , T.identityˡ
     ; identityʳ = S.identityʳ , T.identityʳ
     ; ∘-resp-≈ = ×.zip S.∘-resp-≈ T.∘-resp-≈
-    } where module S = Structures.IsCategory S
-            module T = Structures.IsCategory T
+    } where module S = IsCategory.t S
+            module T = IsCategory.t T
 
   module _
     {e e′ e″ : 𝕃.t}
@@ -290,8 +291,8 @@ module Bundle where
 
   Category :
     {e e′ : 𝕃.t} →
-    (S : Bundles.Category 𝒮 e) (T : Bundles.Category 𝒯 e′) →
-    Bundles.Category (𝒬 𝒮 𝒯) (e ⊔ e′)
+    (S : Bundles.Category e 𝒮) (T : Bundles.Category e′ 𝒯) →
+    Bundles.Category (e ⊔ e′) (𝒬 𝒮 𝒯)
   Category S T = record
     { signature = Signature.Category S.signature T.signature
     ; structure = Structure.IsCategory S.structure T.structure

@@ -5,14 +5,14 @@ open import Cheshire.Signatures
 
 module Cheshire.Structures where
 
-import Cheshire.Structures.Core as Core
+import Cheshire.Category.Structure as IsCategory renaming (IsCategory to t)
 import Cheshire.Morphism.Bundles as Morphisms
 import Cheshire.Morphism.Reasoning as Reasoning
 
 open import Cheshire.Morphism.Structures using (IsEpi; IsMono)
 open import Cheshire.Object.Signatures
 
-open Core public
+open IsCategory public hiding (t)
 
 record IsCartesian {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Cartesian 𝒬) : Set (o ⊔ ℓ ⊔ 𝕃.suc e) where
   open Quiver 𝒬 using (_⇒_)
@@ -39,11 +39,11 @@ record IsCartesian {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Cartesian 
     identityʳ : ∀ {A B} {f : A ⇒ B} → f ∘ id ≈ f
     ∘-resp-≈  : ∀ {A B C} {f h : B ⇒ C} {g i : A ⇒ B} → f ≈ h → g ≈ i → f ∘ g ≈ h ∘ i
 
-  isCategory : Core.IsCategory e category
+  isCategory : IsCategory.t e category
   isCategory = record
     { assoc = assoc; identityˡ = identityˡ; identityʳ = identityʳ; ∘-resp-≈ = ∘-resp-≈ }
 
-  open Core.IsCategory isCategory using (module HomReasoning)
+  open IsCategory.t isCategory using (module HomReasoning)
   open HomReasoning
   open Reasoning isCategory
 

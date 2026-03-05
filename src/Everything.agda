@@ -3,8 +3,13 @@
 module Everything where
 
 import Cheshire.Core
+
+import Cheshire.Category.Signature
+import Cheshire.Category.Structure
+import Cheshire.Category.Bundle
+import Cheshire.Category
+
 import Cheshire.Signatures
-import Cheshire.Structures.Core
 import Cheshire.Structures
 import Cheshire.Bundles
 import Cheshire.Object.Signatures

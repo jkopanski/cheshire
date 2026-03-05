@@ -6,7 +6,7 @@ module Cheshire.Signatures where
 
 import Cheshire.Object.Signatures as Object
 
-open import Cheshire.Signatures.Core public
+open import Cheshire.Category.Signature public
 
 module _ {o ℓ} (𝒬 : Quiver o ℓ) where
   open Quiver 𝒬

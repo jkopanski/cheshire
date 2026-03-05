@@ -12,7 +12,7 @@ import Cheshire.Homomorphism.Signatures as Homo
 import Cheshire.Natural.Signatures as Signatures
 import Cheshire.Natural.Structures as Structures
 
-module _ {e} (T : Category 𝒯 e) where
+module _ {e} (T : Category e 𝒯) where
 
   module T = Category T
 

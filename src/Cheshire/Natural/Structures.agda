@@ -7,6 +7,7 @@ module Cheshire.Natural.Structures where
 import Cheshire.Bundles as Bundles
 import Cheshire.Signatures as Signatures
 import Cheshire.Structures as Structures
+import Cheshire.Category.Structure as IsCategory renaming (IsCategory to t)
 import Cheshire.Morphism.Structures as Morphisms
 import Cheshire.Morphism.Bundles as MorphismBundles
 import Cheshire.Natural.Signatures as Natural
@@ -22,7 +23,7 @@ module _
   {𝒮 : Quiver o  ℓ } {𝒯 : Quiver o′ ℓ′} {ℱ 𝒢 : Morphism 𝒮 𝒯}
   -- Is category bundle better here?
   {T : Signatures.Category 𝒯}
-  {e} (isT : Structures.IsCategory e T)
+  {e} (isT : IsCategory.t e T)
   where
 
   private
@@ -42,7 +43,7 @@ module _
 module _
   {𝒮 : Quiver o  ℓ } {𝒯 : Quiver o′ ℓ′} {ℱ 𝒢 : Morphism 𝒮 𝒯}
   {T : Signatures.Category 𝒯}
-  {e} (isT : Structures.IsCategory e T)
+  {e} (isT : IsCategory.t e T)
   where
 
   private

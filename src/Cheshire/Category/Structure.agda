@@ -1,9 +1,10 @@
 {-# OPTIONS --safe #-}
 
-module Cheshire.Structures.Core where
-
 open import Cheshire.Core
-open import Cheshire.Signatures
+
+module Cheshire.Category.Structure where
+
+open import Cheshire.Category.Signature
 open import Cheshire.Object.Signatures
 
 record IsCategory {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Category 𝒬) : Set (o ⊔ ℓ ⊔ 𝕃.suc e) where
@@ -68,4 +69,3 @@ record IsCategory {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Category �
     connect B f g = g ∘ f
 
     syntax connect B f g = f ⇒⟨ B ⟩ g
-

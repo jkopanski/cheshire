@@ -12,19 +12,7 @@ open × using (Σ-syntax)
 import Cheshire.Morphism.Reasoning as MorReasoning
 import Cheshire.Signatures as Signatures
 open import Cheshire.Structures
-
-record Category (e : 𝕃.t) : Set (𝕃.suc o ⊔ 𝕃.suc ℓ ⊔ 𝕃.suc e) where
-  field
-    signature : Signatures.Category 𝒬
-    structure : IsCategory e signature
-
-  open Signatures.Category signature public
-  open IsCategory structure public
-
-  open HomReasoning public
-  open Commutation public
-
-  module Reasoning = MorReasoning structure
+open import Cheshire.Category.Bundle public
 
 record Cartesian (e : 𝕃.t) : Set (𝕃.suc o ⊔ 𝕃.suc ℓ ⊔ 𝕃.suc e) where
   field
@@ -34,7 +22,7 @@ record Cartesian (e : 𝕃.t) : Set (𝕃.suc o ⊔ 𝕃.suc ℓ ⊔ 𝕃.suc e)
   open Signatures.Cartesian signature public hiding (category)
   open IsCartesian structure public
 
-  category : Category e
+  category : Category e 𝒬
   category = record
     { signature = Signatures.Cartesian.category signature
     ; structure = isCategory
