@@ -35,6 +35,9 @@ import Cheshire.Natural.Structures
 import Cheshire.Natural.Bundles
 import Cheshire.Natural
 
+import Cheshire.Construction.Product.Signatures
+import Cheshire.Construction.Product.Structures
+import Cheshire.Construction.Product.Bundles
 import Cheshire.Construction.Product
 
 import Cheshire.Instance.One
