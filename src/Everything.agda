@@ -40,6 +40,11 @@ import Cheshire.Construction.Product.Structures
 import Cheshire.Construction.Product.Bundles
 import Cheshire.Construction.Product
 
+import Cheshire.Construction.Constant.Signatures
+import Cheshire.Construction.Constant.Structures
+import Cheshire.Construction.Constant.Bundles
+import Cheshire.Construction.Constant
+
 import Cheshire.Instance.One
 import Cheshire.Instance.Setoids
 import Cheshire.Instance.Sets
