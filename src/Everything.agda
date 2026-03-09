@@ -49,6 +49,11 @@ import Cheshire.Construction.Constant.Structures
 import Cheshire.Construction.Constant.Bundles
 import Cheshire.Construction.Constant
 
+import Cheshire.Construction.Bifunctor.Signatures
+import Cheshire.Construction.Bifunctor.Structures
+import Cheshire.Construction.Bifunctor.Bundles
+import Cheshire.Construction.Bifunctor
+
 import Cheshire.Instance.One
 import Cheshire.Instance.Setoids
 import Cheshire.Instance.Sets

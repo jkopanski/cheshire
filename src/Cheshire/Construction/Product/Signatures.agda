@@ -9,7 +9,6 @@ module Cheshire.Construction.Product.Signatures where
 
 import Data.Product as ×
 import Cheshire.Category.Signature as Category renaming (Category to t)
--- import Cheshire.Category.Structure as IsCategory renaming (IsCategory to t)
 import Cheshire.Homomorphism.Signatures as Morphism renaming (Morphism to t)
 
 open × using (_×_; _,_; <_,_>; proj₁; proj₂)
