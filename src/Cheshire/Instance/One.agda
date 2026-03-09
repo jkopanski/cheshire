@@ -4,8 +4,8 @@ open import Cheshire.Core
 
 module Cheshire.Instance.One where
 
-import Cheshire.Signatures as Signatures
-import Cheshire.Category.Structure as IsCategory renaming (IsCategory to t)
+import Cheshire.Category as Category renaming (IsCategory to Structure)
+
 
 module _ {o ℓ : 𝕃.t} where
 
@@ -27,13 +27,13 @@ module _ {o ℓ : 𝕃.t} where
         }
       }
 
-  One : Signatures.Category 𝒬
+  One : Category.Signature 𝒬
   One = record
     { id = 𝟙.tt
     ; _∘_ = λ _ _ → 𝟙.tt
     }
 
-  IsCategory : IsCategory.t e One
+  IsCategory : Category.Structure e One
   IsCategory = record
     { assoc = 𝟙.tt
     ; identityˡ = 𝟙.tt
@@ -45,5 +45,5 @@ module _ {o ℓ : 𝕃.t} where
 𝒬0 = -- mk⇒ {Ob = 𝟙.t} λ _ _ → 𝟙.t
   𝒬 {𝕃.0ℓ} {𝕃.0ℓ}
 
-One0 : Signatures.Category 𝒬0
+One0 : Category.Signature 𝒬0
 One0 = One {𝕃.0ℓ} {𝕃.0ℓ}

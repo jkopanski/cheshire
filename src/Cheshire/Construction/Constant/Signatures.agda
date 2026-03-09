@@ -5,12 +5,12 @@ open import Cheshire.Core
 module Cheshire.Construction.Constant.Signatures where
 
 import Cheshire.Category.Signature as Category renaming (Category to t)
-import Cheshire.Homomorphism as Morphism renaming (Morphism to t)
+import Cheshire.Homomorphism.Signatures as Morphism renaming (Morphism to t)
 
 import Cheshire.Instance.One as One renaming (One0 to t)
 import Cheshire.Construction.Product.Signatures as Product
 
-open Morphism using (idM)
+open Morphism using (id)
 open Product using (_※_)
 
 private
@@ -28,7 +28,7 @@ constant! : Category.t 𝒯 → 𝒯 .Ob → Morphism.t One.𝒬0 𝒯
 constant! = constant
 
 constantˡ : Category.t 𝒮 → 𝒮 .Ob → Morphism.t 𝒯 (Product.𝒬 𝒮 𝒯)
-constantˡ S s = constant S s ※ idM
+constantˡ S s = constant S s ※ id
 
 constantʳ : Category.t 𝒮 → 𝒮 .Ob → Morphism.t 𝒯 (Product.𝒬 𝒯 𝒮)
-constantʳ S s = idM ※ constant S s
+constantʳ S s = id ※ constant S s
