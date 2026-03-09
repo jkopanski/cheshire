@@ -22,6 +22,6 @@ record Category (e : 𝕃.t) (𝒬 : Quiver o ℓ) : Set (𝕃.suc o ⊔ 𝕃.su
 
   open HomReasoning public
   open Commutation public
+  open Equivalence eq public
 
   module Reasoning = MorphismReasoning structure
-
