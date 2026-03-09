@@ -10,6 +10,8 @@ import Cheshire.Category.Bundle
 import Cheshire.Category
 
 import Cheshire.Monoidal.Signature
+import Cheshire.Monoidal.Structure
+import Cheshire.Monoidal.Bundle
 import Cheshire.Monoidal
 
 import Cheshire.Cartesian.Signature

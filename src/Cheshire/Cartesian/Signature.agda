@@ -1,13 +1,17 @@
 {-# OPTIONS --safe #-}
 
 open import Cheshire.Core
+open import Overture renaming (module × to P)
 
 module Cheshire.Cartesian.Signature where
 
 import Cheshire.Category.Signature as Category renaming (Category to t)
 import Cheshire.Monoidal.Signature as Monoidal renaming (Monoidal to t)
-
+import Cheshire.Homomorphism.Signatures as Morphism renaming (Morphism to t)
 import Cheshire.Object.Signatures as Object
+
+import Cheshire.Construction.Bifunctor.Signatures as Bifunctor
+import Cheshire.Construction.Product.Signatures as Product
 
 private
   variable
@@ -71,6 +75,6 @@ record Cartesian (𝒬 : Quiver o ℓ) : Set (𝕃.suc (o ⊔ ℓ)) where
   monoidal = record
     { Category.t category
     ; unit = ⊤
-    ; _⊗₀_ = _×_
-    ; _⊗₁_ = _⁂_
-    }
+    ; ⊗ = Bifunctor.bifunctor category category H
+    } where H : Morphism.t (Product.𝒬 𝒬 𝒬) 𝒬
+            H = record { F₀ = P.uncurry′ _×_; F₁ = P.uncurry′ _⁂_ }

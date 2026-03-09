@@ -1,10 +1,10 @@
 {-# OPTIONS --safe #-}
 
 open import Cheshire.Core
-open import Cheshire.Signatures using (Category)
+import Cheshire.Category.Signature as Category renaming (Category to t)
 
 module Cheshire.Morphism.Bundles
-  {o ℓ} {𝒬 : Quiver o ℓ} (𝒞 : Category 𝒬)
+  {o ℓ} {𝒬 : Quiver o ℓ} (𝒞 : Category.t 𝒬)
   where
 
 import Data.Product as ×
@@ -14,7 +14,7 @@ import Cheshire.Morphism.Signatures 𝒬 as Signatures
 import Cheshire.Morphism.Structures 𝒞 as Structures
 
 open Quiver 𝒬 using (_⇒_)
-open Category 𝒞
+open Category.t 𝒞
 open Signatures using (_⇔_)
 open Structures using (IsEpi; IsIso; IsMono)
 
