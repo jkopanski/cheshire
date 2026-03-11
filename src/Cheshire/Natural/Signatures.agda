@@ -4,7 +4,7 @@ open import Cheshire.Core
 
 module Cheshire.Natural.Signatures where
 
-open import Cheshire.Signatures
+open import Cheshire.Category.Signature
 open import Cheshire.Homomorphism.Signatures renaming (id to idF; _∘_ to _∘F_)
 
 import Cheshire.Morphism.Signatures as Morphisms

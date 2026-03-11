@@ -7,14 +7,14 @@ module Cheshire.Natural.Bundles
   {𝒮 : Quiver o  ℓ } {𝒯 : Quiver o′ ℓ′}
   where
 
-open import Cheshire.Bundles
+import Cheshire.Category.Bundle as Category renaming (Category to t)
 import Cheshire.Homomorphism.Signatures as Homo
 import Cheshire.Natural.Signatures as Signatures
 import Cheshire.Natural.Structures as Structures
 
-module _ {e} (T : Category e 𝒯) where
+module _ {e} (T : Category.t e 𝒯) where
 
-  module T = Category T
+  module T = Category.t T
 
   record NaturalTransformation (ℱ : Homo.Morphism 𝒮 𝒯) (𝒢 : Homo.Morphism 𝒮 𝒯) : Set (o ⊔ ℓ ⊔ o′ ⊔ ℓ′ ⊔ e) where
     field
