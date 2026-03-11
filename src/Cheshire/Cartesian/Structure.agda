@@ -5,6 +5,7 @@ open import Cheshire.Core
 module Cheshire.Cartesian.Structure where
 
 import Cheshire.Category as Category
+import Cheshire.Morphism.Structures as MorphismStructures
 import Cheshire.Morphism.Bundles as Morphisms
 import Cheshire.Morphism.Reasoning as Reasoning
 
@@ -31,6 +32,7 @@ record IsCartesian {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Cartesian 
       π₁ ∘ h ≈ i → π₂ ∘ h ≈ j →
       ⟨ i , j ⟩ ≈ h
 
+    -- category
     assoc :
       ∀ {A B C D} {f : A ⇒ B} {g : B ⇒ C} {h : C ⇒ D} →
       (h ∘ g) ∘ f ≈ h ∘ (g ∘ f)
@@ -42,7 +44,7 @@ record IsCartesian {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Cartesian 
   isCategory = record
     { assoc = assoc; identityˡ = identityˡ; identityʳ = identityʳ; ∘-resp-≈ = ∘-resp-≈ }
 
-  open IsCategory isCategory using (module HomReasoning)
+  open IsCategory isCategory using (module Commutation; module HomReasoning)
   open HomReasoning
   open Reasoning isCategory
 
@@ -74,6 +76,16 @@ record IsCartesian {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Cartesian 
     f ≈ f′ → g ≈ g′ → ⟨ f , g ⟩ ≈ ⟨ f′ , g′ ⟩
   ⟨⟩-cong₂ f≈f′ g≈g′ = unique (project₁ ○ ⟺ f≈f′) (project₂ ○ ⟺ g≈g′)
 
+  ⟨⟩-congʳ :
+    ∀ {f f′ : C ⇒ A} {g : C ⇒ B} →
+    f ≈ f′ → ⟨ f , g ⟩ ≈ ⟨ f′ , g ⟩
+  ⟨⟩-congʳ pf = ⟨⟩-cong₂ pf refl
+
+  ⟨⟩-congˡ :
+    ∀ {f : C ⇒ A} {g g′ : C ⇒ B} →
+    g ≈ g′ → ⟨ f , g ⟩ ≈ ⟨ f , g′ ⟩
+  ⟨⟩-congˡ pf = ⟨⟩-cong₂ refl pf
+
   ∘-distribʳ-⟨⟩ :
     ∀ {A B C D} {f : C ⇒ A} {g : C ⇒ B} {q : D ⇒ C} →
     ⟨ f , g ⟩ ∘ q ≈ ⟨ f ∘ q , g ∘ q ⟩
@@ -84,153 +96,271 @@ record IsCartesian {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Cartesian 
     π₁ ∘ h ≈ π₁ ∘ i → π₂ ∘ h ≈ π₂ ∘ i → h ≈ i
   unique′ eq₁ eq₂ = trans (sym (unique eq₁ eq₂)) g-η
 
+  open MorphismStructures category
   open Morphisms category
 
+  ×-comm : ∀ {A B} → A × B ≅ B × A
+  ×-comm = record
+    { from = swap
+    ; to = swap
+    ; isIso = record
+      { isoˡ = begin
+        ⟨ π₂ , π₁ ⟩ ∘ ⟨ π₂ , π₁ ⟩                ≈⟨ ∘-distribʳ-⟨⟩ ⟩
+        ⟨ π₂  ∘ ⟨ π₂ , π₁ ⟩ , π₁ ∘ ⟨ π₂ , π₁ ⟩ ⟩ ≈⟨ ⟨⟩-cong₂ project₂ project₁ ⟩
+        ⟨ π₁ , π₂ ⟩                              ≈⟨ η ⟩
+        id                                       ∎
+      ; isoʳ = ∘-distribʳ-⟨⟩ ○ ⟨⟩-cong₂ project₂ project₁ ○ η
+      }
+    }
+
+  ×-assoc : ∀ {X Y Z} → X × Y × Z ≅ (X × Y) × Z
+  ×-assoc = record
+    { from = assocʳ
+    ; to = assocˡ
+    ; isIso = record
+        { isoˡ = begin
+            ⟨ π₁ ∘ π₁ , ⟨ π₂ ∘ π₁ , π₂ ⟩ ⟩ ∘ ⟨ ⟨ π₁ , π₁ ∘ π₂ ⟩ , π₂ ∘ π₂ ⟩
+          ≈⟨ ∘-distribʳ-⟨⟩ ⟩
+            ⟨ (π₁ ∘ π₁) ∘ ⟨ ⟨ π₁ , π₁ ∘ π₂ ⟩ , π₂ ∘ π₂ ⟩
+            , ⟨ π₂ ∘ π₁ , π₂ ⟩ ∘ ⟨ ⟨ π₁ , π₁ ∘ π₂ ⟩ , π₂ ∘ π₂ ⟩
+            ⟩
+          ≈⟨ ⟨⟩-cong₂ (pullʳ project₁ ○ project₁) ∘-distribʳ-⟨⟩ ⟩
+            ⟨ π₁
+            , ⟨ (π₂ ∘ π₁) ∘ ⟨ ⟨ π₁ , π₁ ∘ π₂ ⟩ , π₂ ∘ π₂ ⟩
+              , π₂ ∘ ⟨ ⟨ π₁ , π₁ ∘ π₂ ⟩ , π₂ ∘ π₂ ⟩
+              ⟩
+            ⟩
+          ≈⟨ ⟨⟩-congˡ (⟨⟩-cong₂ (pullʳ project₁ ○ project₂) project₂) ⟩
+            ⟨ π₁
+            , ⟨ π₁ ∘ π₂
+              , π₂ ∘ π₂
+              ⟩
+            ⟩
+          ≈⟨ ⟨⟩-congˡ g-η ⟩
+            ⟨ π₁ , π₂ ⟩
+          ≈⟨ η ⟩
+            id
+          ∎
+        ; isoʳ = begin
+              ⟨ ⟨ π₁ , π₁ ∘ π₂ ⟩ , π₂ ∘ π₂ ⟩ ∘ ⟨ π₁ ∘ π₁ , ⟨ π₂ ∘ π₁ , π₂ ⟩ ⟩
+            ≈⟨ ∘-distribʳ-⟨⟩ ⟩
+              ⟨ ⟨ π₁ , π₁ ∘ π₂ ⟩ ∘ ⟨ π₁ ∘ π₁ , ⟨ π₂ ∘ π₁ , π₂ ⟩ ⟩
+              , (π₂ ∘ π₂) ∘ ⟨ π₁ ∘ π₁ , ⟨ π₂ ∘ π₁ , π₂ ⟩ ⟩
+              ⟩
+            ≈⟨ ⟨⟩-cong₂ ∘-distribʳ-⟨⟩ (pullʳ project₂ ○ project₂) ⟩
+              ⟨ ⟨ π₁ ∘ ⟨ π₁ ∘ π₁ , ⟨ π₂ ∘ π₁ , π₂ ⟩ ⟩
+                , (π₁ ∘ π₂) ∘ ⟨ π₁ ∘ π₁ , ⟨ π₂ ∘ π₁ , π₂ ⟩ ⟩
+                ⟩
+              , π₂
+              ⟩
+            ≈⟨ ⟨⟩-congʳ (⟨⟩-cong₂ project₁ (pullʳ project₂ ○ project₁)) ⟩
+              ⟨ ⟨ π₁ ∘ π₁
+                , π₂ ∘ π₁
+                ⟩
+              , π₂
+              ⟩
+            ≈⟨ ⟨⟩-congʳ g-η ⟩
+              ⟨ π₁ , π₂ ⟩
+            ≈⟨ η ⟩
+              id
+            ∎
+        }
+    }
+
   -- -- agda-categories BinaryProducts
-  -- assocʳ∘assocˡ : assocʳ {A}{B}{C} ∘ assocˡ {A}{B}{C} ≈ id
-  -- assocʳ∘assocˡ = {!!}
+  assocʳ∘assocˡ : assocʳ {A}{B}{C} ∘ assocˡ {A}{B}{C} ≈ id
+  assocʳ∘assocˡ = _≅_.isoʳ ×-assoc
 
-  -- assocˡ∘assocʳ : assocˡ {A}{B}{C} ∘ assocʳ {A}{B}{C} ≈ id
-  -- assocˡ∘assocʳ = {!!}
+  assocˡ∘assocʳ : assocˡ {A}{B}{C} ∘ assocʳ {A}{B}{C} ≈ id
+  assocˡ∘assocʳ = _≅_.isoˡ ×-assoc
 
-  -- ⟨⟩-congʳ :
-  --   ∀ {f f′ : C ⇒ A} {g : C ⇒ B} →
-  --   f ≈ f′ → ⟨ f , g ⟩ ≈ ⟨ f′ , g ⟩
-  -- ⟨⟩-congʳ pf = {!!}
+  π₁∘⁂ :
+    ∀ {f : A ⇒ B} {g : C ⇒ D} →
+    π₁ ∘ (f ⁂ g) ≈ f ∘ π₁
+  π₁∘⁂ {f = f} {g} = project₁
 
-  -- ⟨⟩-congˡ :
-  --   ∀ {f : C ⇒ A} {g g′ : C ⇒ B} →
-  --   g ≈ g′ → ⟨ f , g ⟩ ≈ ⟨ f , g′ ⟩
-  -- ⟨⟩-congˡ pf = {!!}
+  π₂∘⁂ :
+    ∀ {f : A ⇒ B} {g : C ⇒ D} →
+    π₂ ∘ (f ⁂ g) ≈ g ∘ π₂
+  π₂∘⁂ {f = f} {g} = project₂
 
-  -- π₁∘⁂ :
-  --   ∀ {f : A ⇒ B} {g : C ⇒ D} →
-  --   π₁ ∘ (f ⁂ g) ≈ f ∘ π₁
-  -- π₁∘⁂ {f = f} {g} = project₁
+  ⁂-cong₂ :
+    ∀ {f g : A ⇒ B} {h i : C ⇒ D} →
+    f ≈ g → h ≈ i → f ⁂ h ≈ g ⁂ i
+  ⁂-cong₂ {f = f} {g} {h} {i} f≈g h≈i = ⟨⟩-cong₂ (f≈g ⟩∘⟨refl) (h≈i ⟩∘⟨refl)
 
-  -- π₂∘⁂ :
-  --   ∀ {f : A ⇒ B} {g : C ⇒ D} →
-  --   π₂ ∘ (f ⁂ g) ≈ g ∘ π₂
-  -- π₂∘⁂ {f = f} {g} = project₂
+  ⁂∘⟨⟩ :
+    ∀ {f : A ⇒ B} {g : C ⇒ D} {f′ : X ⇒ A} {g′ : X ⇒ C} →
+    (f ⁂ g) ∘ ⟨ f′ , g′ ⟩ ≈ ⟨ f ∘ f′ , g ∘ g′ ⟩
+  ⁂∘⟨⟩ {f = f} {g} {f′} {g′} = begin
+      ⟨ f ∘ π₁ , g ∘ π₂ ⟩ ∘ ⟨ f′ , g′ ⟩
+    ≈⟨ ∘-distribʳ-⟨⟩ ⟩
+      ⟨ (f ∘ π₁) ∘ ⟨ f′ , g′ ⟩ , (g ∘ π₂) ∘ ⟨ f′ , g′ ⟩ ⟩
+    ≈⟨ ⟨⟩-cong₂ (pullʳ project₁) (pullʳ project₂) ⟩
+      ⟨ f ∘ f′ , g ∘ g′ ⟩
+    ∎
 
-  -- ⁂-cong₂ :
-  --   ∀ {f g : A ⇒ B} {h i : C ⇒ D} →
-  --   f ≈ g → h ≈ i → f ⁂ h ≈ g ⁂ i
-  -- ⁂-cong₂ = {!!}
+  first∘⟨⟩ :
+    ∀ {f : A ⇒ X} {f′ : C ⇒ A} {g′ : C ⇒ B} →
+    first f ∘ ⟨ f′ , g′ ⟩ ≈ ⟨ f ∘ f′ , g′ ⟩
+  first∘⟨⟩ {f = f} {f′} {g′} = begin
+    first f ∘ ⟨ f′ , g′ ⟩ ≈⟨ ∘-distribʳ-⟨⟩ ⟩
+    ⟨ (f ∘ π₁) ∘ ⟨ f′ , g′ ⟩ , π₂ ∘ ⟨ f′ , g′ ⟩ ⟩ ≈⟨ ⟨⟩-cong₂ (pullʳ project₁) project₂ ⟩
+    ⟨ f ∘ f′ , g′ ⟩ ∎
 
-  -- ⁂∘⟨⟩ :
-  --   ∀ {f : A ⇒ B} {g : C ⇒ D} {f′ : X ⇒ A} {g′ : X ⇒ C} →
-  --   (f ⁂ g) ∘ ⟨ f′ , g′ ⟩ ≈ ⟨ f ∘ f′ , g ∘ g′ ⟩
-  -- ⁂∘⟨⟩ = {!!}
+  second∘⟨⟩ :
+    ∀ {g : B ⇒ X} {f′ : C ⇒ A} {g′ : C ⇒ B} →
+    second g ∘ ⟨ f′ , g′ ⟩ ≈ ⟨ f′ , g ∘ g′ ⟩
+  second∘⟨⟩ {g = g} {f′} {g′} = ∘-distribʳ-⟨⟩ ○ ⟨⟩-cong₂ project₁ (pullʳ project₂)
 
-  -- first∘⟨⟩ :
-  --   ∀ {f : A ⇒ X} {f′ : C ⇒ A} {g′ : C ⇒ B} →
-  --   first f ∘ ⟨ f′ , g′ ⟩ ≈ ⟨ f ∘ f′ , g′ ⟩
-  -- first∘⟨⟩ = {!!}
+  ⁂∘⁂ :
+    ∀ {f : A ⇒ B} {g : C ⇒ D} {f′ : X ⇒ A} {g′ : Y ⇒ C} →
+    (f ⁂ g) ∘ (f′ ⁂ g′) ≈ (f ∘ f′) ⁂ (g ∘ g′)
+  ⁂∘⁂ {f = f} {g} {f′} {g′} = begin
+      ⟨ f ∘ π₁ , g ∘ π₂ ⟩ ∘ ⟨ f′ ∘ π₁ , g′ ∘ π₂ ⟩
+    ≈⟨ ∘-distribʳ-⟨⟩ ⟩
+      ⟨ (f ∘ π₁) ∘ ⟨ f′ ∘ π₁ , g′ ∘ π₂ ⟩ , (g ∘ π₂) ∘ ⟨ f′ ∘ π₁ , g′ ∘ π₂ ⟩ ⟩
+    ≈⟨ ⟨⟩-cong₂ (pullʳ project₁) (pullʳ project₂) ⟩
+      ⟨ f ∘ f′ ∘ π₁ , g ∘ g′ ∘ π₂ ⟩
+    ≈⟨ ⟨⟩-cong₂ assoc assoc ⟨
+      ⟨ (f ∘ f′) ∘ π₁ , (g ∘ g′) ∘ π₂ ⟩
+    ∎
 
-  -- second∘⟨⟩ :
-  --   ∀ {g : B ⇒ X} {f′ : C ⇒ A} {g′ : C ⇒ B} →
-  --   second g ∘ ⟨ f′ , g′ ⟩ ≈ ⟨ f′ , g ∘ g′ ⟩
-  -- second∘⟨⟩ = {!!}
+  ⟨⟩∘ :
+    ∀ {f : C ⇒ A} {g : C ⇒ B} {h : X ⇒ C} →
+    ⟨ f , g ⟩ ∘ h ≈ ⟨ f ∘ h , g ∘ h ⟩
+  ⟨⟩∘ = ∘-distribʳ-⟨⟩
 
-  -- ⁂∘⁂ :
-  --   ∀ {f : A ⇒ B} {g : C ⇒ D} {f′ : X ⇒ A} {g′ : Y ⇒ C} →
-  --   (f ⁂ g) ∘ (f′ ⁂ g′) ≈ (f ∘ f′) ⁂ (g ∘ g′)
-  -- ⁂∘⁂ = {!!}
+  first∘first :
+    ∀ {f : B ⇒ C} {g : A ⇒ B} →
+    ∀ {C} → first {C = C} f ∘ first g ≈ first (f ∘ g)
+  first∘first {f = f} {g} = begin
+    first f ∘ ⟨ g ∘ π₁ , π₂ ⟩ ≈⟨ first∘⟨⟩ ⟩
+    ⟨ f ∘ g ∘ π₁ , π₂ ⟩       ≈⟨ ⟨⟩-congʳ assoc ⟨
+    ⟨ (f ∘ g) ∘ π₁ , π₂ ⟩     ∎
 
-  -- ⟨⟩∘ :
-  --   ∀ {f : C ⇒ A} {g : C ⇒ B} {h : X ⇒ C} →
-  --   ⟨ f , g ⟩ ∘ h ≈ ⟨ f ∘ h , g ∘ h ⟩
-  -- ⟨⟩∘ = {!!}
+  second∘second :
+    ∀ {f : B ⇒ C} {g : A ⇒ B} →
+    ∀ {A} → second {A = A} f ∘ second g ≈ second (f ∘ g)
+  second∘second {f = f} {g} = second∘⟨⟩ ○ ⟺ (⟨⟩-congˡ assoc)
 
-  -- first∘first :
-  --   ∀ {f : B ⇒ C} {g : A ⇒ B} →
-  --   ∀ {C} → first {C = C} f ∘ first g ≈ first (f ∘ g)
-  -- first∘first = {!!}
+  first∘second :
+    ∀ {f : A ⇒ B} {g : C ⇒ D} →
+    first f ∘ second g ≈ f ⁂ g
+  first∘second {f = f} {g} = first∘⟨⟩
 
-  -- second∘second :
-  --   ∀ {f : B ⇒ C} {g : A ⇒ B} →
-  --   ∀ {A} → second {A = A} f ∘ second g ≈ second (f ∘ g)
-  -- second∘second = {!!}
+  second∘first :
+    ∀ {f : A ⇒ B} {g : C ⇒ D} →
+    second f ∘ first g ≈ g ⁂ f
+  second∘first {f = f} {g} = second∘⟨⟩
 
-  -- first∘second :
-  --   ∀ {f : A ⇒ B} {g : C ⇒ D} →
-  --   first f ∘ second g ≈ f ⁂ g
-  -- first∘second {f = f} {g = g} = {!!}
+  first↔second :
+    ∀ {f : A ⇒ B} {g : C ⇒ D} →
+    first f ∘ second g ≈ second g ∘ first f
+  first↔second = first∘⟨⟩ ○ ⟺ second∘⟨⟩
 
-  -- second∘first :
-  --   ∀ {f : A ⇒ B} {g : C ⇒ D} →
-  --   second f ∘ first g ≈ g ⁂ f
-  -- second∘first {f = f} {g = g} = {!!}
+  firstid : ∀ {f : A ⇒ A} (g : A ⇒ C) → first {C = C} f ≈ id → f ≈ id
+  firstid {f = f} g eq = begin
+    f                   ≈⟨ introʳ project₁ ⟩
+    f ∘ π₁ ∘ ⟨ id , g ⟩ ≈⟨ pullˡ fπ₁≈π₁ ⟩
+    π₁ ∘ ⟨ id , g ⟩     ≈⟨ project₁ ⟩
+    id                  ∎
+    where fπ₁≈π₁ = begin
+            f ∘ π₁       ≈⟨ project₁ ⟨
+            π₁ ∘ first f ≈⟨ refl⟩∘⟨ eq ⟩
+            π₁ ∘ id      ≈⟨ identityʳ ⟩
+            π₁           ∎
 
-  -- first↔second :
-  --   ∀ {f : A ⇒ B} {g : C ⇒ D} →
-  --   first f ∘ second g ≈ second g ∘ first f
-  -- first↔second = {!!}
+  swap∘⟨⟩ :
+    ∀ {f : C ⇒ A} {g : C ⇒ B} →
+    swap ∘ ⟨ f , g ⟩ ≈ ⟨ g , f ⟩
+  swap∘⟨⟩ {f = f} {g} = ∘-distribʳ-⟨⟩ ○ ⟨⟩-cong₂ project₂ project₁
 
-  -- firstid : ∀ {f : A ⇒ A} (g : A ⇒ C) → first {C = C} f ≈ id → f ≈ id
-  -- firstid {f = f} g eq = {!!}
+  swap∘⁂ :
+    ∀ {f : A ⇒ B} {g : C ⇒ D} →
+    swap ∘ (f ⁂ g) ≈ (g ⁂ f) ∘ swap
+  swap∘⁂ {f = f} {g} = swap∘⟨⟩ ○ ⟺ ⁂∘⟨⟩
 
-  -- swap∘⟨⟩ :
-  --   ∀ {f : C ⇒ A} {g : C ⇒ B} →
-  --   swap ∘ ⟨ f , g ⟩ ≈ ⟨ g , f ⟩
-  -- swap∘⟨⟩ {f = f} {g = g} = {!!}
+  swap∘swap : (swap {A}{B}) ∘ (swap {B}{A}) ≈ id
+  swap∘swap = swap∘⟨⟩ ○ η
 
-  -- swap∘⁂ :
-  --   ∀ {f : A ⇒ B} {g : C ⇒ D} →
-  --   swap ∘ (f ⁂ g) ≈ (g ⁂ f) ∘ swap
-  -- swap∘⁂ {f = f} {g = g} = {!!}
+  swap-epi : IsEpi (swap {A} {B})
+  swap-epi f g eq = introʳ swap∘swap ○ pullˡ eq ○ cancelʳ swap∘swap
 
-  -- swap∘swap : (swap {A}{B}) ∘ (swap {B}{A}) ≈ id
-  -- swap∘swap = {!!}
+  swap-mono : IsMono (swap {A} {B})
+  swap-mono f g eq = introˡ swap∘swap ○ pullʳ eq ○ cancelˡ swap∘swap
 
-  -- swap-epi : IsEpi category (swap {A} {B})
-  -- swap-epi f g eq = {!!}
+  assocʳ∘⟨⟩ :
+    ∀ {f : C ⇒ D} {g : C ⇒ A} {h : C ⇒ B} →
+    assocʳ ∘ ⟨ f , ⟨ g , h ⟩ ⟩ ≈ ⟨ ⟨ f , g ⟩ , h ⟩
+  assocʳ∘⟨⟩ {f = f} {g = g} {h = h} = begin
+      assocʳ ∘ ⟨ f , ⟨ g , h ⟩ ⟩
+    ≈⟨ refl ⟩
+      ⟨ ⟨ π₁ , π₁ ∘ π₂ ⟩ , π₂ ∘ π₂ ⟩ ∘ ⟨ f , ⟨ g , h ⟩ ⟩
+    ≈⟨ ∘-distribʳ-⟨⟩ ⟩
+      ⟨ ⟨ π₁ , π₁ ∘ π₂ ⟩ ∘ ⟨ f , ⟨ g , h ⟩ ⟩
+      , (π₂ ∘ π₂) ∘ ⟨ f , ⟨ g , h ⟩ ⟩
+      ⟩
+    ≈⟨ ⟨⟩-cong₂ ∘-distribʳ-⟨⟩ (pullʳ project₂) ⟩
+      ⟨ ⟨ π₁        ∘ ⟨ f , ⟨ g , h ⟩ ⟩
+        , (π₁ ∘ π₂) ∘ ⟨ f , ⟨ g , h ⟩ ⟩
+        ⟩
+      , π₂ ∘ ⟨ g , h ⟩
+      ⟩
+    ≈⟨ ⟨⟩-cong₂ (⟨⟩-cong₂ project₁ (pullʳ project₂ ○ project₁)) project₂ ⟩
+      ⟨ ⟨ f , g ⟩ , h ⟩
+    ∎
 
-  -- swap-mono : IsMono category (swap {A} {B})
-  -- swap-mono f g eq = {!!}
+  assocˡ∘⟨⟩ :
+    ∀ {f : C ⇒ A} {g : C ⇒ B} {h : C ⇒ D} →
+    assocˡ ∘ ⟨ ⟨ f , g ⟩ , h ⟩ ≈ ⟨ f , ⟨ g , h ⟩ ⟩
+  assocˡ∘⟨⟩ {f = f} {g = g} {h = h} = begin
+    assocˡ ∘ ⟨ ⟨ f , g ⟩ , h ⟩          ≈⟨ (refl⟩∘⟨ assocʳ∘⟨⟩) ⟨
+    assocˡ ∘ assocʳ ∘ ⟨ f , ⟨ g , h ⟩ ⟩ ≈⟨ cancelˡ assocˡ∘assocʳ ⟩
+    ⟨ f , ⟨ g , h ⟩ ⟩                   ∎
 
-  -- assocʳ∘⟨⟩ :
-  --   ∀ {f : C ⇒ D} {g : C ⇒ A} {h : C ⇒ B} →
-  --   assocʳ ∘ ⟨ f , ⟨ g , h ⟩ ⟩ ≈ ⟨ ⟨ f , g ⟩ , h ⟩
-  -- assocʳ∘⟨⟩ {f = f} {g = g} {h = h} = {!!}
+  assocʳ∘⁂ :
+    ∀ {f : A ⇒ B} {g : C ⇒ D} {h : X ⇒ Y} →
+    assocʳ ∘ (f ⁂ (g ⁂ h)) ≈ ((f ⁂ g) ⁂ h) ∘ assocʳ
+  assocʳ∘⁂ {f = f} {g = g} {h = h} = begin
+      assocʳ ∘ ⟨ f ∘ π₁ , ⟨ g ∘ π₁ , h ∘ π₂ ⟩ ∘ π₂ ⟩
+    ≈⟨ refl⟩∘⟨ ⟨⟩-congˡ ∘-distribʳ-⟨⟩ ⟩
+      assocʳ ∘ ⟨ f ∘ π₁ , ⟨ (g ∘ π₁) ∘ π₂ , (h ∘ π₂) ∘ π₂ ⟩ ⟩
+    ≈⟨ assocʳ∘⟨⟩ ⟩
+      ⟨ ⟨ f ∘ π₁ , (g ∘ π₁) ∘ π₂ ⟩ , (h ∘ π₂) ∘ π₂ ⟩
+    ≈⟨ ⟨⟩-cong₂ (⟨⟩-congˡ assoc) assoc ⟩
+      ⟨ ⟨ f ∘ π₁ , g ∘ π₁ ∘ π₂ ⟩ , h ∘ π₂ ∘ π₂ ⟩
+    ≈⟨ ⟨⟩-congʳ ⁂∘⟨⟩ ⟨
+       ⟨ (f ⁂ g) ∘ ⟨ π₁ , π₁ ∘ π₂ ⟩ , h ∘ π₂ ∘ π₂ ⟩
+    ≈⟨ ⁂∘⟨⟩ ⟨
+      ⟨ ⟨ f ∘ π₁ , g ∘ π₂ ⟩ ∘ π₁ , h ∘ π₂ ⟩ ∘ assocʳ
+    ∎
 
-  -- assocˡ∘⟨⟩ :
-  --   ∀ {f : C ⇒ A} {g : C ⇒ B} {h : C ⇒ D} →
-  --   assocˡ ∘ ⟨ ⟨ f , g ⟩ , h ⟩ ≈ ⟨ f , ⟨ g , h ⟩ ⟩
-  -- assocˡ∘⟨⟩ {f = f} {g = g} {h = h} = {!!}
+  assocˡ∘⁂ :
+    ∀ {f : A ⇒ B} {g : C ⇒ D} {h : X ⇒ Y} →
+    assocˡ ∘ ((f ⁂ g) ⁂ h) ≈ (f ⁂ (g ⁂ h)) ∘ assocˡ
+  assocˡ∘⁂ {f = f} {g = g} {h = h} = begin
+      assocˡ ∘ ⟨ ⟨ f ∘ π₁ , g ∘ π₂ ⟩ ∘ π₁ , h ∘ π₂ ⟩
+    ≈⟨ refl⟩∘⟨ ⟨⟩-congʳ ∘-distribʳ-⟨⟩ ⟩
+      assocˡ ∘ ⟨ ⟨ (f ∘ π₁) ∘ π₁ , (g ∘ π₂) ∘ π₁ ⟩ , h ∘ π₂ ⟩
+    ≈⟨ assocˡ∘⟨⟩ ⟩
+      ⟨ (f ∘ π₁) ∘ π₁ , ⟨ (g ∘ π₂) ∘ π₁ , h ∘ π₂ ⟩ ⟩
+    ≈⟨ ⟨⟩-cong₂ assoc (⟨⟩-congʳ assoc) ⟩
+      ⟨ f ∘ π₁ ∘ π₁ , ⟨ g ∘ π₂ ∘ π₁ , h ∘ π₂ ⟩ ⟩
+    ≈⟨ ⟨⟩-congˡ ⁂∘⟨⟩ ⟨
+      ⟨ f ∘ π₁ ∘ π₁ , (g ⁂ h) ∘ ⟨ π₂ ∘ π₁ , π₂ ⟩ ⟩
+    ≈⟨ ⁂∘⟨⟩ ⟨
+      ⟨ f ∘ π₁ , ⟨ g ∘ π₁ , h ∘ π₂ ⟩ ∘ π₂ ⟩ ∘ assocˡ
+    ∎
 
-  -- assocʳ∘⁂ :
-  --   ∀ {f : A ⇒ B} {g : C ⇒ D} {h : X ⇒ Y} →
-  --   assocʳ ∘ (f ⁂ (g ⁂ h)) ≈ ((f ⁂ g) ⁂ h) ∘ assocʳ
-  -- assocʳ∘⁂ {f = f} {g = g} {h = h} = {!!}
+  Δ∘ :
+    ∀ {f : A ⇒ B} →
+    Δ ∘ f ≈ ⟨ f , f ⟩
+  Δ∘ {f = f} = ∘-distribʳ-⟨⟩ ○ ⟨⟩-cong₂ identityˡ identityˡ
 
-  -- assocˡ∘⁂ :
-  --   ∀ {f : A ⇒ B} {g : C ⇒ D} {h : X ⇒ Y} →
-  --   assocˡ ∘ ((f ⁂ g) ⁂ h) ≈ (f ⁂ (g ⁂ h)) ∘ assocˡ
-  -- assocˡ∘⁂ {f = f} {g = g} {h = h} = {!!}
+  ⁂∘Δ :
+    ∀ {f : A ⇒ B} {g : A ⇒ D} →
+    (f ⁂ g) ∘ Δ ≈ ⟨ f , g ⟩
+  ⁂∘Δ {f = f} {g} =
+    ∘-distribʳ-⟨⟩ ○ ⟨⟩-cong₂ (pullʳ project₁ ○ identityʳ) (pullʳ project₂ ○ identityʳ)
 
-  -- Δ∘ :
-  --   ∀ {f : A ⇒ B} →
-  --   Δ ∘ f ≈ ⟨ f , f ⟩
-  -- Δ∘ {f = f} = {!!}
-
-  -- ⁂∘Δ :
-  --   ∀ {f : A ⇒ B} {g : A ⇒ D} →
-  --   (f ⁂ g) ∘ Δ ≈ ⟨ f , g ⟩
-  -- ⁂∘Δ {f = f} {g = g} = {!!}
-
-  -- ×-comm : ∀ {A B} → A × B ≅ B × A
-  -- ×-comm = record
-  --   { from = swap
-  --   ; to = swap
-  --   ; isIso = record
-  --     { isoˡ = begin
-  --       swap ∘ swap ≈⟨ {!!} ⟩
-  --       id ∎
-  --     ; isoʳ = {!!}
-  --     }
-  --   }
-
-  -- ×-assoc : ∀ {X Y Z} → X × Y × Z ≅ (X × Y) × Z
-  -- ×-assoc = {!!}
