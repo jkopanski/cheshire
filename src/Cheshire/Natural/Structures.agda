@@ -57,6 +57,9 @@ module _
       F⇒G : IsTransformation isT I.F⇒G
       F⇐G : IsTransformation isT I.F⇐G
 
+    module ⇒ = IsTransformation F⇒G
+    module ⇐ = IsTransformation F⇐G
+
     field
       iso : ∀ X → Morphisms.IsIso T (I.iso.from X) (I.iso.to X)
 
