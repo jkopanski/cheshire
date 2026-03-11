@@ -4,15 +4,17 @@ open import Cheshire.Core
 
 module Cheshire.Cartesian.Structure where
 
-import Cheshire.Category as Category
-import Cheshire.Morphism.Structures as MorphismStructures
-import Cheshire.Morphism.Bundles as Morphisms
-import Cheshire.Morphism.Reasoning as Reasoning
+import Cheshire.Category as Category renaming (Category to t)
+import Cheshire.Monoidal as Monoidal
+import Cheshire.Homomorphism as Morphism renaming (Morphism to t)
+import Cheshire.Morphism as Morphisms
+import Cheshire.Natural as Natural
 
 open import Cheshire.Cartesian.Signature
 open import Cheshire.Object.Signatures
 
 open Category using (IsCategory)
+open Monoidal using (IsMonoidal)
 
 record IsCartesian {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Cartesian 𝒬) : Set (o ⊔ ℓ ⊔ 𝕃.suc e) where
   open Quiver 𝒬 using (_⇒_)
@@ -46,7 +48,7 @@ record IsCartesian {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Cartesian 
 
   open IsCategory isCategory using (module Commutation; module HomReasoning)
   open HomReasoning
-  open Reasoning isCategory
+  open Morphisms.Reasoning isCategory
 
   private
     variable
@@ -96,8 +98,8 @@ record IsCartesian {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Cartesian 
     π₁ ∘ h ≈ π₁ ∘ i → π₂ ∘ h ≈ π₂ ∘ i → h ≈ i
   unique′ eq₁ eq₂ = trans (sym (unique eq₁ eq₂)) g-η
 
-  open MorphismStructures category
-  open Morphisms category
+  open Morphisms.Structures category
+  open Morphisms.Bundles category
 
   ×-comm : ∀ {A B} → A × B ≅ B × A
   ×-comm = record
@@ -364,3 +366,127 @@ record IsCartesian {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Cartesian 
   ⁂∘Δ {f = f} {g} =
     ∘-distribʳ-⟨⟩ ○ ⟨⟩-cong₂ (pullʳ project₁ ○ identityʳ) (pullʳ project₂ ○ identityʳ)
 
+  -- Monoidal
+  private
+    open Commutation
+    open Monoidal.Signature monoidal using (_⊗₀_; _⊗₁_)
+    open Natural using (NaturalIsomorphism)
+    open Morphisms.Signatures 𝒬
+    cat : Category.t e 𝒬
+    cat = record { signature = category; structure = isCategory }
+    α⇒ = assocˡ
+
+    ⊤×A≅A : ⊤ × A ≅ A
+    ⊤×A≅A = record
+      { from = π₂
+      ; to = ⟨ ! , id ⟩
+      ; isIso = record
+          { isoˡ = begin
+               ⟨ ! , id ⟩ ∘ π₂ ≈⟨ unique !-unique₂ (cancelˡ project₂) ⟨
+               ⟨ π₁ , π₂ ⟩     ≈⟨ η ⟩
+               id ∎
+          ; isoʳ = project₂
+          }
+      }
+
+    A×⊤≅A : A × ⊤ ≅ A
+    A×⊤≅A = record
+      { _⇔_ A×⊤⇔A
+      ; isIso = record
+          { isoˡ = begin
+              ⟨ id , ! ⟩ ∘ π₁ ≈⟨ unique (cancelˡ project₁) !-unique₂ ⟨
+              ⟨ π₁ , π₂ ⟩     ≈⟨ η ⟩
+              id ∎
+          ; isoʳ = project₁
+          }
+      }
+
+    ⊤×--id-isIso : Natural.IsIsomorphism isCategory ⊤×-
+    ⊤×--id-isIso = record
+      { F⇒G = record { commute = λ _ → project₂ }
+      ; F⇐G = record { commute = λ f → begin
+          ⟨ ! , id ⟩ ∘ f                                     ≈⟨ ⟨⟩∘ ⟩
+          ⟨ ! ∘ f , id ∘ f ⟩                                 ≈⟨ ⟨⟩-cong₂ (⟺ (!-unique (! ∘ f))) identityˡ ⟩
+          ⟨ ! , f ⟩                                          ≈⟨ ⟨⟩-cong₂ identityˡ identityʳ ⟨
+          ⟨ id ∘ ! , f ∘ id ⟩                                ≈⟨ ⟨⟩-cong₂ (pullʳ project₁) (pullʳ project₂) ⟨
+          ⟨ (id ∘ π₁) ∘ ⟨ ! , id ⟩ , (f ∘ π₂) ∘ ⟨ ! , id ⟩ ⟩ ≈⟨ ⟨⟩∘ ⟨
+          ⟨ id ∘ π₁ , f ∘ π₂ ⟩ ∘ ⟨ ! , id ⟩                  ∎
+      }
+      ; iso = λ _ → _≅_.isIso ⊤×A≅A
+      }
+
+    ⊤×--id : NaturalIsomorphism cat (⊤ ×-) Morphism.id
+    ⊤×--id = record { signature = ⊤×-; structure = ⊤×--id-isIso }
+
+    -×⊤-id-isIso : Natural.IsIsomorphism isCategory -×⊤
+    -×⊤-id-isIso = record
+      { F⇒G = record { commute = λ _ → project₁ }
+      ; F⇐G = record { commute = λ f → begin
+          ⟨ id , ! ⟩ ∘ f                                     ≈⟨ ⟨⟩∘ ⟩
+          ⟨ id ∘ f , ! ∘ f ⟩                                 ≈⟨ ⟨⟩-cong₂ identityˡ (⟺ (!-unique (! ∘ f))) ⟩
+          ⟨ f , ! ⟩                                          ≈⟨ ⟨⟩-cong₂ identityʳ identityˡ ⟨
+          ⟨ f ∘ id , id ∘ ! ⟩                                ≈⟨ ⟨⟩-cong₂ (pullʳ project₁) (pullʳ project₂) ⟨
+          ⟨ (f ∘ π₁) ∘ ⟨ id , ! ⟩ , (id ∘ π₂) ∘ ⟨ id , ! ⟩ ⟩ ≈⟨ ⟨⟩∘ ⟨
+          ⟨ f ∘ π₁ , id ∘ π₂ ⟩ ∘ ⟨ id , ! ⟩                  ∎
+      }
+      ; iso = λ x → _≅_.isIso A×⊤≅A
+      }
+
+    -×⊤-id : NaturalIsomorphism cat (-× ⊤) Morphism.id
+    -×⊤-id = record { signature = -×⊤; structure = -×⊤-id-isIso }
+
+    pentagon :
+      ∀ {X Y Z W} →
+      [ ((X ⊗₀ Y) ⊗₀ Z) ⊗₀ W ⇒   X ⊗₀  Y  ⊗₀ Z  ⊗₀ W ]⟨
+        α⇒ ⊗₁ id             ⇒⟨ (X ⊗₀  Y  ⊗₀ Z) ⊗₀ W ⟩
+        α⇒                   ⇒⟨  X ⊗₀ (Y  ⊗₀ Z) ⊗₀ W ⟩
+        id ⊗₁ α⇒
+      ≈ α⇒                   ⇒⟨ (X ⊗₀  Y) ⊗₀ Z  ⊗₀ W ⟩
+        α⇒
+      ⟩
+    pentagon = begin
+        (id ⁂ α⇒) ∘ α⇒ ∘ (α⇒ ⁂ id)
+      ≈⟨ ⟨⟩-congʳ identityˡ ⟩∘⟨ refl ⟩∘⟨ ⟨⟩-congˡ identityˡ ⟩
+        second α⇒ ∘ α⇒ ∘ first α⇒
+        -- second α⇒ ∘ ⟨ π₁ ∘ π₁ , ⟨ π₂ ∘ π₁ , π₂ ⟩ ⟩ ∘ first α⇒
+      ≈⟨ pullˡ second∘⟨⟩ ⟩
+        ⟨ π₁ ∘ π₁ , α⇒ ∘ first π₂ ⟩ ∘ first α⇒
+      ≈⟨ ∘-distribʳ-⟨⟩ ⟩
+        ⟨ (π₁ ∘ π₁) ∘ first α⇒ , (α⇒ ∘ first π₂) ∘ first α⇒ ⟩
+      ≈⟨ ⟨⟩-cong₂ (pullʳ project₁) (pullʳ first∘first) ⟩
+        ⟨ π₁ ∘ α⇒ ∘ π₁ , α⇒ ∘ first (π₂ ∘ α⇒) ⟩
+      ≈⟨ ⟨⟩-cong₂ (pullˡ project₁ ○ assoc) (refl⟩∘⟨ ⟨⟩-congʳ (project₂ ⟩∘⟨refl)) ⟩
+        ⟨ π₁ ∘ π₁ ∘ π₁ , α⇒ ∘ ⟨ ⟨ π₂ ∘ π₁ , π₂ ⟩ ∘ π₁ , π₂ ⟩ ⟩
+      ≈⟨ ⟨⟩-congˡ (refl⟩∘⟨ ⟨⟩-congʳ ∘-distribʳ-⟨⟩) ⟩
+        ⟨ π₁ ∘ π₁ ∘ π₁ , α⇒ ∘ ⟨ ⟨ (π₂ ∘ π₁) ∘ π₁ , π₂ ∘ π₁ ⟩ , π₂ ⟩ ⟩
+      ≈⟨ ⟨⟩-congˡ assocˡ∘⟨⟩ ⟩
+        ⟨ π₁ ∘ π₁ ∘ π₁ , ⟨ (π₂ ∘ π₁) ∘ π₁ , ⟨ π₂ ∘ π₁ , π₂ ⟩ ⟩ ⟩
+      ≈⟨ ⟨⟩-congˡ (⟨⟩-cong₂ (pullʳ project₁ ○ ⟺ assoc) project₂) ⟨
+        ⟨ π₁ ∘ π₁ ∘ π₁ , ⟨ (π₂ ∘ π₁) ∘ α⇒ , π₂ ∘ α⇒ ⟩ ⟩
+      ≈⟨ ⟨⟩-cong₂ (pullʳ project₁) ∘-distribʳ-⟨⟩ ⟨
+        ⟨ (π₁ ∘ π₁) ∘ α⇒ , ⟨ π₂ ∘ π₁ , π₂ ⟩ ∘ α⇒ ⟩
+      ≈⟨ ∘-distribʳ-⟨⟩ ⟨
+        α⇒ ∘ α⇒
+      ∎
+
+  isMonoidal : IsMonoidal e monoidal
+  isMonoidal = record
+    { IsCategory isCategory
+    ; unitorˡ = ⊤×A≅A
+    ; unitorʳ = A×⊤≅A
+    ; associator = ≅.sym isCategory ×-assoc
+    ; unitorˡ-commute-from = project₂
+    ; unitorˡ-commute-to = let open NaturalIsomorphism ⊤×--id in ⇐.commute _
+    ; unitorʳ-commute-from = project₁
+    ; unitorʳ-commute-to = let open NaturalIsomorphism -×⊤-id in ⇐.commute _
+    ; assoc-commute-from = assocˡ∘⁂
+    ; assoc-commute-to = assocʳ∘⁂
+    ; triangle = begin
+        (id ⁂ π₂) ∘ assocˡ
+      ≈⟨ ⁂∘⟨⟩ ⟩
+        ⟨ id ∘ π₁ ∘ π₁ , π₂ ∘ ⟨ π₂ ∘ π₁ , π₂ ⟩ ⟩
+      ≈⟨ ⟨⟩-cong₂ (pullˡ identityˡ) (project₂ ○ ⟺ identityˡ) ⟩
+        π₁ ⁂ id
+      ∎
+    ; pentagon = pentagon
+    }

@@ -8,10 +8,15 @@ module Cheshire.Cartesian.Signature where
 import Cheshire.Category.Signature as Category renaming (Category to t)
 import Cheshire.Monoidal.Signature as Monoidal renaming (Monoidal to t)
 import Cheshire.Homomorphism.Signatures as Morphism renaming (Morphism to t)
+import Cheshire.Bifunctor.Signature as Bifunctor renaming (Bifunctor to t)
 import Cheshire.Object.Signatures as Object
+import Cheshire.Morphism.Signatures as Morphisms
+import Cheshire.Natural.Signatures as Natural
 
-import Cheshire.Construction.Bifunctor.Signatures as Bifunctor
+import Cheshire.Construction.Bifunctor.Signatures as MkBifunctor
 import Cheshire.Construction.Product.Signatures as Product
+
+open MkBifunctor using (bifunctor)
 
 private
   variable
@@ -71,10 +76,48 @@ record Cartesian (𝒬 : Quiver o ℓ) : Set (𝕃.suc (o ⊔ ℓ)) where
   category : Category.t 𝒬
   category = record { id = id; _∘_ = _∘_ }
 
+  -×- : Bifunctor.t 𝒬 𝒬 𝒬
+  -×- = bifunctor category category H
+    where H : Morphism.t (Product.𝒬 𝒬 𝒬) 𝒬
+          H = record { F₀ = P.uncurry′ _×_; F₁ = P.uncurry′ _⁂_ }
+
+  -×_ : 𝒬 .Ob → Morphism.t 𝒬 𝒬
+  -×_ = Bifunctor.t.appʳ -×-
+
+  _×- : 𝒬 .Ob → Morphism.t 𝒬 𝒬
+  _×- = Bifunctor.t.appˡ -×-
+
+  open Morphisms 𝒬
+
+  ⊤×A⇔A : ⊤ × A ⇔ A
+  ⊤×A⇔A = record
+    { from = π₂
+    ; to = ⟨ ! , id ⟩
+    }
+
+  A×⊤⇔A : A × ⊤ ⇔ A
+  A×⊤⇔A = record
+    { from = π₁
+    ; to = ⟨ id , ! ⟩
+    }
+
+  ⊤×- : Natural.Isomorphism (⊤ ×-) Morphism.id
+  ⊤×- = record
+    { F⇒G = record { η = λ _ → π₂ }
+    ; F⇐G = record { η = λ _ → ⟨ ! , id ⟩ }
+    ; iso = λ _ → ⊤×A⇔A
+    }
+
+  -×⊤ : Natural.Isomorphism (-× ⊤) Morphism.id
+  -×⊤ = record
+    { F⇒G = record { η = λ _ → π₁ }
+    ; F⇐G = record { η = λ _ → ⟨ id , ! ⟩ }
+    ; iso = λ _ → A×⊤⇔A
+    }
+
   monoidal : Monoidal.t 𝒬
   monoidal = record
     { Category.t category
     ; unit = ⊤
-    ; ⊗ = Bifunctor.bifunctor category category H
-    } where H : Morphism.t (Product.𝒬 𝒬 𝒬) 𝒬
-            H = record { F₀ = P.uncurry′ _×_; F₁ = P.uncurry′ _⁂_ }
+    ; ⊗ = -×-
+    }
