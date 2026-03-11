@@ -28,6 +28,7 @@ import Cheshire.Morphism.Structures
 import Cheshire.Morphism.Bundles
 import Cheshire.Morphism.Reasoning.Core
 import Cheshire.Morphism.Reasoning
+import Cheshire.Morphism
 import Cheshire.Homomorphism.Signatures
 import Cheshire.Homomorphism.Structures
 import Cheshire.Homomorphism.Bundles
