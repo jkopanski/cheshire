@@ -38,3 +38,8 @@ module _
     ; resp-∘ˡ = eqᵉ.trans (F-resp-≈ (C.refl , D.sym D.identityˡ)) F-resp-∘
     ; resp-∘ʳ = eqᵉ.trans (F-resp-≈ (C.sym C.identityˡ , D.refl)) F-resp-∘
     } where open Morphism.IsFunctor isH
+
+-- TODO: reduce-×-isBifunctor
+--     , flip-isBifunctor
+--     , {appʳ,appˡ}-is{Homomorphism,Functor}
+--     , overlap-×-is{Homomorphism,Functor}

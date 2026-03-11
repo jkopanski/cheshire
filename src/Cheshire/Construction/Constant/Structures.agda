@@ -36,3 +36,5 @@ constant-isFunctor eqₛ S {T} isT t = record
   ; F-resp-∘ = eqₜ.sym T.identityˡ
   } where module T = Category.Structure isT
           module eqₜ = Equivalence T.eq
+
+-- TODO: constant{ˡ,ʳ}-is{Homomorphism,Functor}
