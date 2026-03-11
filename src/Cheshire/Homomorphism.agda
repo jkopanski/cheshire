@@ -9,7 +9,7 @@ open import Relation.Binary.PropositionalEquality.Subst.Properties
   using (module Shorthands)
 import Cheshire.Signatures as Signatures
 
-open import Cheshire.Homomorphism.Signatures renaming (id to idM; _∘_ to _∘M_) public
+open import Cheshire.Homomorphism.Signatures public
 open import Cheshire.Homomorphism.Structures public
 open import Cheshire.Homomorphism.Bundles public
 
@@ -48,15 +48,15 @@ module _
 
   infix 5 _∣ˡ_
   _∣ˡ_ : Morphism B C → Morphism A C → Set (o ⊔ ℓ ⊔ o′ ⊔ ℓ′ ⊔ e′ ⊔ o″ ⊔ ℓ″)
-  G ∣ˡ F = Σ[ J ∈ Morphism A B ] G ∘M J ≃ F
+  G ∣ˡ F = Σ[ J ∈ Morphism A B ] G ∘ J ≃ F
 
-id-isHomomorphism : {𝒬 : Quiver o ℓ} → (eq : Equivalence 𝒬 e′) → IsHomomorphism idM eq eq
+id-isHomomorphism : {𝒬 : Quiver o ℓ} → (eq : Equivalence 𝒬 e′) → IsHomomorphism id eq eq
 id-isHomomorphism eq = record { F-resp-≈ = Function.id }
 
 id-isFunctor :
   {𝒬 : Quiver o ℓ} →
   (C : Signatures.Category 𝒬) (eq : Equivalence 𝒬 e′) →
-  IsFunctor idM eq eq C C
+  IsFunctor id eq eq C C
 id-isFunctor _ eq = record
   { IsHomomorphism (id-isHomomorphism eq)
   ; F-resp-id = eq.refl
