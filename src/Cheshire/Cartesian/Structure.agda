@@ -24,16 +24,6 @@ record IsCartesian {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Cartesian 
   field
     ⦃ eq ⦄ : Equivalence 𝒬 e
 
-    -- terminal
-    !-unique : ∀ {A} → (f : A ⇒ ⊤) → ! ≈ f
-    -- product
-    project₁ : ∀ {A B C} {h : C ⇒ A} {i : C ⇒ B} → π₁ ∘ ⟨ h , i ⟩ ≈ h
-    project₂ : ∀ {A B C} {h : C ⇒ A} {i : C ⇒ B} → π₂ ∘ ⟨ h , i ⟩ ≈ i
-    unique :
-      ∀ {A B C} {h : C ⇒ A × B} {i : C ⇒ A} {j : C ⇒ B} →
-      π₁ ∘ h ≈ i → π₂ ∘ h ≈ j →
-      ⟨ i , j ⟩ ≈ h
-
     -- category
     assoc :
       ∀ {A B C D} {f : A ⇒ B} {g : B ⇒ C} {h : C ⇒ D} →
@@ -49,6 +39,18 @@ record IsCartesian {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Cartesian 
   open IsCategory isCategory using (module Commutation; module HomReasoning)
   open HomReasoning
   open Morphisms.Reasoning isCategory
+
+  -- cartesian
+  field
+    -- terminal
+    !-unique : ∀ {A} → (f : A ⇒ ⊤) → ! ≈ f
+    -- product
+    project₁ : ∀ {A B C} {h : C ⇒ A} {i : C ⇒ B} → π₁ ∘ ⟨ h , i ⟩ ≈ h
+    project₂ : ∀ {A B C} {h : C ⇒ A} {i : C ⇒ B} → π₂ ∘ ⟨ h , i ⟩ ≈ i
+    unique :
+      ∀ {A B C} {h : C ⇒ A × B} {i : C ⇒ A} {j : C ⇒ B} →
+      π₁ ∘ h ≈ i → π₂ ∘ h ≈ j →
+      ⟨ i , j ⟩ ≈ h
 
   private
     variable
