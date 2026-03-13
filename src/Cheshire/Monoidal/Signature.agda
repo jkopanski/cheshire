@@ -70,3 +70,17 @@ record Braided (𝒬 : Quiver o ℓ) : Set (𝕃.suc (o ⊔ ℓ)) where
     }
 
   module braided-iso {X Y} = _⇔_ (braided-iso {X} {Y})
+
+
+-- nlab defines Tracedₗ, Tracedᵣ and /planar/ traced (and spherical?).
+-- agda-categories instead puts symmetric as a requirement (making it
+-- spherical? planar?).  I'm going to follow agda-categories here.
+record Traced (𝒬 : Quiver o ℓ) : Set (𝕃.suc (o ⊔ ℓ)) where
+  no-eta-equality
+  field
+    symmetric : Braided 𝒬
+
+  open Braided symmetric public
+
+  field
+    trace : ∀ {X A B} → A ⊗₀ X ⇒ B ⊗₀ X → A ⇒ B
