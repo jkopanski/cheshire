@@ -60,4 +60,3 @@ import Cheshire.Construction.Bifunctor
 import Cheshire.Instance.One
 import Cheshire.Instance.Setoids
 import Cheshire.Instance.Sets
-import Cheshire.Instance.Syntactic
