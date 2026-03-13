@@ -57,3 +57,16 @@ record Braided (𝒬 : Quiver o ℓ) : Set (𝕃.suc (o ⊔ ℓ)) where
     braiding : Natural.Isomorphism F.H F⁻¹.H
 
   module braiding = Natural.Isomorphism braiding
+
+  B : ∀ {X Y} → X ⊗₀ Y ⇒ Y ⊗₀ X
+  B {X} {Y} = braiding.⇒.η (X , Y)
+
+  open Morphisms 𝒬
+
+  braided-iso : ∀ {X Y} → X ⊗₀ Y ⇔ Y ⊗₀ X
+  braided-iso = record
+    { from = B
+    ; to   = B
+    }
+
+  module braided-iso {X Y} = _⇔_ (braided-iso {X} {Y})

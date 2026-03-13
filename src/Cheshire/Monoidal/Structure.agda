@@ -4,8 +4,7 @@ open import Cheshire.Core
 
 module Cheshire.Monoidal.Structure where
 
-import Cheshire.Morphism.Bundles as MorphismBundles
-import Cheshire.Morphism.Reasoning as MorphismReasoning
+import Cheshire.Morphism as Morphisms
 import Cheshire.Natural as Natural
 open import Cheshire.Category.Structure
 open import Cheshire.Monoidal.Signature
@@ -22,8 +21,8 @@ record IsMonoidal (e : 𝕃.t) {𝒬 : Quiver o ℓ} (ℳ : Monoidal 𝒬) : Set
   open IsCategory isCategory public
   open HomReasoning
   open Commutation
-  open MorphismBundles category
-  open MorphismReasoning isCategory
+  open Morphisms.Bundles category
+  open Morphisms.Reasoning isCategory
 
   field
     unitorˡ    : ∀ {X} → unit ⊗₀ X ≅ X
@@ -87,15 +86,10 @@ record IsBraided (e : 𝕃.t) {𝒬 : Quiver o ℓ} (ℳ : Braided 𝒬) : Set (
   open IsMonoidal isMonoidal public
   open HomReasoning
   open Commutation
-  open MorphismReasoning isCategory
+  open Morphisms.Reasoning isCategory
 
-  -- braided
   field
     braiding-isIso : Natural.IsIsomorphism isCategory braiding
-
-  private
-    B : ∀ {X Y} → X ⊗₀ Y ⇒ Y ⊗₀ X
-    B {X} {Y} = braiding.⇒.η (X , Y)
 
   field
     hexagon₁ :
@@ -118,3 +112,29 @@ record IsBraided (e : 𝕃.t) {𝒬 : Quiver o ℓ} (ℳ : Braided 𝒬) : Set (
         (B                          ⇒⟨ Z ⊗₀ X ⊗₀ Y ⟩
         associator.to)
       ⟩
+
+
+record IsSymmetric (e : 𝕃.t) {𝒬 : Quiver o ℓ} (ℳ : Braided 𝒬) : Set (o ⊔ ℓ ⊔ 𝕃.suc e) where
+  open Braided ℳ
+  field
+    isBraided : IsBraided e ℳ
+
+  open IsBraided isBraided public
+  open Morphisms.Signatures 𝒬
+  open Morphisms.Structures category
+  open Morphisms.Bundles category
+
+  field
+    commutative : ∀ {X Y} → B {X} {Y} ∘ B {Y} {X} ≈ id
+    
+  braided-isIso : ∀ {X Y} → IsIso (B {X} {Y}) B
+  braided-isIso = record
+    { isoˡ = commutative
+    ; isoʳ = commutative
+    }
+
+  braided : ∀ {X Y} → X ⊗₀ Y ≅ Y ⊗₀ X
+  braided = record
+    { _⇔_ braided-iso
+    ; isIso = braided-isIso
+    }
