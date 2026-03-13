@@ -44,32 +44,39 @@ module _ {e e′}
     -- for nicer module use: F.resp-≈
     resp-≈ = F-resp-≈
 
+
   record IsFunctor
     (S : Category 𝒮) (T : Category 𝒯) :
     Set (o ⊔ ℓ ⊔ e ⊔ e′) where
     open Quiver 𝒮
-    module S = Category S
-    module T = Category T
+    field
+      isHomomorphism : IsHomomorphism
+
+    open IsHomomorphism isHomomorphism public
+    private
+      module S = Category S
+      module T = Category T
     open T using (_∘_)
     field
       F-resp-id : ∀ {A} → M.₁ (S.id {A}) ≈ T.id
       F-resp-∘ : ∀ {X Y Z} → {f : X ⇒ Y} {g : Y ⇒ Z} →
                  M.₁ (g S.∘ f) ≈ M.₁ g ∘ M.₁ f
-      F-resp-≈ : ∀ {A B} {f g : A ⇒ B} → f ≈ g → M.₁ f ≈ M.₁ g
-
-    isHomomorphism : IsHomomorphism
-    isHomomorphism = record { F-resp-≈ = F-resp-≈ }
 
     resp-id = F-resp-id
     resp-∘  = F-resp-∘
-    resp-≈  = F-resp-≈
+
 
   record IsCartesian
     (S : Cartesian 𝒮) (T : Cartesian 𝒯)
     : Set (o ⊔ o′ ⊔ ℓ ⊔ ℓ′ ⊔ e ⊔ e′) where
     open Quiver 𝒮
-    module S = Cartesian S
-    module T = Cartesian T
+    private
+      module S = Cartesian S
+      module T = Cartesian T
+    field
+      isFunctor : IsFunctor S.category T.category
+
+    open IsFunctor isFunctor public
     open T using (_∘_)
     open Bundles T.category
     private instance
@@ -84,11 +91,6 @@ module _ {e e′}
       ⊤-iso : ⊤ ≅ M.₀ ⊤
       ×-iso : ∀ (A B : 𝒮 .Ob) → M.₀ A × M.₀ B ≅ M.₀ (A × B )
 
-      F-resp-id : ∀ {A} → M.₁ (S.id {A}) ≈ T.id
-      F-resp-∘ : ∀ {X Y Z} → {f : X ⇒ Y} {g : Y ⇒ Z} →
-                 M.₁ (g S.∘ f) ≈ M.₁ g ∘ M.₁ f
-      F-resp-≈ : ∀ {A B} {f g : A ⇒ B} → f ≈ g → M.₁ f ≈ M.₁ g
-
     module ⊤-iso = _≅_ ⊤-iso
     module ×-iso {A B} = _≅_ (×-iso A B)
 
@@ -97,14 +99,3 @@ module _ {e e′}
       F-resp-⟨⟩ : ∀ {A B X} → (f : X ⇒ A) → (g : X ⇒ B) → ×-iso.to ∘ M.₁ S.⟨ f , g ⟩ ≈ T.⟨ M.₁ f , M.₁ g ⟩
       F-resp-π₁ : ∀ {A B} → M.₁ (S.π₁ {A} {B}) ∘ ×-iso.from ≈ T.π₁
       F-resp-π₂ : ∀ {A B} → M.₁ (S.π₂ {A} {B}) ∘ ×-iso.from ≈ T.π₂
-
-    isFunctor : IsFunctor S.category T.category
-    isFunctor = record
-      { F-resp-id = F-resp-id; F-resp-∘ = F-resp-∘; F-resp-≈ = F-resp-≈ }
-
-    isHomomorphism : IsHomomorphism
-    isHomomorphism = record { F-resp-≈ = F-resp-≈ }
-
-    resp-id = F-resp-id
-    resp-∘  = F-resp-∘
-    resp-≈  = F-resp-≈

@@ -47,6 +47,10 @@ record Cartesian
     signature : Signatures.Morphism 𝒮 𝒯
     structure : IsCartesian signature eqₛ eqₜ S T
 
+  private
+    module S = Signatures.Cartesian S
+    module T = Signatures.Cartesian T
+
   open Signatures.Morphism signature public
   open IsCartesian structure public
 
@@ -56,8 +60,5 @@ record Cartesian
     ; structure = record { IsCartesian structure }
     }
 
-  homomorphism : Homomorphism
-  homomorphism = record
-    { signature = signature
-    ; structure = record { IsCartesian structure }
-    }
+  open Functor functor public
+    using (homomorphism)

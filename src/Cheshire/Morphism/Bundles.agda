@@ -14,7 +14,6 @@ import Cheshire.Morphism.Signatures 𝒬 as Signatures
 import Cheshire.Morphism.Structures 𝒞 as Structures
 import Cheshire.Morphism.Reasoning as MorphismReasoning
 
-open Quiver 𝒬 using (_⇒_)
 open Category.Signature 𝒞
 open Signatures using (_⇔_)
 open Structures using (IsEpi; IsIso; IsMono)

@@ -63,7 +63,7 @@ module _
     (isF : IsFunctor F eqₛ eqₜ₁ S T₁) → (isG : IsFunctor G eqₛ eqₜ₂ S T₂) →
     IsFunctor (F ※ G) eqₛ (equivalence eqₜ₁ eqₜ₂) S (Product.Category T₁ T₂)
   ※-isFunctor isF isG = record
-    { IsHomomorphism isHomomorphism
+    { isHomomorphism = isHomomorphism
     ; F-resp-id = F.resp-id , G.resp-id
     ; F-resp-∘ = F.resp-∘ , G.resp-∘
     } where module F = IsFunctor isF
@@ -88,7 +88,7 @@ module _
     (isF : IsFunctor F eqₛ₁ eqₜ₁ S₁ T₁) → (isG : IsFunctor G eqₛ₂ eqₜ₂ S₂ T₂) →
     IsFunctor (F ⁂ G) (equivalence eqₛ₁ eqₛ₂) (equivalence eqₜ₁ eqₜ₂) (Product.Category S₁ S₂) (Product.Category T₁ T₂)
   ⁂-isFunctor isF isG = record
-    { IsHomomorphism isHomomorphism
+    { isHomomorphism = isHomomorphism
     ; F-resp-id = F.resp-id , G.resp-id
     ; F-resp-∘ = F.resp-∘ , G.resp-∘
     } where module F = IsFunctor isF
@@ -121,7 +121,7 @@ module _
       (Product.Category (Product.Category C₁′ C₂′) C₃′)
       (Product.Category C₁′ (Product.Category C₂′ C₃′))
   assocˡ-isFunctor _ _ _ = record
-    { IsHomomorphism assocˡ-isHomomorphism
+    { isHomomorphism = assocˡ-isHomomorphism
     ; F-resp-id = eq₁.refl , (eq₂.refl , eq₃.refl)
     ; F-resp-∘ = eq₁.refl , (eq₂.refl , eq₃.refl)
     }
@@ -143,7 +143,7 @@ module _
       (Product.Category C₁′ (Product.Category C₂′ C₃′))
       (Product.Category (Product.Category C₁′ C₂′) C₃′)
   assocʳ-isFunctor _ _ _ = record
-    { IsHomomorphism assocʳ-isHomomorphism
+    { isHomomorphism = assocʳ-isHomomorphism
     ; F-resp-id = (eq₁.refl , eq₂.refl) , eq₃.refl
     ; F-resp-∘ = (eq₁.refl , eq₂.refl) , eq₃.refl
     }
@@ -161,7 +161,7 @@ module _ (eqₛ : Equivalence 𝒮 e) (eqₜ : Equivalence 𝒯 e′) where
     (S : Category.Signature 𝒮) (T : Category.Signature 𝒯) →
     IsFunctor (πˡ 𝒮 𝒯) (equivalence eqₛ eqₜ) eqₛ (Product.Category S T) S
   πˡ-isFunctor _ _ = record
-    { IsHomomorphism πˡ-isHomomorphism
+    { isHomomorphism = πˡ-isHomomorphism
     ; F-resp-id = eqₛ.refl
     ; F-resp-∘ = eqₛ.refl
     }
@@ -175,7 +175,7 @@ module _ (eqₛ : Equivalence 𝒮 e) (eqₜ : Equivalence 𝒯 e′) where
     (S : Category.Signature 𝒮) (T : Category.Signature 𝒯) →
     IsFunctor (πʳ 𝒮 𝒯) (equivalence eqₛ eqₜ) eqₜ (Product.Category S T) T
   πʳ-isFunctor _ _ = record
-    { IsHomomorphism πʳ-isHomomorphism
+    { isHomomorphism = πʳ-isHomomorphism
     ; F-resp-id = eqₜ.refl
     ; F-resp-∘ = eqₜ.refl
     }
@@ -191,7 +191,7 @@ module _ (eqₛ : Equivalence 𝒮 e) (eqₜ : Equivalence 𝒯 e′) where
       (equivalence eqₛ eqₜ) (equivalence eqₜ eqₛ)
       (Product.Category S T) (Product.Category T S)
   Swap-isFunctor _ _ = record
-    { IsHomomorphism Swap-isHomomorphism
+    { isHomomorphism = Swap-isHomomorphism
     ; F-resp-id = eqₜ.refl , eqₛ.refl
     ; F-resp-∘ = eqₜ.refl , eqₛ.refl
     }

@@ -18,7 +18,8 @@ module ×ₛ where
 module ⊎ₛ where
   open import Data.Sum.Relation.Binary.Pointwise public
 
-import Cheshire.Signatures as Sig
+import Cheshire.Category as Category renaming (Category to t)
+import Cheshire.Cartesian as Cartesian renaming (Cartesian to t)
 import Cheshire.Object.Signatures as Object
 
 𝒬 : Quiver (𝕃.suc (o ⊔ ℓ)) (o ⊔ ℓ)
@@ -46,10 +47,15 @@ instance
   coproducts : BinaryCoproducts
   coproducts = record {_⊎_ = ⊎ₛ.⊎-setoid }
 
-Setoids : Sig.Cartesian 𝒬
-Setoids = record
+category : Category.Signature 𝒬
+category = record
   { id = λ {A} → Id.function A
   ; _∘_ = Function.flip Comp.function
+  }
+
+Setoids : Cartesian.Signature 𝒬
+Setoids = record
+  { category = category
   ; terminal = terminal
   ; ! = λ {A} → Const.function A ⊤ 𝟙.tt
   ; products = products

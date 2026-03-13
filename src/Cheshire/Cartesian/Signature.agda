@@ -21,18 +21,17 @@ open MkBifunctor using (bifunctor)
 private
   variable
     o ℓ : 𝕃.t
+    𝒬 : Quiver o ℓ
 
-record Cartesian (𝒬 : Quiver o ℓ) : Set (𝕃.suc (o ⊔ ℓ)) where
+record Cartesian (𝒬 : Quiver o ℓ) : Set (𝕃.levelOfTerm 𝒬) where
   no-eta-equality
-  open Quiver 𝒬 hiding (Ob)
+  field
+    category : Category.t 𝒬
+
+  open Category.t category public
   open Object (𝒬 .Ob)
 
-  infixr 9 _∘_
-
   field
-    id : ∀ {A} → A ⇒ A
-    _∘_ : ∀ {A B C} → B ⇒ C → A ⇒ B → A ⇒ C
-
     ⦃ terminal ⦄ : Terminal
     ⦃ products ⦄ : BinaryProducts
 
@@ -72,9 +71,6 @@ record Cartesian (𝒬 : Quiver o ℓ) : Set (𝕃.suc (o ⊔ ℓ)) where
 
   Δ : ∀ {C} → C ⇒ C × C
   Δ {C} = ⟨ id , id ⟩
-
-  category : Category.t 𝒬
-  category = record { id = id; _∘_ = _∘_ }
 
   -×- : Bifunctor.t 𝒬 𝒬 𝒬
   -×- = bifunctor category category H
@@ -117,7 +113,7 @@ record Cartesian (𝒬 : Quiver o ℓ) : Set (𝕃.suc (o ⊔ ℓ)) where
 
   monoidal : Monoidal.t 𝒬
   monoidal = record
-    { Category.t category
+    { category = category
     ; unit = ⊤
     ; ⊗ = -×-
     }

@@ -31,7 +31,7 @@ constant-isFunctor :
   (isT : Category.Structure e′ T) →
   (t : 𝒯 .Ob) → IsFunctor (constant T t) eqₛ (isT .Category.Structure.eq) S T
 constant-isFunctor eqₛ S {T} isT t = record
-  { IsHomomorphism (constant-isHomomorphism eqₛ (T.eq) T t)
+  { isHomomorphism = constant-isHomomorphism eqₛ (T.eq) T t
   ; F-resp-id = eqₜ.refl
   ; F-resp-∘ = eqₜ.sym T.identityˡ
   } where module T = Category.Structure isT

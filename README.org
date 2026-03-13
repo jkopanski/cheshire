@@ -42,6 +42,14 @@ this design pattern(?).  This set me free to break off the structure
 from the signatures, which is *the thing* this library does.
 
 ** Hierarchy inversion
+*IMPORTANT!* I went back on this take.  When trying to port the monoidal
+hierarchy it was a big mess and lot of duplication.  I think the way
+to go now is to construct appropriate bundle with all this all this
+sorted out.  Given that all the categorical signatures/structures are
+parameterized with quiver I should be able to say that this arrow has
+this and that structure.
+
+Old comment kept below for now.
 Other common problem is with structure hierarchy dependencies.  If
 some structure depends on two other, and both of them have a common
 dependency, there is nothing to enforce that this common ancestor /is

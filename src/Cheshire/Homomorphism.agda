@@ -58,7 +58,7 @@ id-isFunctor :
   (C : Signatures.Category 𝒬) (eq : Equivalence 𝒬 e′) →
   IsFunctor id eq eq C C
 id-isFunctor _ eq = record
-  { IsHomomorphism (id-isHomomorphism eq)
+  { isHomomorphism = id-isHomomorphism eq
   ; F-resp-id = eq.refl
   ; F-resp-∘ = eq.refl
   } where module eq = Equivalence eq

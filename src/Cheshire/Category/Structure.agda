@@ -8,7 +8,6 @@ open import Cheshire.Category.Signature
 open import Cheshire.Object.Signatures
 
 record IsCategory {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Category 𝒬) : Set (o ⊔ ℓ ⊔ 𝕃.suc e) where
-  open Quiver 𝒬 using (_⇒_)
   open Category 𝒞
   field
     ⦃ eq ⦄ : Equivalence 𝒬 e

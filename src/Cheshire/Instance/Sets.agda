@@ -8,7 +8,8 @@ import Function
 import Data.Product as ×
 import Data.Sum as ⊎
 
-import Cheshire.Signatures as Sig
+import Cheshire.Category as Category renaming (Category to t)
+import Cheshire.Cartesian as Cartesian renaming (Cartesian to t)
 import Cheshire.Object.Signatures as Object
 
 𝒬 : Quiver (𝕃.suc o) o
@@ -38,10 +39,15 @@ instance
   coproducts : BinaryCoproducts
   coproducts = record { _⊎_ = ⊎._⊎_ }
 
-Sets : Sig.Cartesian 𝒬
-Sets = record
+category : Category.Signature 𝒬
+category = record
   { id = Function.id
   ; _∘_ = Function._∘′_
+  }
+
+Sets : Cartesian.Signature 𝒬
+Sets = record
+  { category = category
   ; terminal = terminal
   ; ! = Function.const 𝟙.tt
   ; products = products

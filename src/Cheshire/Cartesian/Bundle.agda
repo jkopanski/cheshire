@@ -23,22 +23,14 @@ record Cartesian (e : 𝕃.t) (𝒬 : Quiver o ℓ) : Set (𝕃.suc o ⊔ 𝕃.s
     hiding (category; monoidal)
   open IsCartesian structure public
 
-  -- This is already exported by monoidal
-  -- Perhaps I should do something different here?
-  -- category : Category.t e 𝒬
-  -- category = record
-  --   { signature = Signature.category signature
-  --   ; structure = isCategory
-  --   }
-
-  -- open Category.t category public
-  --   hiding (signature; structure)
+  category : Category.t e 𝒬
+  category = record
+    { signature = Signature.category signature
+    ; structure = isCategory
+    }
 
   monoidal : Monoidal.t e 𝒬
   monoidal = record
     { signature = Signature.monoidal signature
     ; structure = isMonoidal
     }
-
-  open Monoidal.t monoidal public
-    hiding (isCategory)

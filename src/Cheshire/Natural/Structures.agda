@@ -27,7 +27,6 @@ module _
     module F = Morphism ℱ
     module G = Morphism 𝒢
 
-    open Quiver 𝒮
     open Category.Signature T
 
   record IsTransformation (N : Natural.Transformation ℱ 𝒢) : Set (o ⊔ ℓ ⊔ e) where
@@ -35,7 +34,7 @@ module _
     open Natural.Transformation N
 
     field
-      commute : ∀ {X Y : 𝒮 .Ob} (f : X ⇒ Y) → η Y ∘ F.₁ f ≈ G.₁ f ∘ η X
+      commute : ∀ {X Y : 𝒮 .Ob} (f : 𝒮 .Hom X Y) → η Y ∘ F.₁ f ≈ G.₁ f ∘ η X
 
 module _
   {𝒮 : Quiver o  ℓ } {𝒯 : Quiver o′ ℓ′} {ℱ 𝒢 : Morphism 𝒮 𝒯}

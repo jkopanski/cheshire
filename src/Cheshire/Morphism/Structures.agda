@@ -7,7 +7,6 @@ module Cheshire.Morphism.Structures
   {o ℓ} {𝒬 : Quiver o ℓ} (𝒞 : Category 𝒬)
   where
 
-open Quiver 𝒬 using (_⇒_)
 open Category 𝒞
 
 private

@@ -27,14 +27,14 @@ record Monoidal (e : 𝕃.t) (𝒬 : Quiver o ℓ) : Set (𝕃.suc o ⊔ 𝕃.su
     ; structure = isCategory
     }
 
-  open Category.t category public
 
 record Braided (e : 𝕃.t) (𝒬 : Quiver o ℓ) : Set (𝕃.suc o ⊔ 𝕃.suc ℓ ⊔ 𝕃.suc e) where
   field
     signature : Signature.Braided 𝒬
     structure : IsBraided e signature
 
-  open Signature.Braided signature public hiding (category; monoidal)
+  open Signature.Braided signature public
+    hiding (category; monoidal)
   open IsBraided structure public
 
   monoidal : Monoidal e 𝒬
@@ -42,4 +42,7 @@ record Braided (e : 𝕃.t) (𝒬 : Quiver o ℓ) : Set (𝕃.suc o ⊔ 𝕃.suc
     { signature = Signature.Braided.monoidal signature
     ; structure = isMonoidal
     }
+
+  category : Category.t e 𝒬
+  category = Monoidal.category monoidal
 

@@ -17,30 +17,16 @@ open Category using (IsCategory)
 open Monoidal using (IsMonoidal)
 
 record IsCartesian {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Cartesian 𝒬) : Set (o ⊔ ℓ ⊔ 𝕃.suc e) where
-  open Quiver 𝒬 using (_⇒_)
+  no-eta-equality
   open Cartesian 𝒞
-  private instance
-      _ = terminal; _ = products
   field
-    ⦃ eq ⦄ : Equivalence 𝒬 e
+    isCategory : IsCategory e category
 
-    -- category
-    assoc :
-      ∀ {A B C D} {f : A ⇒ B} {g : B ⇒ C} {h : C ⇒ D} →
-      (h ∘ g) ∘ f ≈ h ∘ (g ∘ f)
-    identityˡ : ∀ {A B} {f : A ⇒ B} → id ∘ f ≈ f
-    identityʳ : ∀ {A B} {f : A ⇒ B} → f ∘ id ≈ f
-    ∘-resp-≈  : ∀ {A B C} {f h : B ⇒ C} {g i : A ⇒ B} → f ≈ h → g ≈ i → f ∘ g ≈ h ∘ i
+  open IsCategory isCategory public
 
-  isCategory : IsCategory e category
-  isCategory = record
-    { assoc = assoc; identityˡ = identityˡ; identityʳ = identityʳ; ∘-resp-≈ = ∘-resp-≈ }
+  private instance
+    _ = terminal; _ = products
 
-  open IsCategory isCategory using (module Commutation; module HomReasoning)
-  open HomReasoning
-  open Morphisms.Reasoning isCategory
-
-  -- cartesian
   field
     -- terminal
     !-unique : ∀ {A} → (f : A ⇒ ⊤) → ! ≈ f
@@ -51,6 +37,9 @@ record IsCartesian {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Cartesian 
       ∀ {A B C} {h : C ⇒ A × B} {i : C ⇒ A} {j : C ⇒ B} →
       π₁ ∘ h ≈ i → π₂ ∘ h ≈ j →
       ⟨ i , j ⟩ ≈ h
+
+  open HomReasoning
+  open Morphisms.Reasoning isCategory
 
   private
     variable
@@ -473,7 +462,7 @@ record IsCartesian {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Cartesian 
 
   isMonoidal : IsMonoidal e monoidal
   isMonoidal = record
-    { IsCategory isCategory
+    { isCategory = isCategory
     ; unitorˡ = ⊤×A≅A
     ; unitorʳ = A×⊤≅A
     ; associator = ≅.sym isCategory ×-assoc

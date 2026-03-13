@@ -14,7 +14,6 @@ module Cheshire.Morphism.Reasoning.Core
   {e : 𝕃.t} (isC : IsCategory e 𝒞)
   where
 
-open Quiver 𝒬 using (_⇒_)
 open Category 𝒞
 open IsCategory isC
 open HomReasoning

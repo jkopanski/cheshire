@@ -8,6 +8,7 @@ module Cheshire.Monoidal.Signature where
 import Cheshire.Category.Signature as Category renaming (Category to t)
 import Cheshire.Homomorphism.Signatures as Morphism renaming (Morphism to t)
 import Cheshire.Bifunctor.Signature as Bifunctor renaming (Bifunctor to t)
+import Cheshire.Morphism.Signatures as Morphisms
 import Cheshire.Natural.Signatures as Natural
 
 private
@@ -16,15 +17,14 @@ private
 
 record Monoidal (𝒬 : Quiver o ℓ) : Set (𝕃.suc (o ⊔ ℓ)) where
   no-eta-equality
-  open Quiver 𝒬 hiding (Ob)
+  field
+    category : Category.t 𝒬
 
-  infixr 9 _∘_
+  open Category.t category public
+
   infixr 10 _⊗₀_ _⊗₁_
 
   field
-    id : ∀ {A} → A ⇒ A
-    _∘_ : ∀ {A B C} → B ⇒ C → A ⇒ B → A ⇒ C
-
     unit : 𝒬 .Ob
     ⊗  : Bifunctor.t 𝒬 𝒬 𝒬
 
@@ -43,28 +43,13 @@ record Monoidal (𝒬 : Quiver o ℓ) : Set (𝕃.suc (o ⊔ ℓ)) where
   -⊗_ : 𝒬 .Ob → Morphism.t 𝒬 𝒬
   -⊗ X = F.appʳ X
 
-  category : Category.t 𝒬
-  category = record { id = id; _∘_ = _∘_ }
-
 
 record Braided (𝒬 : Quiver o ℓ) : Set (𝕃.suc (o ⊔ ℓ)) where
   no-eta-equality
-  open Quiver 𝒬 hiding (Ob)
-
-  infixr 9 _∘_
-
   field
-    id : ∀ {A} → A ⇒ A
-    _∘_ : ∀ {A B C} → B ⇒ C → A ⇒ B → A ⇒ C
-
-    unit : 𝒬 .Ob
-    ⊗  : Bifunctor.t 𝒬 𝒬 𝒬
-
-  monoidal : Monoidal 𝒬
-  monoidal = record { id = id; _∘_ = _∘_; unit = unit; ⊗ = ⊗ }
+    monoidal : Monoidal 𝒬
 
   open Monoidal monoidal public
-    hiding (id; _∘_; unit; ⊗)
 
   module F⁻¹ = Bifunctor.t (Bifunctor.t.flip ⊗)
 
