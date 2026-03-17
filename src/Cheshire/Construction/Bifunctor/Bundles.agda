@@ -18,22 +18,20 @@ private
     e e′ e″ : 𝕃.t
 
 module _
-  {𝒞 : Quiver o ℓ} {𝒟 : Quiver o′ ℓ′} {ℰ : Quiver o″ ℓ″}
-  (C : Category.t e 𝒞) (D : Category.t e′ 𝒟) (E : Category.t e″ ℰ)
+  (C : Category.t o ℓ e) (D : Category.t o′ ℓ′ e′) (E : Category.t o″ ℓ″ e″)
   where
 
   private
     module C = Category.t C
     module D = Category.t D
     module E = Category.t E
-    𝒞×𝒟 = Product.𝒬 𝒞 𝒟
-    C×D = Product.Category C.signature D.signature
+    𝒞×𝒟 = Product.𝒬 C.𝒬 D.𝒬
+    C×D = Product.Category C.category D.category
 
   bifunctor-Bifunctor :
-    {H : Morphism.t 𝒞×𝒟 ℰ} →
-    Morphism.IsFunctor H (Product.equivalence C.eq D.eq) E.eq C×D E.signature →
+    (H : Morphism.Functor C×D E.category) →
     Bifunctor.t C D E
-  bifunctor-Bifunctor {H} isH = record
-    { signature = bifunctor C.signature D.signature H
-    ; structure = bifunctor-isBifunctor C D E.signature E.eq isH
-    }
+  bifunctor-Bifunctor H = record
+    { signature = bifunctor C.category D.category H.signature
+    ; structure = bifunctor-isBifunctor C D E.category H
+    } where module H = Morphism.Functor H

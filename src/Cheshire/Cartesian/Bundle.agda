@@ -7,30 +7,24 @@ module Cheshire.Cartesian.Bundle where
 open import Cheshire.Cartesian.Signature renaming (Cartesian to Signature)
 open import Cheshire.Cartesian.Structure
 
-import Cheshire.Category.Bundle as Category renaming (Category to t)
+import Cheshire.Category as Category renaming (Category to t; IsCategory to Structure)
 import Cheshire.Monoidal.Bundle as Monoidal renaming (Monoidal to t)
 
-private
-  variable
-    o ℓ : 𝕃.t
-
-record Cartesian (e : 𝕃.t) (𝒬 : Quiver o ℓ) : Set (𝕃.suc o ⊔ 𝕃.suc ℓ ⊔ 𝕃.suc e) where
+record Cartesian o ℓ e : Set (𝕃.suc( o ⊔ ℓ ⊔ e)) where
   field
-    signature : Signature 𝒬
-    structure : IsCartesian e signature
+    𝒬 : Quiver o ℓ
+    -- signatures
+    category    :  Category.Signature 𝒬
+    cartesian   : Signature category
+    -- structures
+    isCategory  : Category.Structure e category
+    isCartesian : IsCartesian isCategory cartesian
 
-  open Signature signature public
-    hiding (category; monoidal)
-  open IsCartesian structure public
-
-  category : Category.t e 𝒬
-  category = record
-    { signature = Signature.category signature
-    ; structure = isCategory
-    }
-
-  monoidal : Monoidal.t e 𝒬
+  monoidal : Monoidal.t o ℓ e
   monoidal = record
-    { signature = Signature.monoidal signature
-    ; structure = isMonoidal
+    { 𝒬 = 𝒬
+    ; category = category
+    ; monoidal = Signature.monoidal cartesian
+    ; isCategory = isCategory
+    ; isMonoidal = IsCartesian.isMonoidal isCartesian
     }

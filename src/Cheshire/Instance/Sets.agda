@@ -45,10 +45,9 @@ category = record
   ; _∘_ = Function._∘′_
   }
 
-Sets : Cartesian.Signature 𝒬
+Sets : Cartesian.Signature category
 Sets = record
-  { category = category
-  ; terminal = terminal
+  { terminal = terminal
   ; ! = Function.const 𝟙.tt
   ; products = products
   ; π₁ = ×.proj₁

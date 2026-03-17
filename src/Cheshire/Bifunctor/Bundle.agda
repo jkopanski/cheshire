@@ -14,8 +14,7 @@ private
     e e′ e″ : 𝕃.t
 
 module _
-  {𝒞 : Quiver o ℓ} {𝒟 : Quiver o′ ℓ′} {ℰ : Quiver o″ ℓ″}
-  (C : Category.t e 𝒞) (D : Category.t e′ 𝒟) (E : Category.t e″ ℰ)
+  (C : Category.t o ℓ e) (D : Category.t o′ ℓ′ e′) (E : Category.t o″ ℓ″ e″)
   where
 
   module C = Category.t C
@@ -24,10 +23,9 @@ module _
 
   record Bifunctor : Set (o ⊔ o′ ⊔ o″ ⊔ ℓ ⊔ ℓ′ ⊔ ℓ″ ⊔ e ⊔ e′ ⊔ e″) where
     field
-      signature : Signature.Bifunctor 𝒞 𝒟 ℰ
+      signature : Signature.Bifunctor C.𝒬 D.𝒬 E.𝒬
       structure : IsBifunctor
-        {C = C.signature} {D = D.signature} {E = E.signature}
-        C.eq D.eq E.eq
+        C.category D.category E.category
         signature
 
     open Signature.Bifunctor signature public

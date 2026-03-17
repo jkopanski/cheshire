@@ -21,21 +21,22 @@ private
     𝒮₂ 𝒯₂ : Quiver o ℓ
 
 Category :
-  (S : Category.t e 𝒮) (T : Category.t e′ 𝒯) →
-  Category.t (e ⊔ e′) (𝒬 𝒮 𝒯)
+  (S : Category.t o ℓ e) (T : Category.t o′ ℓ′ e′) →
+  Category.t (o ⊔ o′) (ℓ ⊔ ℓ′) (e ⊔ e′)
 Category S T = record
-  { signature = Product.Category S.signature T.signature
-  ; structure = IsCategory S.structure T.structure
+  { 𝒬          = 𝒬 S.𝒬 T.𝒬
+  ; category   = Product.Category S.category T.category
+  ; isCategory = IsCategory S.isCategory T.isCategory
   } where module S = Category.t S
           module T = Category.t T
 
 module _
-  {eqₛ : Equivalence 𝒮 e} {eqₜ₁ : Equivalence 𝒯₁ e′} {eqₜ₂ : Equivalence 𝒯₂ e″}
+  ⦃ eqₛ : Equivalence 𝒮 e ⦄ ⦃ eqₜ₁ : Equivalence 𝒯₁ e′ ⦄ ⦃ eqₜ₂ : Equivalence 𝒯₂ e″ ⦄
   where
 
   ※-Homomorphism :
-    (F : Homomorphism eqₛ eqₜ₁) (G : Homomorphism eqₛ eqₜ₂) →
-    Homomorphism eqₛ (equivalence eqₜ₁ eqₜ₂)
+    (F : Homomorphism 𝒮 𝒯₁) (G : Homomorphism 𝒮 𝒯₂) →
+    Homomorphism 𝒮 (𝒬 𝒯₁ 𝒯₂) ⦃ _ ⦄ ⦃ equivalence eqₜ₁ eqₜ₂ ⦄
   ※-Homomorphism F G = record
     { signature = F.signature ※ G.signature
     ; structure = ※-isHomomorphism F.structure G.structure
@@ -44,21 +45,22 @@ module _
 
   ※-Functor :
     {S : Category.Signature 𝒮} {T₁ : Category.Signature 𝒯₁} {T₂ : Category.Signature 𝒯₂} →
-    (F : Functor eqₛ eqₜ₁ S T₁) (G : Functor eqₛ eqₜ₂ S T₂) →
-    Functor eqₛ (equivalence eqₜ₁ eqₜ₂) S (Product.Category T₁ T₂)
+    (F : Functor S T₁) (G : Functor S T₂) →
+    Functor ⦃ eqₜ = equivalence eqₜ₁ eqₜ₂ ⦄ S (Product.Category T₁ T₂)
   ※-Functor F G = record
     { signature = F.signature ※ G.signature
     ; structure = ※-isFunctor F.structure G.structure
+    ; isHomomorphism = ※-isHomomorphism F.isHomomorphism G.isHomomorphism
     } where module F = Functor F
             module G = Functor G
 
 module _
-  {eqₛ₁ : Equivalence 𝒮₁ e} {eqₛ₂ : Equivalence 𝒮₂ e′} {eqₜ₁ : Equivalence 𝒯₁ e″} {eqₜ₂ : Equivalence 𝒯₂ e‴}
+  ⦃ eqₛ₁ : Equivalence 𝒮₁ e ⦄ ⦃ eqₛ₂ : Equivalence 𝒮₂ e′ ⦄ ⦃ eqₜ₁ : Equivalence 𝒯₁ e″ ⦄ ⦃ eqₜ₂ : Equivalence 𝒯₂ e‴ ⦄
   where
 
   ⁂-Homomorphism :
-    (F : Homomorphism eqₛ₁ eqₜ₁) (G : Homomorphism eqₛ₂ eqₜ₂) →
-    Homomorphism (equivalence eqₛ₁ eqₛ₂) (equivalence eqₜ₁ eqₜ₂)
+    (F : Homomorphism 𝒮₁ 𝒯₁) (G : Homomorphism 𝒮₂ 𝒯₂) →
+    Homomorphism (𝒬 𝒮₁ 𝒮₂) (𝒬 𝒯₁ 𝒯₂) ⦃ equivalence eqₛ₁ eqₛ₂ ⦄ ⦃ equivalence eqₜ₁ eqₜ₂ ⦄
   ⁂-Homomorphism F G = record
     { signature = F.signature ⁂ G.signature
     ; structure = ⁂-isHomomorphism F.structure G.structure
@@ -67,106 +69,102 @@ module _
 
   ⁂-Functor :
     {S₁ : Category.Signature 𝒮₁} {S₂ : Category.Signature 𝒮₂} {T₁ : Category.Signature 𝒯₁} {T₂ : Category.Signature 𝒯₂} →
-    (F : Functor eqₛ₁ eqₜ₁ S₁ T₁) (G : Functor eqₛ₂ eqₜ₂ S₂ T₂) →
+    (F : Functor S₁ T₁) (G : Functor S₂ T₂) →
     Functor
-      (equivalence eqₛ₁ eqₛ₂) (equivalence eqₜ₁ eqₜ₂)
+      ⦃ equivalence eqₛ₁ eqₛ₂ ⦄ ⦃ equivalence eqₜ₁ eqₜ₂ ⦄
       (Product.Category S₁ S₂) (Product.Category T₁ T₂)
   ⁂-Functor F G = record
     { signature = F.signature ⁂ G.signature
     ; structure = ⁂-isFunctor F.structure G.structure
+    ; isHomomorphism = ⁂-isHomomorphism F.isHomomorphism G.isHomomorphism
     } where module F = Functor F
             module G = Functor G
 
 module _
   {C₁ : Quiver o ℓ} {C₂ : Quiver o′ ℓ′} {C₃ : Quiver o″ ℓ″}
-  (eq₁ : Equivalence C₁ e) (eq₂ : Equivalence C₂ e′) (eq₃ : Equivalence C₃ e″)
+  ⦃ eq₁ : Equivalence C₁ e ⦄ ⦃ eq₂ : Equivalence C₂ e′ ⦄ ⦃ eq₃ : Equivalence C₃ e″ ⦄
   where
 
-  assocˡ-Homomorphism :
-    Homomorphism
-      (equivalence (equivalence eq₁ eq₂) eq₃)
-      (equivalence eq₁ (equivalence eq₂ eq₃))
+  assocˡ-Homomorphism : Homomorphism (𝒬 (𝒬 C₁ C₂) C₃) (𝒬 C₁ (𝒬 C₂ C₃))
   assocˡ-Homomorphism = record
     { signature = assocˡ C₁ C₂ C₃
-    ; structure = assocˡ-isHomomorphism eq₁ eq₂ eq₃
+    ; structure = assocˡ-isHomomorphism
     }
 
   assocˡ-Functor :
     (C₁′ : Category.Signature C₁) (C₂′ : Category.Signature C₂) (C₃′ : Category.Signature C₃) →
     Functor
-      (equivalence (equivalence eq₁ eq₂) eq₃)
-      (equivalence eq₁ (equivalence eq₂ eq₃))
       (Product.Category (Product.Category C₁′ C₂′) C₃′)
       (Product.Category C₁′ (Product.Category C₂′ C₃′))
   assocˡ-Functor C₁′ C₂′ C₃′ = record
     { signature = assocˡ C₁ C₂ C₃
-    ; structure = assocˡ-isFunctor eq₁ eq₂ eq₃ C₁′ C₂′ C₃′
+    ; structure = assocˡ-isFunctor C₁′ C₂′ C₃′
+    ; isHomomorphism = assocˡ-isHomomorphism
     }
 
   assocʳ-Homomorphism :
     Homomorphism
-      (equivalence eq₁ (equivalence eq₂ eq₃))
-      (equivalence (equivalence eq₁ eq₂) eq₃)
+      (𝒬 C₁ (𝒬 C₂ C₃))
+      (𝒬 (𝒬 C₁ C₂) C₃)
   assocʳ-Homomorphism = record
     { signature = assocʳ C₁ C₂ C₃
-    ; structure = assocʳ-isHomomorphism eq₁ eq₂ eq₃
+    ; structure = assocʳ-isHomomorphism
     }
 
   assocʳ-Functor :
     (C₁′ : Category.Signature C₁) (C₂′ : Category.Signature C₂) (C₃′ : Category.Signature C₃) →
     Functor
-      (equivalence eq₁ (equivalence eq₂ eq₃))
-      (equivalence (equivalence eq₁ eq₂) eq₃)
       (Product.Category C₁′ (Product.Category C₂′ C₃′))
       (Product.Category (Product.Category C₁′ C₂′) C₃′)
   assocʳ-Functor C₁′ C₂′ C₃′ = record
     { signature = assocʳ C₁ C₂ C₃
-    ; structure = assocʳ-isFunctor eq₁ eq₂ eq₃ C₁′ C₂′ C₃′
+    ; structure = assocʳ-isFunctor C₁′ C₂′ C₃′
+    ; isHomomorphism = assocʳ-isHomomorphism
     }
 
-module _ (eqₛ : Equivalence 𝒮 e) (eqₜ : Equivalence 𝒯 e′) where
+module _ ⦃ eqₛ : Equivalence 𝒮 e ⦄ ⦃ eqₜ : Equivalence 𝒯 e′ ⦄ where
 
-  πˡ-Homomorphism :
-    Homomorphism (equivalence eqₛ eqₜ) eqₛ
+  πˡ-Homomorphism : Homomorphism (𝒬 𝒮 𝒯) 𝒮
   πˡ-Homomorphism = record
     { signature = πˡ 𝒮 𝒯
-    ; structure = πˡ-isHomomorphism eqₛ eqₜ
+    ; structure = πˡ-isHomomorphism
     }
 
   πˡ-Functor :
     (S : Category.Signature 𝒮) (T : Category.Signature 𝒯) →
-    Functor (equivalence eqₛ eqₜ) eqₛ (Product.Category S T) S
+    Functor (Product.Category S T) S
   πˡ-Functor S T = record
     { signature = πˡ 𝒮 𝒯
-    ; structure = πˡ-isFunctor eqₛ eqₜ S T
+    ; structure = πˡ-isFunctor S T
+    ; isHomomorphism = πˡ-isHomomorphism
     }
 
-  πʳ-Homomorphism :
-    Homomorphism (equivalence eqₛ eqₜ) eqₜ
+  πʳ-Homomorphism : Homomorphism (𝒬 𝒮 𝒯) 𝒯
   πʳ-Homomorphism = record
     { signature = πʳ 𝒮 𝒯
-    ; structure = πʳ-isHomomorphism eqₛ eqₜ
+    ; structure = πʳ-isHomomorphism
     }
 
   πʳ-Functor :
     (S : Category.Signature 𝒮) (T : Category.Signature 𝒯) →
-    Functor (equivalence eqₛ eqₜ) eqₜ (Product.Category S T) T
+    Functor (Product.Category S T) T
   πʳ-Functor S T = record
     { signature = πʳ 𝒮 𝒯
-    ; structure = πʳ-isFunctor eqₛ eqₜ S T
+    ; structure = πʳ-isFunctor S T
+    ; isHomomorphism = πʳ-isHomomorphism
     }
 
-  Swap-Homomorphism :
-    Homomorphism (equivalence eqₛ eqₜ) (equivalence eqₜ eqₛ)
+  Swap-Homomorphism : Homomorphism (𝒬 𝒮 𝒯) (𝒬 𝒯 𝒮)
   Swap-Homomorphism = record
     { signature = Swap 𝒮 𝒯
-    ; structure = Swap-isHomomorphism eqₛ eqₜ
+    ; structure = Swap-isHomomorphism
     }
 
   Swap-Functor :
     (S : Category.Signature 𝒮) (T : Category.Signature 𝒯) →
-    Functor (equivalence eqₛ eqₜ) (equivalence eqₜ eqₛ) (Product.Category S T) (Product.Category T S)
+    Functor (Product.Category S T) (Product.Category T S)
   Swap-Functor S T = record
     { signature = Swap 𝒮 𝒯
-    ; structure = Swap-isFunctor eqₛ eqₜ S T
+    ; structure = Swap-isFunctor S T
+    ; isHomomorphism = Swap-isHomomorphism
     }

@@ -38,8 +38,8 @@ open Object (𝒬 .Ob)
 
 instance
   terminal : Terminal
-  terminal = λ where
-    .⊤ → record { Carrier = 𝟙.t; _≈_ = λ _ _ → 𝟙.t }
+  terminal = record
+    { ⊤ = record { Carrier = 𝟙.t; _≈_ = λ _ _ → 𝟙.t } }
 
   products : BinaryProducts
   products = record { _×_ = ×ₛ.×-setoid }
@@ -53,10 +53,9 @@ category = record
   ; _∘_ = Function.flip Comp.function
   }
 
-Setoids : Cartesian.Signature 𝒬
+Setoids : Cartesian.Signature category
 Setoids = record
-  { category = category
-  ; terminal = terminal
+  { terminal = terminal
   ; ! = λ {A} → Const.function A ⊤ 𝟙.tt
   ; products = products
   ; π₁ = ×ₛ.proj₁ₛ

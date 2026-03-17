@@ -4,25 +4,27 @@ open import Cheshire.Core
 
 module Cheshire.Monoidal.Structure where
 
+import Cheshire.Category as Category renaming (IsCategory to Structure)
 import Cheshire.Morphism as Morphisms
 import Cheshire.Natural as Natural
-open import Cheshire.Category.Structure
 open import Cheshire.Monoidal.Signature
 
 private
   variable
-    o ℓ : 𝕃.t
+    o ℓ e : 𝕃.t
+    𝒬 : Quiver o ℓ
+    𝒞 : Category.Signature 𝒬
+    ℳ : Monoidal 𝒞
 
-record IsMonoidal (e : 𝕃.t) {𝒬 : Quiver o ℓ} (ℳ : Monoidal 𝒬) : Set (o ⊔ ℓ ⊔ 𝕃.suc e) where
+record IsMonoidal
+  (isCategory : Category.Structure e 𝒞)
+  (ℳ : Monoidal 𝒞) : Set (𝕃.levelOfTerm ℳ ⊔ 𝕃.suc e) where
   open Monoidal ℳ
-  field
-    isCategory : IsCategory e category
-
-  open IsCategory isCategory public
+  open Category.Signature 𝒞
+  open Category.Structure isCategory
   open HomReasoning
   open Commutation
-  open Morphisms.Bundles category
-  open Morphisms.Reasoning isCategory
+  open Morphisms.Bundles 𝒞
 
   field
     unitorˡ    : ∀ {X} → unit ⊗₀ X ≅ X
@@ -78,12 +80,20 @@ record IsMonoidal (e : 𝕃.t) {𝒬 : Quiver o ℓ} (ℳ : Monoidal 𝒬) : Set
       ⟩
 
 
-record IsBraided (e : 𝕃.t) {𝒬 : Quiver o ℓ} (ℳ : Braided 𝒬) : Set (o ⊔ ℓ ⊔ 𝕃.suc e) where
-  open Braided ℳ
+record IsBraided
+  {𝒞 : Category.Signature 𝒬}
+  (isCategory : Category.Structure e 𝒞)
+  {ℳ : Monoidal 𝒞}
+  (ℬ : Braided ℳ) :
+  Set (𝕃.levelOfTerm ℬ ⊔ 𝕃.suc e) where
   field
-    isMonoidal : IsMonoidal e monoidal
+    isMonoidal : IsMonoidal isCategory ℳ
 
-  open IsMonoidal isMonoidal public
+  open Braided ℬ
+  open Monoidal ℳ
+  open Category.Signature 𝒞
+  open IsMonoidal isMonoidal
+  open Category.Structure isCategory
   open HomReasoning
   open Commutation
   open Morphisms.Reasoning isCategory
@@ -114,15 +124,17 @@ record IsBraided (e : 𝕃.t) {𝒬 : Quiver o ℓ} (ℳ : Braided 𝒬) : Set (
       ⟩
 
 
-record IsSymmetric (e : 𝕃.t) {𝒬 : Quiver o ℓ} (ℳ : Braided 𝒬) : Set (o ⊔ ℓ ⊔ 𝕃.suc e) where
-  open Braided ℳ
-  field
-    isBraided : IsBraided e ℳ
-
-  open IsBraided isBraided public
+record IsSymmetric
+  {𝒞 : Category.Signature 𝒬}
+  (isCategory : Category.Structure e 𝒞)
+  {ℳ : Monoidal 𝒞} (ℬ : Braided ℳ) :
+  Set (𝕃.levelOfTerm ℬ ⊔ 𝕃.suc e) where
+  open Braided ℬ hiding (braided-iso)
+  open Monoidal ℳ
+  open Category.Signature 𝒞
   open Morphisms.Signatures 𝒬
-  open Morphisms.Structures category
-  open Morphisms.Bundles category
+  open Morphisms.Structures 𝒞
+  open Morphisms.Bundles 𝒞
 
   field
     commutative : ∀ {X Y} → B {X} {Y} ∘ B {Y} {X} ≈ id
@@ -133,18 +145,25 @@ record IsSymmetric (e : 𝕃.t) {𝒬 : Quiver o ℓ} (ℳ : Braided 𝒬) : Set
     ; isoʳ = commutative
     }
 
-  braided : ∀ {X Y} → X ⊗₀ Y ≅ Y ⊗₀ X
-  braided = record
-    { _⇔_ braided-iso
+  braided-iso : ∀ {X Y} → X ⊗₀ Y ≅ Y ⊗₀ X
+  braided-iso = record
+    { _⇔_ (Braided.braided-iso ℬ)
     ; isIso = braided-isIso
     }
 
-record IsTraced (e : 𝕃.t) {𝒬 : Quiver o ℓ} (ℳ : Traced 𝒬) : Set (o ⊔ ℓ ⊔ 𝕃.suc e) where
-  open Traced ℳ
-  field
-    isSymmetric : IsSymmetric e symmetric
+record IsTraced
+  {𝒞 : Category.Signature 𝒬}
+  {isCategory : Category.Structure e 𝒞}
+  {ℳ : Monoidal 𝒞}
+  (isMonoidal : IsMonoidal isCategory ℳ)
+  (ℬ : Braided ℳ) (𝒯 : Traced ℳ) :
+  Set (𝕃.levelOfTerm 𝒯 ⊔ 𝕃.suc e) where
 
-  open IsSymmetric isSymmetric public
+  open Traced 𝒯
+  open Braided ℬ
+  open Monoidal ℳ
+  open IsMonoidal isMonoidal
+  open Category.Signature 𝒞
 
   field
     trace-resp-≈ :
@@ -174,4 +193,3 @@ record IsTraced (e : 𝕃.t) {𝒬 : Quiver o ℓ} (ℳ : Traced 𝒬) : Set (o 
       ≈ id {Y} ⊗₁ trace {X = X} f
     yanking :
       ∀ {X} → trace (braiding.⇒.η (X , X)) ≈ id
-

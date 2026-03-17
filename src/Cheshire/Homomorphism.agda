@@ -7,7 +7,7 @@ module Cheshire.Homomorphism where
 import Data.Product as ×
 open import Relation.Binary.PropositionalEquality.Subst.Properties
   using (module Shorthands)
-import Cheshire.Signatures as Signatures
+import Cheshire.Category.Signature as Category renaming (Category to t)
 
 open import Cheshire.Homomorphism.Signatures public
 open import Cheshire.Homomorphism.Structures public
@@ -50,16 +50,15 @@ module _
   _∣ˡ_ : Morphism B C → Morphism A C → Set (o ⊔ ℓ ⊔ o′ ⊔ ℓ′ ⊔ e′ ⊔ o″ ⊔ ℓ″)
   G ∣ˡ F = Σ[ J ∈ Morphism A B ] G ∘ J ≃ F
 
-id-isHomomorphism : {𝒬 : Quiver o ℓ} → (eq : Equivalence 𝒬 e′) → IsHomomorphism id eq eq
-id-isHomomorphism eq = record { F-resp-≈ = Function.id }
+id-isHomomorphism : {𝒬 : Quiver o ℓ} → ⦃ eq : Equivalence 𝒬 e′ ⦄ → IsHomomorphism id
+id-isHomomorphism = record { F-resp-≈ = Function.id }
 
 id-isFunctor :
-  {𝒬 : Quiver o ℓ} →
-  (C : Signatures.Category 𝒬) (eq : Equivalence 𝒬 e′) →
-  IsFunctor id eq eq C C
-id-isFunctor _ eq = record
-  { isHomomorphism = id-isHomomorphism eq
-  ; F-resp-id = eq.refl
-  ; F-resp-∘ = eq.refl
-  } where module eq = Equivalence eq
+  {𝒬 : Quiver o ℓ} → (C : Category.t 𝒬) →
+  ⦃ eq : Equivalence 𝒬 e′ ⦄ →
+  IsFunctor C C id
+id-isFunctor _ = record
+  { F-resp-id = refl
+  ; F-resp-∘ = refl
+  }
 

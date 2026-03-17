@@ -18,21 +18,19 @@ private
     𝒮 𝒯 : Quiver o ℓ
 
 constant-isHomomorphism :
-  (eqₛ : Equivalence 𝒮 e) (eqₜ : Equivalence 𝒯 e′) →
+  ⦃ eqₛ : Equivalence 𝒮 e ⦄ ⦃ eqₜ : Equivalence 𝒯 e′ ⦄ →
   (T : Category.Signature 𝒯) → (t : 𝒯 .Ob) →
-  IsHomomorphism (constant T t) eqₛ eqₜ
-constant-isHomomorphism eqₛ eqₜ T t = record
-  { F-resp-≈ = λ _ → eqₜ.refl
-  } where module eqₜ = Equivalence eqₜ
+  IsHomomorphism ⦃ eqₛ ⦄ (constant T t)
+constant-isHomomorphism ⦃ _ ⦄ ⦃ eqₜ ⦄ T t = record
+  { F-resp-≈ = λ _ → eqₜ.refl } where module eqₜ = Equivalence eqₜ
 
 constant-isFunctor :
-  (eqₛ : Equivalence 𝒮 e) →
+  ⦃ eqₛ : Equivalence 𝒮 e ⦄ →
   (S : Category.Signature 𝒮) {T : Category.Signature 𝒯} →
   (isT : Category.Structure e′ T) →
-  (t : 𝒯 .Ob) → IsFunctor (constant T t) eqₛ (isT .Category.Structure.eq) S T
-constant-isFunctor eqₛ S {T} isT t = record
-  { isHomomorphism = constant-isHomomorphism eqₛ (T.eq) T t
-  ; F-resp-id = eqₜ.refl
+  (t : 𝒯 .Ob) → IsFunctor S T (constant T t)
+constant-isFunctor S isT t = record
+  { F-resp-id = eqₜ.refl
   ; F-resp-∘ = eqₜ.sym T.identityˡ
   } where module T = Category.Structure isT
           module eqₜ = Equivalence T.eq

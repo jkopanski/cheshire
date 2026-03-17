@@ -16,13 +16,22 @@ open import Cheshire.Object.Signatures
 open Category using (IsCategory)
 open Monoidal using (IsMonoidal)
 
-record IsCartesian {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Cartesian 𝒬) : Set (o ⊔ ℓ ⊔ 𝕃.suc e) where
+private
+  variable
+    o ℓ e : 𝕃.t
+    𝒬 : Quiver o ℓ
+
+record IsCartesian
+  {𝒞′ : Category.Signature 𝒬}
+  (isCategory : IsCategory e 𝒞′) (𝒞 : Cartesian 𝒞′) :
+  Set (𝕃.levelOfTerm 𝒞 ⊔ 𝕃.suc e) where
   no-eta-equality
   open Cartesian 𝒞
-  field
-    isCategory : IsCategory e category
+  open Category.Signature 𝒞′
+  open IsCategory isCategory
+  open HomReasoning
+  open Morphisms.Reasoning isCategory
 
-  open IsCategory isCategory public
 
   private instance
     _ = terminal; _ = products
@@ -38,12 +47,8 @@ record IsCartesian {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Cartesian 
       π₁ ∘ h ≈ i → π₂ ∘ h ≈ j →
       ⟨ i , j ⟩ ≈ h
 
-  open HomReasoning
-  open Morphisms.Reasoning isCategory
-
-  private
-    variable
-      A B C D X Y : 𝒬 .Ob
+  private variable
+    A B C D X Y : 𝒬 .Ob
 
   -- agda-categories Terminal
   !-unique₂ : ∀ {f g : A ⇒ ⊤} → f ≈ g
@@ -89,8 +94,8 @@ record IsCartesian {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Cartesian 
     π₁ ∘ h ≈ π₁ ∘ i → π₂ ∘ h ≈ π₂ ∘ i → h ≈ i
   unique′ eq₁ eq₂ = trans (sym (unique eq₁ eq₂)) g-η
 
-  open Morphisms.Structures category
-  open Morphisms.Bundles category
+  open Morphisms.Structures 𝒞′
+  open Morphisms.Bundles 𝒞′
 
   ×-comm : ∀ {A B} → A × B ≅ B × A
   ×-comm = record
@@ -363,8 +368,8 @@ record IsCartesian {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Cartesian 
     open Monoidal.Signature monoidal using (_⊗₀_; _⊗₁_)
     open Natural using (NaturalIsomorphism)
     open Morphisms.Signatures 𝒬
-    cat : Category.t e 𝒬
-    cat = record { signature = category; structure = isCategory }
+    cat : Category.t _ _ e
+    cat = record { 𝒬 = 𝒬; category = 𝒞′; isCategory = isCategory }
     α⇒ = assocˡ
 
     ⊤×A≅A : ⊤ × A ≅ A
@@ -460,10 +465,9 @@ record IsCartesian {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Cartesian 
         α⇒ ∘ α⇒
       ∎
 
-  isMonoidal : IsMonoidal e monoidal
+  isMonoidal : IsMonoidal isCategory monoidal
   isMonoidal = record
-    { isCategory = isCategory
-    ; unitorˡ = ⊤×A≅A
+    { unitorˡ = ⊤×A≅A
     ; unitorʳ = A×⊤≅A
     ; associator = ≅.sym isCategory ×-assoc
     ; unitorˡ-commute-from = project₂

@@ -8,20 +8,17 @@ open import Cheshire.Category.Signature renaming (Category to Signature)
 open import Cheshire.Category.Structure
 import Cheshire.Morphism.Reasoning as MorphismReasoning
 
-private
-  variable
-    o ℓ : 𝕃.t
-
-record Category (e : 𝕃.t) (𝒬 : Quiver o ℓ) : Set (𝕃.suc o ⊔ 𝕃.suc ℓ ⊔ 𝕃.suc e) where
+record Category o ℓ e : Set (𝕃.suc (o ⊔ ℓ ⊔ e)) where
   field
-    signature : Signature 𝒬
-    structure : IsCategory e signature
+    𝒬          : Quiver o ℓ
+    category   : Signature 𝒬
+    isCategory : IsCategory e category
 
-  open Signature signature public
-  open IsCategory structure public
+  open Signature category public
+  open IsCategory isCategory public
 
   open HomReasoning public
   open Commutation public
   open Equivalence eq public
 
-  module Reasoning = MorphismReasoning structure
+  module Reasoning = MorphismReasoning isCategory

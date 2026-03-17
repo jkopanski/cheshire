@@ -17,27 +17,29 @@ private
     e e′ e″ : 𝕃.t
 
 module _
-  {𝒞 : Quiver o ℓ} {𝒟 : Quiver o′ ℓ′} {ℰ : Quiver o″ ℓ″}
-  (C : Category.t e 𝒞) (D : Category.t e′ 𝒟) (E : Category.Signature ℰ)
-  (eqᵉ : Equivalence ℰ e″)
+  {ℰ : Quiver o″ ℓ″}
+  (C : Category.t o ℓ e) (D : Category.t o′ ℓ′ e′) (E : Category.Signature ℰ)
+  ⦃ eqᵉ : Equivalence ℰ e″ ⦄
   where
 
   private
     module C = Category.t C
     module D = Category.t D
+    𝒞 = C.𝒬
+    𝒟 = C.𝒬
     module eqᵉ = Equivalence eqᵉ
-    C×D = Product.Category C.signature D.signature
+    C×D = Product.Category C.category D.category
 
   bifunctor-isBifunctor :
-    {H : Morphism.t (Product.𝒬 𝒞 𝒟) ℰ} →
-    (isH : Morphism.IsFunctor H (Product.equivalence C.eq D.eq) eqᵉ C×D E) →
-    IsBifunctor {C = C.signature} {D = D.signature} {E = E} C.eq D.eq eqᵉ (bifunctor C.signature D.signature H)
-  bifunctor-isBifunctor isH = record
+    (H : Morphism.Functor C×D E) →
+    (let module H = Morphism.Functor H) →
+    IsBifunctor C.category D.category E (bifunctor C.category D.category H.signature)
+  bifunctor-isBifunctor H = record
     { resp-≈ˡ = λ f≈g → F-resp-≈ (f≈g , D.refl)
     ; resp-≈ʳ = λ f≈g → F-resp-≈ (C.refl , f≈g)
     ; resp-∘ˡ = eqᵉ.trans (F-resp-≈ (C.refl , D.sym D.identityˡ)) F-resp-∘
     ; resp-∘ʳ = eqᵉ.trans (F-resp-≈ (C.sym C.identityˡ , D.refl)) F-resp-∘
-    } where open Morphism.IsFunctor isH
+    } where open Morphism.Functor H
 
 -- TODO: reduce-×-isBifunctor
 --     , flip-isBifunctor

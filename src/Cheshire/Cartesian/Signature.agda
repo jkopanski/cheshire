@@ -23,12 +23,9 @@ private
     o ℓ : 𝕃.t
     𝒬 : Quiver o ℓ
 
-record Cartesian (𝒬 : Quiver o ℓ) : Set (𝕃.levelOfTerm 𝒬) where
+record Cartesian (𝒞 : Category.t 𝒬) : Set (𝕃.levelOfTerm 𝒞) where
   no-eta-equality
-  field
-    category : Category.t 𝒬
-
-  open Category.t category public
+  open Category.t 𝒞
   open Object (𝒬 .Ob)
 
   field
@@ -73,7 +70,7 @@ record Cartesian (𝒬 : Quiver o ℓ) : Set (𝕃.levelOfTerm 𝒬) where
   Δ {C} = ⟨ id , id ⟩
 
   -×- : Bifunctor.t 𝒬 𝒬 𝒬
-  -×- = bifunctor category category H
+  -×- = bifunctor 𝒞 𝒞 H
     where H : Morphism.t (Product.𝒬 𝒬 𝒬) 𝒬
           H = record { F₀ = P.uncurry′ _×_; F₁ = P.uncurry′ _⁂_ }
 
@@ -111,9 +108,17 @@ record Cartesian (𝒬 : Quiver o ℓ) : Set (𝕃.levelOfTerm 𝒬) where
     ; iso = λ _ → A×⊤⇔A
     }
 
-  monoidal : Monoidal.t 𝒬
+  monoidal : Monoidal.t 𝒞
   monoidal = record
-    { category = category
-    ; unit = ⊤
+    { unit = ⊤
     ; ⊗ = -×-
+    }
+
+  braided : Monoidal.Braided monoidal
+  braided = record
+    { braiding = record
+      { F⇐G = record { η = λ _ → swap }
+      ; F⇒G = record { η = λ _ → swap }
+      ; iso = λ x → record { from = swap; to = swap }
+      }
     }

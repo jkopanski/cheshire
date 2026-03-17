@@ -14,13 +14,12 @@ import Cheshire.Natural.Signatures as Natural
 private
   variable
     o ℓ : 𝕃.t
+    𝒬 : Quiver o ℓ
+    𝒞 : Category.t 𝒬
 
-record Monoidal (𝒬 : Quiver o ℓ) : Set (𝕃.suc (o ⊔ ℓ)) where
+record Monoidal (𝒞 : Category.t 𝒬) : Set (𝕃.levelOfTerm 𝒞) where
   no-eta-equality
-  field
-    category : Category.t 𝒬
-
-  open Category.t category public
+  open Category.t 𝒞
 
   infixr 10 _⊗₀_ _⊗₁_
 
@@ -44,12 +43,11 @@ record Monoidal (𝒬 : Quiver o ℓ) : Set (𝕃.suc (o ⊔ ℓ)) where
   -⊗ X = F.appʳ X
 
 
-record Braided (𝒬 : Quiver o ℓ) : Set (𝕃.suc (o ⊔ ℓ)) where
+record Braided {𝒬 : Quiver o ℓ} {𝒞 : Category.t 𝒬} (ℳ : Monoidal 𝒞) : Set (𝕃.levelOfTerm ℳ) where
   no-eta-equality
-  field
-    monoidal : Monoidal 𝒬
-
-  open Monoidal monoidal public
+  open Morphisms 𝒬
+  open Category.t 𝒞
+  open Monoidal ℳ
 
   module F⁻¹ = Bifunctor.t (Bifunctor.t.flip ⊗)
 
@@ -60,8 +58,6 @@ record Braided (𝒬 : Quiver o ℓ) : Set (𝕃.suc (o ⊔ ℓ)) where
 
   B : ∀ {X Y} → X ⊗₀ Y ⇒ Y ⊗₀ X
   B {X} {Y} = braiding.⇒.η (X , Y)
-
-  open Morphisms 𝒬
 
   braided-iso : ∀ {X Y} → X ⊗₀ Y ⇔ Y ⊗₀ X
   braided-iso = record
@@ -75,12 +71,14 @@ record Braided (𝒬 : Quiver o ℓ) : Set (𝕃.suc (o ⊔ ℓ)) where
 -- nlab defines Tracedₗ, Tracedᵣ and /planar/ traced (and spherical?).
 -- agda-categories instead puts symmetric as a requirement (making it
 -- spherical? planar?).  I'm going to follow agda-categories here.
-record Traced (𝒬 : Quiver o ℓ) : Set (𝕃.suc (o ⊔ ℓ)) where
+record Traced {𝒬 : Quiver o ℓ} {𝒞 : Category.t 𝒬} (ℳ : Monoidal 𝒞) : Set (𝕃.levelOfTerm ℳ) where
   no-eta-equality
+  open Category.t 𝒞
+  open Monoidal ℳ
   field
-    symmetric : Braided 𝒬
+    symmetric : Braided ℳ
 
-  open Braided symmetric public
+  open Braided symmetric
 
   field
     trace : ∀ {X A B} → A ⊗₀ X ⇒ B ⊗₀ X → A ⇒ B

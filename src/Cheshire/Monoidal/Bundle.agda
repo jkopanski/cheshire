@@ -7,42 +7,84 @@ module Cheshire.Monoidal.Bundle where
 import Cheshire.Monoidal.Signature as Signature
 open import Cheshire.Monoidal.Structure
 
-import Cheshire.Category.Bundle as Category renaming (Category to t)
+import Cheshire.Category as Category renaming (Category to t; IsCategory to Structure)
 
-private
-  variable
-    o ℓ : 𝕃.t
-
-record Monoidal (e : 𝕃.t) (𝒬 : Quiver o ℓ) : Set (𝕃.suc o ⊔ 𝕃.suc ℓ ⊔ 𝕃.suc e) where
+record Monoidal o ℓ e : Set (𝕃.suc (o ⊔ ℓ ⊔ e)) where
   field
-    signature : Signature.Monoidal 𝒬
-    structure : IsMonoidal e signature
-
-  open Signature.Monoidal signature public hiding (category)
-  open IsMonoidal structure public
-
-  category : Category.t e 𝒬
-  category = record
-    { signature = Signature.Monoidal.category signature
-    ; structure = isCategory
-    }
+    𝒬 : Quiver o ℓ
+    -- signatures
+    category : Category.Signature 𝒬
+    monoidal : Signature.Monoidal category
+    -- structures
+    isCategory : Category.Structure e category
+    isMonoidal : IsMonoidal isCategory monoidal
 
 
-record Braided (e : 𝕃.t) (𝒬 : Quiver o ℓ) : Set (𝕃.suc o ⊔ 𝕃.suc ℓ ⊔ 𝕃.suc e) where
+record Braided o ℓ e : Set (𝕃.suc (o ⊔ ℓ ⊔ e)) where
   field
-    signature : Signature.Braided 𝒬
-    structure : IsBraided e signature
+    𝒬 : Quiver o ℓ
+    -- signatures
+    category : Category.Signature 𝒬
+    monoidal : Signature.Monoidal category
+    braided  : Signature.Braided monoidal
+    -- structures
+    isCategory : Category.Structure e category
+    isMonoidal : IsMonoidal isCategory monoidal
+    isBraided  : IsBraided isCategory braided
 
-  open Signature.Braided signature public
-    hiding (category; monoidal)
-  open IsBraided structure public
+  open Category.Signature category public
+  open Signature.Monoidal monoidal public
+  open Signature.Braided braided public
+  open Category.Structure isCategory public
+  open IsMonoidal isMonoidal public
+  open IsBraided isBraided public
 
-  monoidal : Monoidal e 𝒬
-  monoidal = record
-    { signature = Signature.Braided.monoidal signature
-    ; structure = isMonoidal
-    }
 
-  category : Category.t e 𝒬
-  category = Monoidal.category monoidal
+record Symmetric o ℓ e : Set (𝕃.suc (o ⊔ ℓ ⊔ e)) where
+  field
+    𝒬 : Quiver o ℓ
+    -- signatures
+    category : Category.Signature 𝒬
+    monoidal : Signature.Monoidal category
+    braided  : Signature.Braided monoidal
+    -- structures
+    isCategory  : Category.Structure e category
+    isMonoidal  : IsMonoidal isCategory monoidal
+    isBraided   : IsBraided isCategory braided
+    isSymmetric : IsSymmetric isCategory braided
 
+  open Category.Signature category public
+  open Signature.Monoidal monoidal public
+  open Signature.Braided braided public
+    hiding (braided-iso)
+  open Category.Structure isCategory public
+  open IsMonoidal isMonoidal public
+  open IsBraided isBraided public
+  open IsSymmetric isSymmetric public
+
+
+record Traced o ℓ e : Set (𝕃.suc (o ⊔ ℓ ⊔ e)) where
+  field
+    𝒬 : Quiver o ℓ
+    -- signatures
+    category : Category.Signature 𝒬
+    monoidal : Signature.Monoidal category
+    braided  : Signature.Braided monoidal
+    traced   : Signature.Traced monoidal
+    -- structures
+    isCategory  : Category.Structure e category
+    isMonoidal  : IsMonoidal isCategory monoidal
+    isBraided   : IsBraided isCategory braided
+    isSymmetric : IsSymmetric isCategory braided
+    isTraced    : IsTraced isMonoidal braided traced
+
+  open Category.Signature category public
+  open Signature.Monoidal monoidal public
+  open Signature.Braided braided public
+    hiding (braided-iso)
+  open Signature.Traced traced public
+  open Category.Structure isCategory public
+  open IsMonoidal isMonoidal public
+  open IsBraided isBraided public
+  open IsSymmetric isSymmetric public
+  open IsTraced isTraced public

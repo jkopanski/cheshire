@@ -2,63 +2,69 @@
 
 open import Cheshire.Core
 
-module Cheshire.Homomorphism.Bundles
-  {o ℓ e o′ ℓ′ e′} {𝒮 : Quiver o ℓ} {𝒯 : Quiver o′ ℓ′}
-  (eqₛ : Equivalence 𝒮 e) (eqₜ : Equivalence 𝒯 e′)
-  where
+module Cheshire.Homomorphism.Bundles where
 
 import Data.Product as ×
 open × using (Σ-syntax)
 
-import Cheshire.Signatures as Signatures
-import Cheshire.Homomorphism.Signatures as Signatures
+import Cheshire.Category.Signature as Category renaming (Category to t)
+import Cheshire.Cartesian.Signature as CartesianCat renaming (Cartesian to t)
+import Cheshire.Homomorphism.Signatures as Morphism renaming (Morphism to t)
 open import Cheshire.Homomorphism.Structures
 
-record Homomorphism : Set (o ⊔ ℓ ⊔ e ⊔ o′ ⊔ ℓ′ ⊔ e′) where
-  field
-    signature : Signatures.Morphism 𝒮 𝒯
-    structure : IsHomomorphism signature eqₛ eqₜ
+private
+  variable
+    o ℓ e : 𝕃.t
+    𝒮 𝒯 : Quiver o ℓ
 
-  open Signatures.Morphism signature public
+record Homomorphism
+  {o ℓ e o′ ℓ′ e′}
+  (𝒮 : Quiver o ℓ) (𝒯 : Quiver o′ ℓ′)
+  ⦃ eqₛ : Equivalence 𝒮 e ⦄ ⦃ eqₜ : Equivalence 𝒯 e′ ⦄ :
+  Set (o ⊔ ℓ ⊔ e ⊔ o′ ⊔ ℓ′ ⊔ e′) where
+  field
+    signature : Morphism.t 𝒮 𝒯
+    structure : IsHomomorphism signature
+
+  open Morphism.t signature public
   open IsHomomorphism structure public
 
+
 record Functor
-  (S : Signatures.Category 𝒮)
-  (T : Signatures.Category 𝒯) :
+  {o ℓ e o′ ℓ′ e′}
+  {𝒮 : Quiver o ℓ} {𝒯 : Quiver o′ ℓ′}
+  ⦃ eqₛ : Equivalence 𝒮 e ⦄ ⦃ eqₜ : Equivalence 𝒯 e′ ⦄
+  (S : Category.t 𝒮) (T : Category.t 𝒯) :
   Set (o ⊔ ℓ ⊔ e ⊔ o′ ⊔ ℓ′ ⊔ e′) where
   field
-    signature : Signatures.Morphism 𝒮 𝒯
-    structure : IsFunctor signature eqₛ eqₜ S T
+    signature      : Morphism.t 𝒮 𝒯
+    isHomomorphism : IsHomomorphism signature
+    structure      : IsFunctor S T signature
 
-  open Signatures.Morphism signature public
+  open Morphism.t signature public
+  open IsHomomorphism isHomomorphism public
   open IsFunctor structure public
 
-  homomorphism : Homomorphism
-  homomorphism = record
-    { signature = signature
-    ; structure = record { IsFunctor structure }
-    }
 
 record Cartesian
-  (S : Signatures.Cartesian 𝒮)
-  (T : Signatures.Cartesian 𝒯) :
+  {o ℓ e o′ ℓ′ e′}
+  {𝒮 : Quiver o ℓ} {𝒯 : Quiver o′ ℓ′}
+  {𝒮′ : Category.t 𝒮} {𝒯′ : Category.t 𝒯}
+  ⦃ eqₛ : Equivalence 𝒮 e ⦄ ⦃ eqₜ : Equivalence 𝒯 e′ ⦄
+  (S : CartesianCat.t 𝒮′) (T : CartesianCat.t 𝒯′) :
   Set (o ⊔ ℓ ⊔ e ⊔ o′ ⊔ ℓ′ ⊔ e′) where
-  field
-    signature : Signatures.Morphism 𝒮 𝒯
-    structure : IsCartesian signature eqₛ eqₜ S T
-
   private
-    module S = Signatures.Cartesian S
-    module T = Signatures.Cartesian T
+    module S = CartesianCat.t S
+    module T = CartesianCat.t T
 
-  open Signatures.Morphism signature public
+  field
+    signature      : Morphism.t 𝒮 𝒯
+    isHomomorphism : IsHomomorphism signature
+    isFunctor      : IsFunctor 𝒮′ 𝒯′ signature
+    structure      : IsCartesian S T signature
+
+  open Morphism.t signature public
+  open IsHomomorphism isHomomorphism public
+  open IsFunctor isFunctor public
   open IsCartesian structure public
 
-  functor : Functor (S.category) (T.category)
-  functor = record
-    { signature = signature
-    ; structure = record { IsCartesian structure }
-    }
-
-  open Functor functor public
-    using (homomorphism)
