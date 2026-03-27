@@ -79,10 +79,6 @@ module _
       open Category.t 𝒯′ using (_∘_)
       open Morphisms.Bundles 𝒯′
 
-    private instance
-      _ = S.terminal; _ = T.terminal
-      _ = S.products; _ = T.products
-
     field
       -- This is actually something different in agda-categories.  It's
       -- a lawful ⊤ and × moved to the target category.

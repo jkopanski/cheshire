@@ -29,8 +29,13 @@ record Cartesian (𝒞 : Category.t 𝒬) : Set (𝕃.levelOfTerm 𝒞) where
   open Object (𝒬 .Ob)
 
   field
-    ⦃ terminal ⦄ : Terminal
-    ⦃ products ⦄ : BinaryProducts
+    instance
+      terminal : Terminal
+      products : BinaryProducts
+
+  private
+    instance
+      _ = terminal; _ = products
 
   field
     ! : ∀ {A} → A ⇒ ⊤
