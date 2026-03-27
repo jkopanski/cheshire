@@ -109,3 +109,15 @@ module _
       F-resp-π₂ :
         ∀ {A B} →
         M.₁ (S.π₂ {A} {B}) ∘ ×-iso.from ≈ T.π₂
+
+
+  IsFaithful : (ℳ : Morphism 𝒮 𝒯) → Set _
+  IsFaithful ℳ = ∀ {X Y} → Function.Injective {A = 𝒮 .Hom X Y} _≈_ _≈_ M.₁
+    where module M = Morphism ℳ
+
+  IsFull : (ℳ : Morphism 𝒮 𝒯) → Set _
+  IsFull ℳ = ∀ {X Y} → Function.StrictlySurjective {A = 𝒮 .Hom X Y} _≈_ M.₁
+    where module M = Morphism ℳ
+
+  IsFullyFaithful : (ℳ : Morphism 𝒮 𝒯) → Set _
+  IsFullyFaithful ℳ = IsFull ℳ ×.× IsFaithful ℳ
