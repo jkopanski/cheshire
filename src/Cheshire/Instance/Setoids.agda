@@ -2,7 +2,7 @@
 
 open import Cheshire.Core
 
-module Cheshire.Instance.Setoids (o ℓ : 𝕃.t) where
+module Cheshire.Instance.Setoids (ℓ : 𝕃.t) where
 
 open import Relation.Binary.Bundles using (Setoid)
 import Data.Unit.Polymorphic.Properties as 𝟙ₛ
@@ -22,11 +22,11 @@ import Cheshire.Category as Category renaming (Category to t)
 import Cheshire.Cartesian as Cartesian renaming (Cartesian to t)
 import Cheshire.Object.Signatures as Object
 
-𝒬 : Quiver (𝕃.suc (o ⊔ ℓ)) (o ⊔ ℓ)
-𝒬 = mk⇒ {Ob = Setoid (o ⊔ ℓ) (o ⊔ ℓ)} Func.t
+𝒬 : Quiver (𝕃.suc ℓ) ℓ
+𝒬 = mk⇒ {Ob = Setoid ℓ ℓ} Func.t
 
 instance
-  eq : Equivalence 𝒬 (o ⊔ ℓ)
+  eq : Equivalence 𝒬 ℓ
   eq = record
     { _≈_ = λ {A} {B} f g →
       let open SetoidEq A B
