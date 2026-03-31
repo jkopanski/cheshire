@@ -7,7 +7,7 @@ module Cheshire.Construction.Constant.Bundles where
 import Cheshire.Category as Category renaming (IsCategory to Structure)
 import Cheshire.Homomorphism as Morphism renaming (Morphism to t)
 import Cheshire.Construction.Product as Product
-import Cheshire.Instance.One as One renaming (One0 to t)
+import Cheshire.Instance.One as One
 
 open import Cheshire.Construction.Constant.Signatures
 open import Cheshire.Construction.Constant.Structures
@@ -48,10 +48,10 @@ constant!-Homomorphism T t = record
 constant!-Functor :
   (S : Category.Signature 𝒮) → {T : Category.Signature 𝒯} →
   (isT : Category.Structure e′ T) →
-  𝒯 .Ob → Functor ⦃ One.eq {e = e′}⦄ One.t T
+  𝒯 .Ob → Functor ⦃ One.eq {e = e′}⦄ One.category T
 constant!-Functor S {T} isT t = record
   { signature = constant! T t
-  ; structure = constant-isFunctor One.t isT t
+  ; structure = constant-isFunctor One.category isT t
   ; isHomomorphism = constant-isHomomorphism T t
   }
 

@@ -7,7 +7,7 @@ module Cheshire.Construction.Constant.Signatures where
 import Cheshire.Category.Signature as Category renaming (Category to t)
 import Cheshire.Homomorphism.Signatures as Morphism renaming (Morphism to t)
 
-import Cheshire.Instance.One as One renaming (One0 to t)
+import Cheshire.Instance.One as One
 import Cheshire.Construction.Product.Signatures as Product
 
 open Morphism using (id)

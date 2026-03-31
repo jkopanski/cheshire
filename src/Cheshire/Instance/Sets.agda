@@ -45,8 +45,8 @@ category = record
   ; _∘_ = Function._∘′_
   }
 
-Sets : Cartesian.Signature category
-Sets = record
+cartesian : Cartesian.Signature category
+cartesian = record
   { terminal = terminal
   ; ! = Function.const 𝟙.tt
   ; products = products

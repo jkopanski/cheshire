@@ -53,8 +53,8 @@ category = record
   ; _∘_ = Function.flip Comp.function
   }
 
-Setoids : Cartesian.Signature category
-Setoids = record
+cartesian : Cartesian.Signature category
+cartesian = record
   { terminal = terminal
   ; ! = λ {A} → Const.function A ⊤ 𝟙.tt
   ; products = products
