@@ -42,6 +42,8 @@ import Cheshire.Natural.Structures
 import Cheshire.Natural.Bundles
 import Cheshire.Natural
 
+import Cheshire.Prop
+
 import Cheshire.Construction.Product.Signatures
 import Cheshire.Construction.Product.Structures
 import Cheshire.Construction.Product.Bundles
@@ -56,6 +58,10 @@ import Cheshire.Construction.Bifunctor.Signatures
 import Cheshire.Construction.Bifunctor.Structures
 import Cheshire.Construction.Bifunctor.Bundles
 import Cheshire.Construction.Bifunctor
+
+import Cheshire.Construction.Sub.Object
+import Cheshire.Construction.Sub.Morphism
+import Cheshire.Construction.Sub
 
 import Cheshire.Instance.One
 import Cheshire.Instance.Setoids
