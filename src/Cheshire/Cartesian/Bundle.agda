@@ -14,7 +14,7 @@ record Cartesian o ℓ e : Set (𝕃.suc( o ⊔ ℓ ⊔ e)) where
   field
     𝒬 : Quiver o ℓ
     -- signatures
-    category    :  Category.Signature 𝒬
+    category    : Category.Signature 𝒬
     cartesian   : Signature category
     -- structures
     isCategory  : Category.Structure e category
