@@ -22,8 +22,8 @@ constant-Homomorphism :
   ⦃ eqₛ : Equivalence 𝒮 e ⦄ ⦃ eqₜ : Equivalence 𝒯 e′ ⦄ →
   Category.Signature 𝒯 → 𝒯 .Ob → Homomorphism 𝒮 𝒯
 constant-Homomorphism T t = record
-  { signature = constant T t
-  ; structure = constant-isHomomorphism T t
+  { morphism = constant T t
+  ; isHomomorphism = constant-isHomomorphism T t
   }
 
 constant-Functor :
@@ -32,8 +32,8 @@ constant-Functor :
   (isT : Category.Structure e′ T) →
   𝒯 .Ob → Functor ⦃ eqₛ ⦄ ⦃ Category.Structure.eq isT ⦄ S T
 constant-Functor S {T} isT t = record
-  { signature = constant T t
-  ; structure = constant-isFunctor S isT t
+  { morphism = constant T t
+  ; isFunctor = constant-isFunctor S isT t
   ; isHomomorphism = constant-isHomomorphism T t
   }
 
@@ -41,8 +41,8 @@ constant!-Homomorphism :
   ⦃ eqₜ : Equivalence 𝒯 e′ ⦄ →
   Category.Signature 𝒯 → 𝒯 .Ob → Homomorphism One.𝒬0 𝒯 ⦃ One.eq {e = e′} ⦄
 constant!-Homomorphism T t = record
-  { signature = constant! T t
-  ; structure = constant-isHomomorphism T t
+  { morphism = constant! T t
+  ; isHomomorphism = constant-isHomomorphism T t
   }
 
 constant!-Functor :
@@ -50,8 +50,8 @@ constant!-Functor :
   (isT : Category.Structure e′ T) →
   𝒯 .Ob → Functor ⦃ One.eq {e = e′}⦄ One.category T
 constant!-Functor S {T} isT t = record
-  { signature = constant! T t
-  ; structure = constant-isFunctor One.category isT t
+  { morphism = constant! T t
+  ; isFunctor = constant-isFunctor One.category isT t
   ; isHomomorphism = constant-isHomomorphism T t
   }
 
@@ -59,8 +59,8 @@ constantˡ-Homomorphism :
   ⦃ eqₛ : Equivalence 𝒮 e ⦄ ⦃ eqₜ : Equivalence 𝒯 e′ ⦄ →
   Category.Signature 𝒮 → 𝒮 .Ob → Homomorphism 𝒯 (Product.𝒬 𝒮 𝒯)
 constantˡ-Homomorphism S s = record
-  { signature = constantˡ S s
-  ; structure = Product.※-isHomomorphism
+  { morphism = constantˡ S s
+  ; isHomomorphism = Product.※-isHomomorphism
       (constant-isHomomorphism S s)
       Morphism.id-isHomomorphism
   }
@@ -71,19 +71,19 @@ constantˡ-Functor :
   (isS : Category.Structure e′ S) →
   𝒮 .Ob → Functor T (Product.Category S T)
 constantˡ-Functor T {S} isS s = record
-  { signature = constantˡ S s
-  ; structure = Product.※-isFunctor
+  { morphism = constantˡ S s
+  ; isFunctor = Product.※-isFunctor
       (constant-isFunctor T isS s)
       (Morphism.id-isFunctor T)
-  ; isHomomorphism = Homomorphism.structure (constantˡ-Homomorphism S s)
+  ; isHomomorphism = Homomorphism.isHomomorphism (constantˡ-Homomorphism S s)
   }
 
 constantʳ-Homomorphism :
   ⦃ eqₛ : Equivalence 𝒮 e ⦄ ⦃ eqₜ : Equivalence 𝒯 e′ ⦄ →
   Category.Signature 𝒮 → 𝒮 .Ob → Homomorphism 𝒯 (Product.𝒬 𝒯 𝒮)
 constantʳ-Homomorphism S s = record
-  { signature = constantʳ S s
-  ; structure = Product.※-isHomomorphism
+  { morphism = constantʳ S s
+  ; isHomomorphism = Product.※-isHomomorphism
       Morphism.id-isHomomorphism
       (constant-isHomomorphism S s)
   }
@@ -94,10 +94,10 @@ constantʳ-Functor :
   (isS : Category.Structure e′ S) →
   𝒮 .Ob → Functor T (Product.Category T S)
 constantʳ-Functor T {S} isS s = record
-  { signature = constantʳ S s
-  ; structure = Product.※-isFunctor
+  { morphism = constantʳ S s
+  ; isFunctor = Product.※-isFunctor
       (Morphism.id-isFunctor T)
       (constant-isFunctor T isS s)
-  ; isHomomorphism = Homomorphism.structure (constantʳ-Homomorphism S s)
+  ; isHomomorphism = Homomorphism.isHomomorphism (constantʳ-Homomorphism S s)
   }
 

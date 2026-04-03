@@ -23,11 +23,11 @@ record Homomorphism
   ⦃ eqₛ : Equivalence 𝒮 e ⦄ ⦃ eqₜ : Equivalence 𝒯 e′ ⦄ :
   Set (o ⊔ ℓ ⊔ e ⊔ o′ ⊔ ℓ′ ⊔ e′) where
   field
-    signature : Morphism.t 𝒮 𝒯
-    structure : IsHomomorphism signature
+    morphism       : Morphism.t 𝒮 𝒯
+    isHomomorphism : IsHomomorphism morphism
 
-  open Morphism.t signature public
-  open IsHomomorphism structure public
+  open Morphism.t morphism public
+  open IsHomomorphism isHomomorphism public
 
 
 record Functor
@@ -37,13 +37,13 @@ record Functor
   (S : Category.t 𝒮) (T : Category.t 𝒯) :
   Set (o ⊔ ℓ ⊔ e ⊔ o′ ⊔ ℓ′ ⊔ e′) where
   field
-    signature      : Morphism.t 𝒮 𝒯
-    isHomomorphism : IsHomomorphism signature
-    structure      : IsFunctor S T signature
+    morphism       : Morphism.t 𝒮 𝒯
+    isHomomorphism : IsHomomorphism morphism
+    isFunctor      : IsFunctor S T morphism
 
-  open Morphism.t signature public
+  open Morphism.t morphism public
   open IsHomomorphism isHomomorphism public
-  open IsFunctor structure public
+  open IsFunctor isFunctor public
 
 
 record Cartesian
@@ -58,13 +58,13 @@ record Cartesian
     module T = CartesianCat.t T
 
   field
-    signature      : Morphism.t 𝒮 𝒯
-    isHomomorphism : IsHomomorphism signature
-    isFunctor      : IsFunctor 𝒮′ 𝒯′ signature
-    structure      : IsCartesian S T signature
+    morphism       : Morphism.t 𝒮 𝒯
+    isHomomorphism : IsHomomorphism morphism
+    isFunctor      : IsFunctor 𝒮′ 𝒯′ morphism
+    isCartesian    : IsCartesian S T morphism
 
-  open Morphism.t signature public
+  open Morphism.t morphism public
   open IsHomomorphism isHomomorphism public
   open IsFunctor isFunctor public
-  open IsCartesian structure public
+  open IsCartesian isCartesian public
 

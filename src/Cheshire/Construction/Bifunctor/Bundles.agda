@@ -32,6 +32,6 @@ module _
     (H : Morphism.Functor C×D E.category) →
     Bifunctor.t C D E
   bifunctor-Bifunctor H = record
-    { signature = bifunctor C.category D.category H.signature
+    { signature = bifunctor C.category D.category H.morphism
     ; structure = bifunctor-isBifunctor C D E.category H
     } where module H = Morphism.Functor H

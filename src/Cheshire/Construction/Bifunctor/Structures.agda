@@ -33,7 +33,7 @@ module _
   bifunctor-isBifunctor :
     (H : Morphism.Functor C×D E) →
     (let module H = Morphism.Functor H) →
-    IsBifunctor C.category D.category E (bifunctor C.category D.category H.signature)
+    IsBifunctor C.category D.category E (bifunctor C.category D.category H.morphism)
   bifunctor-isBifunctor H = record
     { resp-≈ˡ = λ f≈g → F-resp-≈ (f≈g , D.refl)
     ; resp-≈ʳ = λ f≈g → F-resp-≈ (C.refl , f≈g)
