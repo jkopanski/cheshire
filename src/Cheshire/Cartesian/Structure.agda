@@ -23,8 +23,10 @@ private
 
 record IsCartesian
   {𝒞′ : Category.Signature 𝒬}
-  (isCategory : IsCategory e 𝒞′) (𝒞 : Cartesian 𝒞′) :
-  Set (𝕃.levelOfTerm 𝒞 ⊔ 𝕃.suc e) where
+  {eq : Equivalence 𝒬 e}
+  (isCategory : IsCategory eq 𝒞′)
+  (𝒞 : Cartesian 𝒞′)
+    : Set (𝕃.levelOfTerm 𝒞 ⊔ 𝕃.suc e) where
   no-eta-equality
   open Cartesian 𝒞
   open Category.Signature 𝒞′
@@ -32,9 +34,8 @@ record IsCartesian
   open HomReasoning
   open Morphisms.Reasoning isCategory
 
-
   private instance
-    _ = terminal; _ = products
+    _ = eq; _ = terminal; _ = products
 
   field
     -- terminal

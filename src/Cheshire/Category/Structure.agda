@@ -7,11 +7,16 @@ module Cheshire.Category.Structure where
 open import Cheshire.Category.Signature
 open import Cheshire.Object.Signatures
 
-record IsCategory {o ℓ} (e : 𝕃.t) {𝒬 : Quiver o ℓ} (𝒞 : Category 𝒬) : Set (o ⊔ ℓ ⊔ 𝕃.suc e) where
+record IsCategory
+  {o ℓ e} {𝒬 : Quiver o ℓ}
+  (eq : Equivalence 𝒬 e)
+  (𝒞 : Category 𝒬)
+    : Set (o ⊔ ℓ ⊔ 𝕃.suc e) where
+  no-eta-equality
   open Category 𝒞
-  field
-    ⦃ eq ⦄ : Equivalence 𝒬 e
+  private instance _ = eq
 
+  field
     assoc :
       ∀ {A B C D} {f : A ⇒ B} {g : B ⇒ C} {h : C ⇒ D} →
       (h ∘ g) ∘ f ≈ h ∘ (g ∘ f)

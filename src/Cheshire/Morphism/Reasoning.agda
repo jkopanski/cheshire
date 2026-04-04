@@ -5,9 +5,10 @@ open import Cheshire.Category.Signature
 open import Cheshire.Category.Structure
 
 module Cheshire.Morphism.Reasoning
-  {o ℓ} {𝒬 : Quiver o ℓ}
+  {o ℓ e} {𝒬 : Quiver o ℓ}
+  {eq : Equivalence 𝒬 e}
   {𝒞 : Category 𝒬}
-  {e} (is-𝒞 : IsCategory e 𝒞)
+  (is-𝒞 : IsCategory eq 𝒞)
   where
 
 open import Cheshire.Morphism.Reasoning.Core is-𝒞 public

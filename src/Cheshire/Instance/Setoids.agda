@@ -56,10 +56,9 @@ category = record
   ; _∘_ = Function.flip Comp.function
   }
 
-is-category : Category.Structure ℓ category
+is-category : Category.Structure eq category
 is-category = record
-  { eq        = eq
-  ; assoc     = λ {A} {_} {_} {D} x → let module D = Setoid.t D in D.refl
+  { assoc     = λ {A} {_} {_} {D} x → let module D = Setoid.t D in D.refl
   ; identityˡ = λ {f = f} → refl {x = f}
   ; identityʳ = λ {f = f} → refl {x = f}
   ; ∘-resp-≈  = λ {C = C} {f = f} {h} {g} {i} f≈h g≈i → begin

@@ -50,13 +50,13 @@ module _
   _∣ˡ_ : Morphism B C → Morphism A C → Set (o ⊔ ℓ ⊔ o′ ⊔ ℓ′ ⊔ e′ ⊔ o″ ⊔ ℓ″)
   G ∣ˡ F = Σ[ J ∈ Morphism A B ] G ∘ J ≃ F
 
-id-isHomomorphism : {𝒬 : Quiver o ℓ} → ⦃ eq : Equivalence 𝒬 e′ ⦄ → IsHomomorphism id
+id-isHomomorphism : {𝒬 : Quiver o ℓ} → ⦃ eq : Equivalence 𝒬 e′ ⦄ → IsHomomorphism eq eq id
 id-isHomomorphism = record { F-resp-≈ = Function.id }
 
 id-isFunctor :
   {𝒬 : Quiver o ℓ} → (C : Category.t 𝒬) →
   ⦃ eq : Equivalence 𝒬 e′ ⦄ →
-  IsFunctor C C id
+  IsFunctor eq eq C C id
 id-isFunctor _ = record
   { F-resp-id = refl
   ; F-resp-∘ = refl

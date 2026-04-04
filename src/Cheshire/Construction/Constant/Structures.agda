@@ -20,19 +20,20 @@ private
 constant-isHomomorphism :
   ⦃ eqₛ : Equivalence 𝒮 e ⦄ ⦃ eqₜ : Equivalence 𝒯 e′ ⦄ →
   (T : Category.Signature 𝒯) → (t : 𝒯 .Ob) →
-  IsHomomorphism ⦃ eqₛ ⦄ (constant T t)
+  IsHomomorphism eqₛ eqₜ (constant T t)
 constant-isHomomorphism ⦃ _ ⦄ ⦃ eqₜ ⦄ T t = record
   { F-resp-≈ = λ _ → eqₜ.refl } where module eqₜ = Equivalence eqₜ
 
 constant-isFunctor :
-  ⦃ eqₛ : Equivalence 𝒮 e ⦄ →
-  (S : Category.Signature 𝒮) {T : Category.Signature 𝒯} →
-  (isT : Category.Structure e′ T) →
-  (t : 𝒯 .Ob) → IsFunctor S T (constant T t)
-constant-isFunctor S isT t = record
+  ⦃ eqₛ : Equivalence 𝒮 e ⦄ ⦃ eqₜ : Equivalence 𝒯 e′ ⦄ →
+  (S : Category.Signature 𝒮)
+  {T : Category.Signature 𝒯} → (isT : Category.Structure eqₜ T) →
+  (t : 𝒯 .Ob) →
+  IsFunctor eqₛ eqₜ S T (constant T t)
+constant-isFunctor ⦃ _ ⦄ ⦃ eqₜ ⦄ _ isT t = record
   { F-resp-id = eqₜ.refl
   ; F-resp-∘ = eqₜ.sym T.identityˡ
   } where module T = Category.Structure isT
-          module eqₜ = Equivalence T.eq
+          module eqₜ = Equivalence eqₜ
 
 -- TODO: constant{ˡ,ʳ}-is{Homomorphism,Functor}

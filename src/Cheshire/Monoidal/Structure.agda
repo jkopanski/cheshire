@@ -17,14 +17,18 @@ private
     ℳ : Monoidal 𝒞
 
 record IsMonoidal
-  (isCategory : Category.Structure e 𝒞)
-  (ℳ : Monoidal 𝒞) : Set (𝕃.levelOfTerm ℳ ⊔ 𝕃.suc e) where
+  {eq : Equivalence 𝒬 e}
+  (isCategory : Category.Structure eq 𝒞)
+  (ℳ : Monoidal 𝒞)
+    : Set (𝕃.levelOfTerm ℳ ⊔ 𝕃.suc e) where
+  no-eta-equality
   open Monoidal ℳ
   open Category.Signature 𝒞
   open Category.Structure isCategory
   open HomReasoning
   open Commutation
   open Morphisms.Bundles 𝒞
+  private instance _ = eq
 
   field
     unitorˡ    : ∀ {X} → unit ⊗₀ X ≅ X
@@ -81,14 +85,16 @@ record IsMonoidal
 
 
 record IsBraided
+  {eq : Equivalence 𝒬 e}
   {𝒞 : Category.Signature 𝒬}
-  (isCategory : Category.Structure e 𝒞)
+  (isCategory : Category.Structure eq 𝒞)
   {ℳ : Monoidal 𝒞}
   (ℬ : Braided ℳ) :
   Set (𝕃.levelOfTerm ℬ ⊔ 𝕃.suc e) where
   field
     isMonoidal : IsMonoidal isCategory ℳ
 
+  private instance _ = eq
   open Braided ℬ
   open Monoidal ℳ
   open Category.Signature 𝒞
@@ -125,16 +131,19 @@ record IsBraided
 
 
 record IsSymmetric
+  {eq : Equivalence 𝒬 e}
   {𝒞 : Category.Signature 𝒬}
-  (isCategory : Category.Structure e 𝒞)
-  {ℳ : Monoidal 𝒞} (ℬ : Braided ℳ) :
-  Set (𝕃.levelOfTerm ℬ ⊔ 𝕃.suc e) where
+  (isCategory : Category.Structure eq 𝒞)
+  {ℳ : Monoidal 𝒞} (ℬ : Braided ℳ)
+    : Set (𝕃.levelOfTerm ℬ ⊔ 𝕃.suc e) where
+  no-eta-equality
   open Braided ℬ hiding (braided-iso)
   open Monoidal ℳ
   open Category.Signature 𝒞
   open Morphisms.Signatures 𝒬
   open Morphisms.Structures 𝒞
   open Morphisms.Bundles 𝒞
+  private instance _ = eq
 
   field
     commutative : ∀ {X Y} → B {X} {Y} ∘ B {Y} {X} ≈ id
@@ -152,18 +161,20 @@ record IsSymmetric
     }
 
 record IsTraced
+  {eq : Equivalence 𝒬 e}
   {𝒞 : Category.Signature 𝒬}
-  {isCategory : Category.Structure e 𝒞}
+  {isCategory : Category.Structure eq 𝒞}
   {ℳ : Monoidal 𝒞}
   (isMonoidal : IsMonoidal isCategory ℳ)
-  (ℬ : Braided ℳ) (𝒯 : Traced ℳ) :
-  Set (𝕃.levelOfTerm 𝒯 ⊔ 𝕃.suc e) where
-
+  (ℬ : Braided ℳ) (𝒯 : Traced ℳ)
+    : Set (𝕃.levelOfTerm 𝒯 ⊔ 𝕃.suc e) where
+  no-eta-equality
   open Traced 𝒯
   open Braided ℬ
   open Monoidal ℳ
   open IsMonoidal isMonoidal
   open Category.Signature 𝒞
+  private instance _ = eq
 
   field
     trace-resp-≈ :

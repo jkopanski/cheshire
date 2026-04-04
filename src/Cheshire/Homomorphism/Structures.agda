@@ -31,9 +31,13 @@ module _ {e} (eqₛ : Equivalence 𝒯 e) (ℳ : Morphism 𝒮 𝒯) where
 
 module _
   {e e′}
-  ⦃ eqₛ : Equivalence 𝒮 e ⦄
-  ⦃ eqₜ : Equivalence 𝒯 e′ ⦄
+  (eqₛ : Equivalence 𝒮 e)
+  (eqₜ : Equivalence 𝒯 e′)
   where
+
+  private
+    instance
+      _ = eqₛ; _ = eqₜ
 
   record IsHomomorphism (ℳ : Morphism 𝒮 𝒯) : Set (𝕃.levelOfTerm ℳ ⊔ e ⊔ e′) where
     private

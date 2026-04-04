@@ -11,26 +11,28 @@ import Cheshire.Category as Category renaming (Category to t; IsCategory to Stru
 
 record Monoidal o ℓ e : Set (𝕃.suc (o ⊔ ℓ ⊔ e)) where
   field
-    𝒬 : Quiver o ℓ
+    𝒬           : Quiver o ℓ
+    instance eq : Equivalence 𝒬 e
     -- signatures
-    category : Category.Signature 𝒬
-    monoidal : Signature.Monoidal category
+    category    : Category.Signature 𝒬
+    monoidal    : Signature.Monoidal category
     -- structures
-    isCategory : Category.Structure e category
-    isMonoidal : IsMonoidal isCategory monoidal
+    isCategory  : Category.Structure eq category
+    isMonoidal  : IsMonoidal isCategory monoidal
 
 
 record Braided o ℓ e : Set (𝕃.suc (o ⊔ ℓ ⊔ e)) where
   field
-    𝒬 : Quiver o ℓ
+    𝒬           : Quiver o ℓ
+    instance eq : Equivalence 𝒬 e
     -- signatures
-    category : Category.Signature 𝒬
-    monoidal : Signature.Monoidal category
-    braided  : Signature.Braided monoidal
+    category    : Category.Signature 𝒬
+    monoidal    : Signature.Monoidal category
+    braided     : Signature.Braided monoidal
     -- structures
-    isCategory : Category.Structure e category
-    isMonoidal : IsMonoidal isCategory monoidal
-    isBraided  : IsBraided isCategory braided
+    isCategory  : Category.Structure eq category
+    isMonoidal  : IsMonoidal isCategory monoidal
+    isBraided   : IsBraided isCategory braided
 
   open Category.Signature category public
   open Signature.Monoidal monoidal public
@@ -42,13 +44,14 @@ record Braided o ℓ e : Set (𝕃.suc (o ⊔ ℓ ⊔ e)) where
 
 record Symmetric o ℓ e : Set (𝕃.suc (o ⊔ ℓ ⊔ e)) where
   field
-    𝒬 : Quiver o ℓ
+    𝒬           : Quiver o ℓ
+    instance eq : Equivalence 𝒬 e
     -- signatures
-    category : Category.Signature 𝒬
-    monoidal : Signature.Monoidal category
-    braided  : Signature.Braided monoidal
+    category    : Category.Signature 𝒬
+    monoidal    : Signature.Monoidal category
+    braided     : Signature.Braided monoidal
     -- structures
-    isCategory  : Category.Structure e category
+    isCategory  : Category.Structure eq category
     isMonoidal  : IsMonoidal isCategory monoidal
     isBraided   : IsBraided isCategory braided
     isSymmetric : IsSymmetric isCategory braided
@@ -65,14 +68,15 @@ record Symmetric o ℓ e : Set (𝕃.suc (o ⊔ ℓ ⊔ e)) where
 
 record Traced o ℓ e : Set (𝕃.suc (o ⊔ ℓ ⊔ e)) where
   field
-    𝒬 : Quiver o ℓ
+    𝒬           : Quiver o ℓ
+    instance eq : Equivalence 𝒬 e
     -- signatures
-    category : Category.Signature 𝒬
-    monoidal : Signature.Monoidal category
-    braided  : Signature.Braided monoidal
-    traced   : Signature.Traced monoidal
+    category    : Category.Signature 𝒬
+    monoidal    : Signature.Monoidal category
+    braided     : Signature.Braided monoidal
+    traced      : Signature.Traced monoidal
     -- structures
-    isCategory  : Category.Structure e category
+    isCategory  : Category.Structure eq category
     isMonoidal  : IsMonoidal isCategory monoidal
     isBraided   : IsBraided isCategory braided
     isSymmetric : IsSymmetric isCategory braided

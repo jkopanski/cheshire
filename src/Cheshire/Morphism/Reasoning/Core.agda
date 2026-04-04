@@ -9,9 +9,9 @@ open import Cheshire.Category.Signature
 open import Cheshire.Category.Structure
 
 module Cheshire.Morphism.Reasoning.Core
-  {o ℓ} {𝒬 : Quiver o ℓ}
-  {𝒞 : Category 𝒬 }
-  {e : 𝕃.t} (isC : IsCategory e 𝒞)
+  {o ℓ e} {𝒬 : Quiver o ℓ}
+  {𝒞 : Category 𝒬 } {eq : Equivalence 𝒬 e}
+  (isC : IsCategory eq 𝒞)
   where
 
 open Category 𝒞
@@ -20,6 +20,7 @@ open HomReasoning
 open Commutation
 
 private
+  instance _ = eq
   variable
     A B C D : 𝒬 .Ob
     U V W X Y Z : 𝒬 .Ob

@@ -54,8 +54,9 @@ Iso : ⦃ Equivalence 𝒬 e ⦄ → (A B : 𝒬 .Ob) → Set (o ⊔ ℓ ⊔ e)
 Iso A B = Σ[ iso ∈ A ⇔ B ] IsIso (iso .from) (iso .to)
   where open _⇔_
 
-module _ (isC : Category.Structure e 𝒞) where
+module _ {eq : Equivalence 𝒬 e} (isC : Category.Structure eq 𝒞) where
 
+  private instance _ = eq
   open Category.Structure isC
 
   private
@@ -104,4 +105,5 @@ module _ (isC : Category.Structure e 𝒞) where
     ; trans = ≅-trans
     }
 
-module ≅ {e : 𝕃.t} (isC : Category.Structure e 𝒞) = Rel₂.IsEquivalence (≅-isEquivalence isC)
+module ≅ {e} {eq : Equivalence 𝒬 e} (isC : Category.Structure eq 𝒞) =
+  Rel₂.IsEquivalence (≅-isEquivalence isC)

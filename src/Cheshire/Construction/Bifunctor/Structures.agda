@@ -29,9 +29,10 @@ module _
     𝒟 = C.𝒬
     module eqᵉ = Equivalence eqᵉ
     C×D = Product.Category C.category D.category
+    eq× = Product.equivalence C.eq D.eq
 
   bifunctor-isBifunctor :
-    (H : Morphism.Functor C×D E) →
+    (H : Morphism.Functor eq× eqᵉ C×D E) →
     (let module H = Morphism.Functor H) →
     IsBifunctor C.category D.category E (bifunctor C.category D.category H.morphism)
   bifunctor-isBifunctor H = record

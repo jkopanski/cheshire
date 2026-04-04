@@ -20,10 +20,12 @@ module _
   {𝒮 : Quiver o  ℓ } {𝒯 : Quiver o′ ℓ′} {ℱ 𝒢 : Morphism 𝒮 𝒯}
   -- Is category bundle better here?
   {T : Category.Signature 𝒯}
-  {e} (isT : Category.Structure e T)
+  {eq : Equivalence 𝒯 e}
+  (isT : Category.Structure eq T)
   where
 
   private
+    instance _ = eq
     module F = Morphism ℱ
     module G = Morphism 𝒢
 
@@ -39,10 +41,12 @@ module _
 module _
   {𝒮 : Quiver o  ℓ } {𝒯 : Quiver o′ ℓ′} {ℱ 𝒢 : Morphism 𝒮 𝒯}
   {T : Category.Signature 𝒯}
-  {e} (isT : Category.Structure e T)
+  {eq : Equivalence 𝒯 e}
+  (isT : Category.Structure eq T)
   where
 
   private
+    instance _ = eq
     module F = Morphism ℱ
     module G = Morphism 𝒢
 

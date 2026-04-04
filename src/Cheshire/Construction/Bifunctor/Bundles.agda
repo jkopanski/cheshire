@@ -27,9 +27,10 @@ module _
     module E = Category.t E
     𝒞×𝒟 = Product.𝒬 C.𝒬 D.𝒬
     C×D = Product.Category C.category D.category
+    eq× = Product.equivalence C.eq D.eq
 
   bifunctor-Bifunctor :
-    (H : Morphism.Functor C×D E.category) →
+    (H : Morphism.Functor eq× E.eq C×D E.category) →
     Bifunctor.t C D E
   bifunctor-Bifunctor H = record
     { signature = bifunctor C.category D.category H.morphism

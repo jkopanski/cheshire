@@ -12,19 +12,15 @@ import Cheshire.Cartesian.Signature as CartesianCat renaming (Cartesian to t)
 import Cheshire.Homomorphism.Signatures as Morphism renaming (Morphism to t)
 open import Cheshire.Homomorphism.Structures
 
-private
-  variable
-    o ℓ e : 𝕃.t
-    𝒮 𝒯 : Quiver o ℓ
-
 record Homomorphism
   {o ℓ e o′ ℓ′ e′}
   (𝒮 : Quiver o ℓ) (𝒯 : Quiver o′ ℓ′)
-  ⦃ eqₛ : Equivalence 𝒮 e ⦄ ⦃ eqₜ : Equivalence 𝒯 e′ ⦄ :
-  Set (o ⊔ ℓ ⊔ e ⊔ o′ ⊔ ℓ′ ⊔ e′) where
+  (eqₛ : Equivalence 𝒮 e) (eqₜ : Equivalence 𝒯 e′)
+    : Set (o ⊔ ℓ ⊔ e ⊔ o′ ⊔ ℓ′ ⊔ e′) where
+  no-eta-equality
   field
     morphism       : Morphism.t 𝒮 𝒯
-    isHomomorphism : IsHomomorphism morphism
+    isHomomorphism : IsHomomorphism eqₛ eqₜ morphism
 
   open Morphism.t morphism public
   open IsHomomorphism isHomomorphism public
@@ -33,13 +29,14 @@ record Homomorphism
 record Functor
   {o ℓ e o′ ℓ′ e′}
   {𝒮 : Quiver o ℓ} {𝒯 : Quiver o′ ℓ′}
-  ⦃ eqₛ : Equivalence 𝒮 e ⦄ ⦃ eqₜ : Equivalence 𝒯 e′ ⦄
-  (S : Category.t 𝒮) (T : Category.t 𝒯) :
-  Set (o ⊔ ℓ ⊔ e ⊔ o′ ⊔ ℓ′ ⊔ e′) where
+  (eqₛ : Equivalence 𝒮 e) (eqₜ : Equivalence 𝒯 e′)
+  (S : Category.t 𝒮) (T : Category.t 𝒯)
+    : Set (o ⊔ ℓ ⊔ e ⊔ o′ ⊔ ℓ′ ⊔ e′) where
+  no-eta-equality
   field
     morphism       : Morphism.t 𝒮 𝒯
-    isHomomorphism : IsHomomorphism morphism
-    isFunctor      : IsFunctor S T morphism
+    isHomomorphism : IsHomomorphism eqₛ eqₜ morphism
+    isFunctor      : IsFunctor eqₛ eqₜ S T morphism
 
   open Morphism.t morphism public
   open IsHomomorphism isHomomorphism public
@@ -49,19 +46,20 @@ record Functor
 record Cartesian
   {o ℓ e o′ ℓ′ e′}
   {𝒮 : Quiver o ℓ} {𝒯 : Quiver o′ ℓ′}
+  (eqₛ : Equivalence 𝒮 e) (eqₜ : Equivalence 𝒯 e′)
   {𝒮′ : Category.t 𝒮} {𝒯′ : Category.t 𝒯}
-  ⦃ eqₛ : Equivalence 𝒮 e ⦄ ⦃ eqₜ : Equivalence 𝒯 e′ ⦄
-  (S : CartesianCat.t 𝒮′) (T : CartesianCat.t 𝒯′) :
-  Set (o ⊔ ℓ ⊔ e ⊔ o′ ⊔ ℓ′ ⊔ e′) where
+  (S : CartesianCat.t 𝒮′) (T : CartesianCat.t 𝒯′)
+    : Set (o ⊔ ℓ ⊔ e ⊔ o′ ⊔ ℓ′ ⊔ e′) where
+  no-eta-equality
   private
     module S = CartesianCat.t S
     module T = CartesianCat.t T
 
   field
     morphism       : Morphism.t 𝒮 𝒯
-    isHomomorphism : IsHomomorphism morphism
-    isFunctor      : IsFunctor 𝒮′ 𝒯′ morphism
-    isCartesian    : IsCartesian S T morphism
+    isHomomorphism : IsHomomorphism eqₛ eqₜ morphism
+    isFunctor      : IsFunctor eqₛ eqₜ 𝒮′ 𝒯′ morphism
+    isCartesian    : IsCartesian eqₛ eqₜ S T morphism
 
   open Morphism.t morphism public
   open IsHomomorphism isHomomorphism public

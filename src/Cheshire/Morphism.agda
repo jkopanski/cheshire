@@ -14,7 +14,8 @@ module Signatures {o ℓ} (𝒬 : Quiver o ℓ) = Sigs 𝒬
 module Structures {o ℓ} {𝒬 : Quiver o ℓ} (𝒞 : Category.Signature 𝒬) = Structs 𝒞
 module Bundles {o ℓ} {𝒬 : Quiver o ℓ} (𝒞 : Category.Signature 𝒬) = MB 𝒞
 module Reasoning
-  {o ℓ} {𝒬 : Quiver o ℓ}
+  {o ℓ e} {𝒬 : Quiver o ℓ}
+  {eq : Equivalence 𝒬 e}
   {𝒞 : Category.Signature 𝒬}
-  {e} (is-𝒞 : Category.IsCategory e 𝒞)
+  (is-𝒞 : Category.IsCategory eq 𝒞)
   = MR is-𝒞

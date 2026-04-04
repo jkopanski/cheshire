@@ -10,9 +10,10 @@ import Cheshire.Morphism.Reasoning as MorphismReasoning
 
 record Category o ℓ e : Set (𝕃.suc (o ⊔ ℓ ⊔ e)) where
   field
-    𝒬          : Quiver o ℓ
-    category   : Signature 𝒬
-    isCategory : IsCategory e category
+    𝒬           : Quiver o ℓ
+    instance eq : Equivalence 𝒬 e
+    category    : Signature 𝒬
+    isCategory  : IsCategory eq category
 
   open Signature category public
   open IsCategory isCategory public

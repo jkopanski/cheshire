@@ -45,7 +45,7 @@ category = record
   ; _∘_ = Function._∘′_
   }
 
-is-category : Category.Structure o category
+is-category : Category.Structure eq category
 is-category = record
   { assoc     = λ _ → ≡-refl
   ; identityˡ = λ _ → ≡-refl
