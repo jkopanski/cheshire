@@ -7,6 +7,7 @@ import Cheshire.Core
 import Cheshire.Category.Signature
 import Cheshire.Category.Structure
 import Cheshire.Category.Bundle
+import Cheshire.Category.Transfer
 import Cheshire.Category
 
 import Cheshire.Monoidal.Signature
