@@ -1,20 +1,22 @@
 {-# OPTIONS --safe #-}
 
 open import Cheshire.Core
-import Cheshire.Category as Category renaming (Category to t; IsCategory to Structure)
+import Cheshire.Category.Signature as Category renaming (Category to t)
 
 module Cheshire.Morphism.Bundles
-  {o ℓ} {𝒬 : Quiver o ℓ} (𝒞 : Category.Signature 𝒬)
+  {o ℓ} {𝒬 : Quiver o ℓ} (𝒞 : Category.t 𝒬)
   where
 
 import Data.Product as ×
-open × using (Σ; Σ-syntax)
 
 import Cheshire.Morphism.Signatures 𝒬 as Signatures
 import Cheshire.Morphism.Structures 𝒞 as Structures
 import Cheshire.Morphism.Reasoning as MorphismReasoning
 
-open Category.Signature 𝒞
+open import Cheshire.Category.Structure using (IsCategory)
+
+open × using (Σ; Σ-syntax)
+open Category.t 𝒞
 open Signatures using (_⇔_)
 open Structures using (IsEpi; IsIso; IsMono)
 
@@ -54,10 +56,10 @@ Iso : ⦃ Equivalence 𝒬 e ⦄ → (A B : 𝒬 .Ob) → Set (o ⊔ ℓ ⊔ e)
 Iso A B = Σ[ iso ∈ A ⇔ B ] IsIso (iso .from) (iso .to)
   where open _⇔_
 
-module _ {eq : Equivalence 𝒬 e} (isC : Category.Structure eq 𝒞) where
+module _ {eq : Equivalence 𝒬 e} (isC : IsCategory eq 𝒞) where
 
   private instance _ = eq
-  open Category.Structure isC
+  open IsCategory isC
 
   private
     ≅-refl : Rel₂.Reflexive _≅_
@@ -105,5 +107,5 @@ module _ {eq : Equivalence 𝒬 e} (isC : Category.Structure eq 𝒞) where
     ; trans = ≅-trans
     }
 
-module ≅ {e} {eq : Equivalence 𝒬 e} (isC : Category.Structure eq 𝒞) =
+module ≅ {e} {eq : Equivalence 𝒬 e} (isC : IsCategory eq 𝒞) =
   Rel₂.IsEquivalence (≅-isEquivalence isC)
