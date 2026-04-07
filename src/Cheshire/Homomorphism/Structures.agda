@@ -1,7 +1,6 @@
 {-# OPTIONS --safe #-}
 
 open import Cheshire.Core
-open import Cheshire.Homomorphism.Signatures hiding (_∘_)
 
 module Cheshire.Homomorphism.Structures where
 
@@ -10,10 +9,13 @@ import Relation.Binary.Construct.On as On
 
 import Cheshire.Category.Signature as Category renaming (Category to t)
 import Cheshire.Cartesian.Signature as Cartesian renaming (Cartesian to t)
+import Cheshire.Homomorphism.Signatures as Signatures
 import Cheshire.Object.Signatures as Object
 import Cheshire.Morphism as Morphisms
 
 open Object
+open Signatures hiding (_∘_)
+
 private
   variable
     o ℓ o′ ℓ′ : 𝕃.t
@@ -90,7 +92,7 @@ module _
       -- F-resp-× : ∀ {A B} → F₀ A × F₀ B ≅ F₀ (A × B)
 
       ⊤-iso : ⊤ ≅ M.₀ ⊤
-      ×-iso : ∀ (A B : 𝒮 .Ob) → M.₀ A × M.₀ B ≅ M.₀ (A × B )
+      ×-iso : ∀ (A B : 𝒮 .Ob) → M.₀ A × M.₀ B ≅ M.₀ (A × B)
 
     module ⊤-iso = _≅_ ⊤-iso
     module ×-iso {A B} = _≅_ (×-iso A B)
@@ -109,6 +111,11 @@ module _
       F-resp-π₂ :
         ∀ {A B} →
         M.₁ (S.π₂ {A} {B}) ∘ ×-iso.from ≈ T.π₂
+
+    resp-!  = F-resp-!
+    resp-⟨⟩ = F-resp-⟨⟩
+    resp-π₁ = F-resp-π₁
+    resp-π₂ = F-resp-π₂
 
 
   IsFaithful : (ℳ : Morphism 𝒮 𝒯) → Set _

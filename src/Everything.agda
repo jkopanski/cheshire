@@ -18,6 +18,7 @@ import Cheshire.Monoidal
 import Cheshire.Cartesian.Signature
 import Cheshire.Cartesian.Structure
 import Cheshire.Cartesian.Bundle
+import Cheshire.Cartesian.Transfer
 import Cheshire.Cartesian
 
 import Cheshire.Signatures
