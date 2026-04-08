@@ -9,6 +9,7 @@ open import Cheshire.Cartesian.Structure
 
 import Cheshire.Category as Category renaming (Category to t; IsCategory to Structure)
 import Cheshire.Monoidal.Bundle as Monoidal renaming (Monoidal to t)
+import Cheshire.Morphism.Reasoning as MorphismReasoning
 
 record Cartesian o ℓ e : Set (𝕃.suc( o ⊔ ℓ ⊔ e)) where
   field
@@ -20,6 +21,17 @@ record Cartesian o ℓ e : Set (𝕃.suc( o ⊔ ℓ ⊔ e)) where
     -- structures
     isCategory  : Category.Structure eq category
     isCartesian : IsCartesian isCategory cartesian
+
+  open Category.Signature category public
+  open Signature cartesian public hiding (monoidal)
+  open Category.Structure isCategory public
+  open IsCartesian isCartesian public
+
+  open HomReasoning public
+  open Commutation public
+  open Equivalence eq public
+
+  module Reasoning = MorphismReasoning isCategory
 
   monoidal : Monoidal.t o ℓ e
   monoidal = record
