@@ -14,19 +14,19 @@ import Cheshire.Cartesian as Cartesian renaming (Cartesian to t)
 import Cheshire.Homomorphism as Morphism renaming (Morphism to t)
 import Cheshire.Object.Signatures as Object
 import Cheshire.Instance.Sets o as Sets
-import Cheshire.Construction.Sub.Object as SubObject
+import Cheshire.Construction.Sub.Object as Sub
 
 open ℕ using (_<_; _≤_; _+_)
 open Stream using (_[_])
 open Pointwise using () renaming (_≈_ to _≈ₛ_)
 
-module Sub = SubObject Sets.𝒬
+-- module Sub = SubObject Sets.𝒬
 
 𝒬 : Quiver (𝕃.suc o) o
-𝒬 = Sub.𝒬 Stream.t
+𝒬 = Sub.𝒬 Sets.𝒬 Stream.t
 
 H : Morphism.t 𝒬 Sets.𝒬
-H = Sub.Signatures.H
+H = Sub.H Sets.𝒬 Stream.t
 
 private
   variable
@@ -38,7 +38,7 @@ instance
   eq = Morphism.equivalence Sets.eq H
 
 category : Category.Signature 𝒬
-category = Sub.Signatures.category Sets.category
+category = Sub.Signatures.category Sets.𝒬 Stream.t Sets.category
 
 open Category.Signature category
 open Object (𝒬 .Ob)
@@ -66,7 +66,7 @@ productsH .Morphism.BinaryProducts.×-iso = λ _ _ → record
   }
 
 cartesian : Cartesian.Signature category
-cartesian = Sub.Signatures.cartesian Sets.cartesian terminalH productsH
+cartesian = Sub.Signatures.cartesian Sets.𝒬 Stream.t Sets.category Sets.cartesian terminalH productsH
 
 map : (A → B) → A ⇒ B
 map = Stream.map

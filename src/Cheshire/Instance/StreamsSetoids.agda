@@ -15,7 +15,7 @@ import Cheshire.Category as Category renaming (Category to t)
 import Cheshire.Homomorphism as Morphism renaming (Morphism to t)
 import Cheshire.Object.Signatures as Object
 import Cheshire.Instance.Setoids o as Setoids
-import Cheshire.Construction.Sub.Object as SubObject
+import Cheshire.Construction.Sub.Object as Sub
 
 open ℕ using (_<_; _≤_; _+_)
 open Stream using (_∷_; _[_])
@@ -34,8 +34,6 @@ open IndexedSetoid.t
 -- But I don't see how I could define Streaming functions as sub
 -- category of Setoids?
 
-module Sub = SubObject Setoids.𝒬
-
 -- TODO: to stdlib?
 indexedSetoid : IndexedSetoid.t (Set o) o o
 indexedSetoid = record
@@ -52,10 +50,10 @@ U : Set o → Setoid.t o o
 U = At.setoid indexedSetoid
 
 𝒬 : Quiver (𝕃.suc o) o
-𝒬 = Sub.𝒬 U
+𝒬 = Sub.𝒬 Setoids.𝒬 U
 
 H : Morphism.t 𝒬 Setoids.𝒬
-H = Sub.Signatures.H
+H = Sub.H Setoids.𝒬 U
 
 private
   variable
@@ -68,7 +66,7 @@ instance
   eq = Morphism.equivalence Setoids.eq H
 
 category : Category.Signature 𝒬
-category = Sub.Signatures.category Setoids.category
+category = Sub.Signatures.category Setoids.𝒬 U Setoids.category
 
 open Category.Signature category
 open Object (𝒬 .Ob)
