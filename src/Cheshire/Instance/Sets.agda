@@ -50,7 +50,7 @@ is-category = record
   { assoc     = λ _ → ≡-refl
   ; identityˡ = λ _ → ≡-refl
   ; identityʳ = λ _ → ≡-refl
-  ; ∘-resp-≈  = λ {h = h} f≈h g≈i x → ≡-trans (f≈h _) (cong h (g≈i x))
+  ; ∘-resp-≈  = λ {h = h} f≈h g≈i x → ≡-trans (f≈h _) (≡-cong h (g≈i x))
   }
 
 cartesian : Cartesian.Signature category
