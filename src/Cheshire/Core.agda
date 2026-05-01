@@ -5,7 +5,7 @@ module Cheshire.Core where
 import Overture
 open import Overture
   hiding (module Func; module ×; _⊎_)
-  renaming (refl to ≡-refl; sym to ≡-sym; trans to ≡-trans) public
+  renaming (refl to ≡-refl; sym to ≡-sym; trans to ≡-trans; cong to ≡-cong) public
 import Algebra
 
 open 𝕃 using (_⊔_) public

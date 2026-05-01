@@ -6,7 +6,7 @@ module Cheshire.Homomorphism where
 
 import Data.Product as ×
 open import Relation.Binary.PropositionalEquality.Subst.Properties
-  using (module Shorthands)
+  using (module Shorthands; module Transport; module TransportOverQ)
 import Cheshire.Category.Signature as Category renaming (Category to t)
 
 open import Cheshire.Homomorphism.Signatures public
@@ -19,7 +19,7 @@ open import Cheshire.Homomorphism.Bundles public
 --   Copyright (c) 2019 Agda Github Community
 
 open × using (Σ-syntax)
-open Rel₂ using (_≡_)
+open Rel₂ using (_≡_; Reflexive; Symmetric; Transitive)
 
 private
   variable
@@ -34,12 +34,67 @@ record _≃_
   private
     module M  = Morphism ℳ
     module M′ = Morphism ℳ′
-    instance _ = eq
   open Shorthands (𝒬′ .Hom)
 
   field
     F₀≡ : ∀ {X} → M.₀ X ≡ M′.₀ X
     F₁≡ : ∀ {A B} {f : 𝒬 .Hom A B} → M.₁ f ▸ F₀≡ ≈ F₀≡ ◂ M′.₁ f
+
+module _
+  {𝒬 : Quiver o ℓ} {𝒬′ : Quiver o ℓ}
+  -- {e}  ⦃ eq  : Equivalence 𝒬  e  ⦄
+  {e} ⦃ eq : Equivalence 𝒬′ e ⦄
+  where
+  open _≃_
+  -- open Equivalence eq
+
+  private
+    open EdgeReasoning
+    open Transport (𝒬′ .Hom)
+    open TransportOverQ (𝒬′ .Hom) (eq ._≈_)
+
+    ≃-refl : Reflexive {A = Morphism 𝒬 𝒬′} _≃_
+    ≃-refl = record { F₀≡ = ≡-refl; F₁≡ = refl }
+
+    ≃-sym : Symmetric {A = Morphism 𝒬 𝒬′} _≃_
+    ≃-sym {x} {y} x≃y = record
+      { F₀≡ = ≡-sym e₁
+      ; F₁≡ = λ {_ _ f} →
+        begin
+          F₁ y f ▸ ≡-sym e₁
+        ≡⟨ ≡-cong (_◂ (F₁ y f ▸ ≡-sym e₁)) (Rel₂.trans-symˡ e₁) ⟨
+          ≡-trans (≡-sym e₁) e₁ ◂ (F₁ y f ▸ ≡-sym e₁)
+        ≡⟨ ◂-assocˡ (≡-sym e₁) (F₁ y f ▸ ≡-sym e₁) ⟨
+          ≡-sym e₁ ◂ e₁ ◂ (F₁ y f ▸ ≡-sym e₁)
+        ≡⟨ ≡-cong (≡-sym e₁ ◂_) (◂-▸-comm e₁ (F₁ y f) (≡-sym e₁)) ⟩
+          ≡-sym e₁ ◂ ((e₁ ◂ F₁ y f) ▸ ≡-sym e₁)
+        ≈⟨ ◂-resp-≈ (≡-sym e₁) (▸-resp-≈ (x≃y .F₁≡) (≡-sym e₁)) ⟨
+          ≡-sym e₁ ◂ (F₁ x f ▸ e₁ ▸ ≡-sym e₁)
+        ≡⟨ ≡-cong (≡-sym e₁ ◂_) (▸-assocʳ (F₁ x f) (≡-sym e₁)) ⟩
+          ≡-sym e₁ ◂ (F₁ x f ▸ ≡-trans e₁ (≡-sym e₁))
+        ≡⟨ ≡-cong (λ p → ≡-sym e₁ ◂ (F₁ x f ▸ p)) (Rel₂.trans-symʳ e₁) ⟩
+          ≡-sym e₁ ◂ F₁ x f
+        ∎
+      } where e₁ = F₀≡ x≃y
+
+    ≃-trans : Transitive {A = Morphism 𝒬 𝒬′} _≃_
+    ≃-trans {i} {j} {k} i≃j j≃k = record
+      { F₀≡ = ≡-trans (F₀≡ i≃j) (F₀≡ j≃k)
+      ; F₁≡ = λ {_ _ f} → begin
+        F₁ i f ▸ ≡-trans (F₀≡ i≃j) (F₀≡ j≃k) ≡⟨ ▸-assocʳ (F₁ i f) (F₀≡ j≃k) ⟨
+        (F₁ i f ▸ F₀≡ i≃j) ▸ F₀≡ j≃k         ≈⟨ ▸-resp-≈ (F₁≡ i≃j) (F₀≡ j≃k) ⟩
+        (F₀≡ i≃j ◂ F₁ j f) ▸ F₀≡ j≃k         ≡⟨ ◂-▸-comm (F₀≡ i≃j) (F₁ j f) (F₀≡ j≃k) ⟨
+        F₀≡ i≃j ◂ (F₁ j f ▸ F₀≡ j≃k)         ≈⟨ ◂-resp-≈ (F₀≡ i≃j) (F₁≡ j≃k) ⟩
+        F₀≡ i≃j ◂ (F₀≡ j≃k ◂ F₁ k f)         ≡⟨ ◂-assocˡ (F₀≡ i≃j) (F₁ k f) ⟩
+        ≡-trans (F₀≡ i≃j) (F₀≡ j≃k) ◂ F₁ k f ∎
+      }
+
+  ≃-Equivalence : Rel₂.IsEquivalence _≃_
+  ≃-Equivalence = record
+    { refl  = ≃-refl
+    ; sym   = ≃-sym
+    ; trans = ≃-trans
+    }
 
 module _
   {A : Quiver o ℓ} {B : Quiver o′ ℓ′} {C : Quiver o″ ℓ″}
