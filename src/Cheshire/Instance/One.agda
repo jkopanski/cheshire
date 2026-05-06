@@ -22,7 +22,7 @@ module _ {o ℓ : 𝕃.t} where
     eq = record
       { _≈_ = λ _ _ → 𝟙.t
       ; equiv = record
-        { refl = λ {_} → 𝟙.tt
+        { refl = 𝟙.tt
         ; trans = λ _ _ → 𝟙.tt
         ; sym = λ _ → 𝟙.tt
         }
