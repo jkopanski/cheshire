@@ -1,4 +1,4 @@
-{-# OPTIONS --safe #-}
+{-# OPTIONS --safe --guardedness #-}
 
 module Everything where
 
@@ -69,3 +69,4 @@ import Cheshire.Instance.One
 import Cheshire.Instance.Setoids
 import Cheshire.Instance.Sets
 import Cheshire.Instance.Quivers
+import Cheshire.Instance.Streams
