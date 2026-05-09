@@ -1,13 +1,13 @@
 {-# OPTIONS --safe #-}
 
 open import Cheshire.Core
-open import Cheshire.Signatures using (Category)
+import Cheshire.Category.Signature as Category renaming (Category to t)
 
 module Cheshire.Morphism.Structures
-  {o ℓ} {𝒬 : Quiver o ℓ} (𝒞 : Category 𝒬)
+  {o ℓ} {𝒬 : Quiver o ℓ} (𝒞 : Category.t 𝒬)
   where
 
-open Category 𝒞
+open Category.t 𝒞
 
 private
   variable
