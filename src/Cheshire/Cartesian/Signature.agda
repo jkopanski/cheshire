@@ -7,6 +7,7 @@ module Cheshire.Cartesian.Signature where
 
 import Cheshire.Category.Signature as Category renaming (Category to t)
 import Cheshire.Monoidal.Signature as Monoidal renaming (Monoidal to t)
+import Cheshire.Monoidal.Braided.Signature as Braided renaming (Braided to t)
 import Cheshire.Homomorphism.Signatures as Morphism renaming (Morphism to t)
 import Cheshire.Bifunctor.Signature as Bifunctor renaming (Bifunctor to t)
 import Cheshire.Object.Signatures as Object
@@ -119,7 +120,7 @@ record Cartesian (𝒞 : Category.t 𝒬) : Set (𝕃.levelOfTerm 𝒞) where
     ; ⊗ = -×-
     }
 
-  braided : Monoidal.Braided monoidal
+  braided : Braided.t monoidal
   braided = record
     { braiding = record
       { F⇐G = record { η = λ _ → swap }

@@ -15,6 +15,20 @@ import Cheshire.Monoidal.Structure
 import Cheshire.Monoidal.Bundle
 import Cheshire.Monoidal
 
+import Cheshire.Monoidal.Braided.Signature
+import Cheshire.Monoidal.Braided.Structure
+import Cheshire.Monoidal.Braided.Bundle
+import Cheshire.Monoidal.Braided
+
+import Cheshire.Monoidal.Symmetric.Structure
+import Cheshire.Monoidal.Symmetric.Bundle
+import Cheshire.Monoidal.Symmetric
+
+import Cheshire.Monoidal.Traced.Signature
+import Cheshire.Monoidal.Traced.Structure
+import Cheshire.Monoidal.Traced.Bundle
+import Cheshire.Monoidal.Traced
+
 import Cheshire.Cartesian.Signature
 import Cheshire.Cartesian.Structure
 import Cheshire.Cartesian.Bundle
