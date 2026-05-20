@@ -20,6 +20,11 @@ import Cheshire.Monoidal.Braided.Structure
 import Cheshire.Monoidal.Braided.Bundle
 import Cheshire.Monoidal.Braided
 
+import Cheshire.Monoidal.CounitalCopy.Signature
+import Cheshire.Monoidal.CounitalCopy.Structure
+import Cheshire.Monoidal.CounitalCopy.Bundle
+import Cheshire.Monoidal.CounitalCopy
+
 import Cheshire.Monoidal.Symmetric.Structure
 import Cheshire.Monoidal.Symmetric.Bundle
 import Cheshire.Monoidal.Symmetric
