@@ -1,6 +1,7 @@
 {-# OPTIONS --safe #-}
 
 open import Cheshire.Core
+open import Overture using (module ×)
 
 module Cheshire.Prop where
 
@@ -12,6 +13,10 @@ open Signature using (_[_∘_])
 
 HomPred : ∀ {o ℓ} → Quiver o ℓ → (e : 𝕃.t) → Set (o ⊔ ℓ ⊔ 𝕃.suc e)
 HomPred 𝒬 e = ∀ {A B} → Rel₁.Pred (𝒬 .Hom A B) e
+
+module HomPred {o ℓ e e′} (𝒬 : Quiver o ℓ) where
+  _∩_ : HomPred 𝒬 e → HomPred 𝒬 e′ → HomPred 𝒬 (e ⊔ e′)
+  P ∩ Q = P Rel₁.∩ Q
 
 private
   variable
@@ -61,7 +66,7 @@ _∩_ :
   Category 𝒞 R₁ → Category 𝒞 R₂ → Category 𝒞 (R₁ Rel₁.∩ R₂)
 P₁ ∩ P₂ = record
   { id = P₁.id , P₂.id
-  ; _∘_ = λ (g₁ , g₂) (f₁ , f₂) → g₁ P₁.∘ f₁ , g₂ P₂.∘ f₂
+  ; _∘_ = ×.zip P₁._∘_ P₂._∘_
   } where module P₁ = Category P₁
           module P₂ = Category P₂
 
