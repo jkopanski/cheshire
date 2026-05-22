@@ -16,14 +16,12 @@ module Func where
   open Func public
 
   module _ {c ℓ} (S : Setoid.t c ℓ) where
-    open Setoid.t S renaming (Carrier to X; _≈_ to eq)
+
+    open Setoid.t S renaming (Carrier to X; _≈_ to eq; isEquivalence to isEq)
 
     unary : {f : Op₁ X} → Algebra.Congruent₁ eq f → S ⟶ₛ S
     unary {f} _ .Func.t.to = f
     unary cong .Func.t.cong = cong
-
-  module _ {c ℓ} (S : Setoid.t c ℓ) where
-    open Setoid.t S renaming (Carrier to X; _≈_ to eq; isEquivalence to isEq)
 
     binary : {f : Op₂ X} → Algebra.Congruent₂ eq f → S ⟶ₛ (S ⇨ S)
     binary {f} eq .Func.t.to = λ x → record
