@@ -15,19 +15,17 @@ import Cheshire.Morphism as Morphisms
 open × using (Σ-syntax)
 open Function using (_-⟨_⟩-_)
 open Object
+open Prop using (HomPred)
 open Morphisms.Bundles using (Iso)
 
 private
   variable
     o ℓ ℓ′ e : 𝕃.t
 
-𝒬 : (𝒰 : Quiver o ℓ) → (R : ∀ {A B} → Rel₁.Pred (𝒰 .Hom A B) ℓ′) → Quiver o (ℓ ⊔ ℓ′)
+𝒬 : (𝒰 : Quiver o ℓ) → (R : HomPred 𝒰 ℓ′) → Quiver o (ℓ ⊔ ℓ′)
 𝒬 𝒰 R = mk⇒ λ X Y → Σ[ f ∈ 𝒰 .Hom X Y ] (R f)
 
-module _
-  (𝒯 : Quiver o ℓ)
-  (R : ∀ {A B} → Rel₁.Pred (𝒯 .Hom A B) ℓ′)
-  where
+module _ (𝒯 : Quiver o ℓ) (R : HomPred 𝒯 ℓ′) where
 
   𝒮 : Quiver o (ℓ ⊔ ℓ′)
   𝒮 = 𝒬 𝒯 R
@@ -40,7 +38,7 @@ module _
 
   private module H = Morphism.t H
 
-  module Signatures {T : Category.Signature 𝒯} (P : Prop.Category R T) where
+  module Signatures {T : Category.Signature 𝒯} (P : Prop.Category T R) where
 
     open Category.Signature T
 
@@ -52,7 +50,7 @@ module _
 
     cartesian :
       {C : Cartesian.Signature T}
-      (P : Prop.Cartesian R C) →
+      (P : Prop.Cartesian C R) →
       Cartesian.Signature category
     cartesian {C = C} P = record
       { terminal = terminal
@@ -73,7 +71,7 @@ module _
     H-is-homomorphism = record { F-resp-≈ = Function.id }
 
 
-    module _ {T : Category.Signature 𝒯} (P : Prop.Category R T) where
+    module _ {T : Category.Signature 𝒯} (P : Prop.Category T R) where
 
       private
         category : Category.Signature 𝒮
@@ -98,7 +96,7 @@ module _
 
     module _
       {T : Category.Signature 𝒯} {C : Cartesian.Signature T}
-      (P : Prop.Category R T) (P′ : Prop.Cartesian R C)
+      (P : Prop.Category T R) (P′ : Prop.Cartesian C R)
       {T-is-category : Category.Structure eqₜ T}
       (C-is-cartesian : Cartesian.Structure T-is-category C)
       where
@@ -161,8 +159,8 @@ module Bundles where
     {o ℓ e}
     (𝒞 : Category.t o ℓ e)
     (let module 𝒞 = Category.t 𝒞)
-    {ℓ′} (R : ∀ {A B} → Rel₁.Pred (𝒞.𝒬 .Hom A B) ℓ′)
-    (P : Prop.Category R 𝒞.category)
+    {ℓ′} (R : HomPred 𝒞.𝒬 ℓ′)
+    (P : Prop.Category 𝒞.category R)
     where
 
     category : Category.t o (ℓ ⊔ ℓ′) e
@@ -176,8 +174,8 @@ module Bundles where
     {o ℓ e}
     (𝒞 : Cartesian.t o ℓ e)
     (let module 𝒞 = Cartesian.t 𝒞)
-    {ℓ′} (R : ∀ {A B} → Rel₁.Pred (𝒞.𝒬 .Hom A B) ℓ′)
-    (P : Prop.Category R 𝒞.category) (P′ : Prop.Cartesian R 𝒞.cartesian)
+    {ℓ′} (R : HomPred 𝒞.𝒬 ℓ′)
+    (P : Prop.Category 𝒞.category R) (P′ : Prop.Cartesian 𝒞.cartesian R)
     where
 
     private
