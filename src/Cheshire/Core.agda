@@ -93,3 +93,9 @@ _[_≈_] :
   (eq : Equivalence 𝒬 e) → (f g : 𝒬 .Hom A B) → Set e
 _[_≈_] eq = Equivalence._≈_ eq
 
+HomPred : ∀ {o ℓ} → Quiver o ℓ → (e : 𝕃.t) → Set (o ⊔ ℓ ⊔ 𝕃.suc e)
+HomPred 𝒬 e = ∀ {A B} → Rel₁.Pred (𝒬 .Hom A B) e
+
+module HomPred {o ℓ e e′} (𝒬 : Quiver o ℓ) where
+  _∩_ : HomPred 𝒬 e → HomPred 𝒬 e′ → HomPred 𝒬 (e ⊔ e′)
+  P ∩ Q = P Rel₁.∩ Q

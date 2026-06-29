@@ -15,7 +15,6 @@ import Cheshire.Morphism as Morphisms
 open × using (Σ-syntax)
 open Function using (_-⟨_⟩-_)
 open Object
-open Prop using (HomPred)
 open Morphisms.Bundles using (Iso)
 
 private

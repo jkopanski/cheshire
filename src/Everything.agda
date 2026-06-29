@@ -64,6 +64,8 @@ import Cheshire.Natural.Bundles
 import Cheshire.Natural
 
 import Cheshire.Prop
+import Cheshire.Prop.Category
+import Cheshire.Prop.Cartesian
 
 import Cheshire.Construction.Product.Signatures
 import Cheshire.Construction.Product.Structures
