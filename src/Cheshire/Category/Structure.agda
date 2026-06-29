@@ -31,7 +31,7 @@ record IsCategory
   ∘-resp-≈ʳ pf = ∘-resp-≈ refl pf
 
   module HomReasoning {A B : 𝒬 .Ob} where
-    open Setoid.Reasoning (setoid {A = A} {B = B}) public
+    open Setoid.Reasoning (Equivalence.setoid eq {A = A} {B = B}) public
 
     infixr 4 _⟩∘⟨_ refl⟩∘⟨_
     infixl 5 _⟩∘⟨refl

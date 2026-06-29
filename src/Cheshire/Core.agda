@@ -84,7 +84,7 @@ record Equivalence (𝒬 : Quiver o ℓ) (e : 𝕃.t) : Set (o 𝕃.⊔ ℓ 𝕃
 
   open Equiv public
 
-open Equivalence ⦃ … ⦄ public
+open Equivalence ⦃ … ⦄ hiding (setoid) public
 
 {-# DISPLAY Equivalence._≈_ _ f g = f ≈ g #-}
 
