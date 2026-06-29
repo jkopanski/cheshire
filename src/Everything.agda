@@ -84,6 +84,7 @@ import Cheshire.Construction.Bifunctor
 
 import Cheshire.Construction.Sub.Object
 import Cheshire.Construction.Sub.Morphism
+import Cheshire.Construction.Sub.Homomorphism
 import Cheshire.Construction.Sub
 
 import Cheshire.Instance.One
