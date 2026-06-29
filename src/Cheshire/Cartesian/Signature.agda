@@ -75,6 +75,14 @@ record Cartesian (𝒞 : Category.t 𝒬) : Set (𝕃.levelOfTerm 𝒞) where
   Δ : ∀ {C} → C ⇒ C × C
   Δ {C} = ⟨ id , id ⟩
 
+  -- TODO: This is "four middle interchange", from:
+  -- https://agda.github.io/agda-categories/Categories.Category.Monoidal.Interchange.html
+  interchange : (A × B) × (C × D) ⇒ (A × C) × (B × D)
+  interchange =
+    ⟨ ⟨ π₁ ∘ π₁ , π₁ ∘ π₂ ⟩
+    , ⟨ π₂ ∘ π₁ , π₂ ∘ π₂ ⟩
+    ⟩
+
   -×- : Bifunctor.t 𝒬 𝒬 𝒬
   -×- = bifunctor 𝒞 𝒞 H
     where H : Morphism.t (Product.𝒬 𝒬 𝒬) 𝒬

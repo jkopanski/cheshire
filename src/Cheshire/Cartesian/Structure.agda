@@ -486,3 +486,5 @@ record IsCartesian
       ∎
     ; pentagon = pentagon
     }
+
+  open IsMonoidal isMonoidal public
