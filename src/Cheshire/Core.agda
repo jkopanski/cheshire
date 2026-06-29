@@ -12,29 +12,27 @@ open 𝕃 using (_⊔_) public
 open Algebra using (Op₁; Op₂)
 
 module Func where
+  open import Data.Product.Relation.Binary.Pointwise.NonDependent using (_×ₛ_)
+
   open Overture using (module Func)
   open Func public
 
   module _ {c ℓ} (S : Setoid.t c ℓ) where
-
+    import Function.Construct.Constant as Const
+    open Overture using (module ×)
     open Setoid.t S renaming (Carrier to X; _≈_ to eq; isEquivalence to isEq)
 
+    nullary : (ε : X) → S ⟶ₛ S
+    nullary ε = Const.function S S ε
+
     unary : {f : Op₁ X} → Algebra.Congruent₁ eq f → S ⟶ₛ S
-    unary {f} _ .Func.t.to = f
-    unary cong .Func.t.cong = cong
+    unary {f} f-cong = record { to = f; cong = f-cong }
 
-    binary : {f : Op₂ X} → Algebra.Congruent₂ eq f → S ⟶ₛ (S ⇨ S)
-    binary {f} eq .Func.t.to = λ x → record
-      { to = λ y → f x y
-      ; cong = eq (Rel₂.IsEquivalence.refl isEq)
+    binary : {f : Op₂ X} → Algebra.Congruent₂ eq f → S ×ₛ S ⟶ₛ S
+    binary {f} f-cong = record
+      { to = ×.uncurry f
+      ; cong = ×.uncurry f-cong
       }
-    binary eq .Func.t.cong = λ x≈y _ → eq x≈y (Rel₂.IsEquivalence.refl isEq)
-
-  module _ {c ℓ} (m : Algebra.Magma c ℓ) where
-    open Algebra.Magma m renaming (setoid to S)
-
-    magma : S ⟶ₛ (S ⇨ S)
-    magma = binary S ∙-cong
 
 open Func using (_⟨$⟩_; _⟶ₛ_; _⇨_) public
 
