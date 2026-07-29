@@ -27,11 +27,6 @@ record Cartesian
   private
     module C = Signature.Cartesian C
 
-  -- Is this really needed?
-  -- I think it is convenient.
-  field
-    category : Category.t 𝒞 R
-
   field
     !     : ∀ {A}     → R (C.! {A = A})
     π₁    : ∀ {A B}   → R (C.π₁ {A = A} {B = B})
@@ -45,8 +40,7 @@ _∩_ :
   ∀ {𝒞 : Signature.Category 𝒬} {C : Signature.Cartesian 𝒞} →
   Cartesian C R₁ → Cartesian C R₂ → Cartesian C (R₁ Rel₁.∩ R₂)
 P₁ ∩ P₂ = record
-  { category = P₁.category Category.∩ P₂.category
-  ; ! = P₁.! , P₂.!
+  { ! = P₁.! , P₂.!
   ; π₁ = P₁.π₁ , P₂.π₁
   ; π₂ = P₁.π₂ , P₂.π₂
   ; ⟨_,_⟩ = ×.zip P₁.⟨_,_⟩ P₂.⟨_,_⟩
@@ -59,8 +53,7 @@ infix 10 ⋂
   (H : J → Σ[ R ∈ HomPred 𝒬 e ] Cartesian C R) →
   Cartesian C (Rel₁.⋂ J λ j → H j .proj₁)
 ⋂ H = record
-  { category = Category.⋂ (×.map₂ category ⊙ H)
-  ; ! = λ j → ! (H j .proj₂)
+  { ! = λ j → ! (H j .proj₂)
   ; π₁ = λ j → π₁ (H j .proj₂)
   ; π₂ = λ j → π₂ (H j .proj₂)
   ; ⟨_,_⟩ = λ G F → λ j → ⟨_,_⟩ (H j .proj₂) (G j) (F j)
