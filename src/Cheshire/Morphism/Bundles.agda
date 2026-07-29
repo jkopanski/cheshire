@@ -56,6 +56,19 @@ Iso : ⦃ Equivalence 𝒬 e ⦄ → (A B : 𝒬 .Ob) → Set (o ⊔ ℓ ⊔ e)
 Iso A B = Σ[ iso ∈ A ⇔ B ] IsIso (iso .from) (iso .to)
   where open _⇔_
 
+≅-is-Iso : ⦃ _ : Equivalence 𝒬 e ⦄ → ∀ {A B : 𝒬 .Ob} → A ≅ B → Iso A B
+≅-is-Iso ≅ = record { from = iso.from; to = iso.to } , iso.isIso
+  where module iso = _≅_ ≅
+
+Iso-is-≅ : ⦃ _ : Equivalence 𝒬 e ⦄ → ∀ {A B : 𝒬 .Ob} → Iso A B → A ≅ B
+Iso-is-≅ (i , isIso) = record { _⇔_ i; isIso = isIso }
+
+≅-is-⇔ : ⦃ _ : Equivalence 𝒬 e ⦄ → ∀ {A B : 𝒬 .Ob} → A ≅ B → A ⇔ B
+≅-is-⇔ = proj₁ ⊙ ≅-is-Iso
+
+Iso-is-⇔ : ⦃ _ : Equivalence 𝒬 e ⦄ → ∀ {A B : 𝒬 .Ob} → Iso A B → A ⇔ B
+Iso-is-⇔ = proj₁
+
 module _ {eq : Equivalence 𝒬 e} (isC : IsCategory eq 𝒞) where
 
   private instance _ = eq
