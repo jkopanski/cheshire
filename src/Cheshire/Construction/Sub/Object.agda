@@ -11,7 +11,6 @@ import Cheshire.Object.Signatures as Object
 import Cheshire.Morphism as Morphisms
 
 open Object
-open Morphisms.Bundles using (Iso)
 
 private
   variable
@@ -23,8 +22,9 @@ private
 
 module _ (𝒯 : Quiver o ℓ) (U : I → 𝒯 .Ob) where
 
-  𝒮 : Quiver _ ℓ
-  𝒮 = 𝒬 𝒯 U
+  private
+    𝒮 : Quiver _ ℓ
+    𝒮 = 𝒬 𝒯 U
 
   H : Morphism.t 𝒮 𝒯
   H = record
@@ -96,31 +96,18 @@ module _ (𝒯 : Quiver o ℓ) (U : I → 𝒯 .Ob) where
       (C-is-cartesian : Cartesian.Structure T-is-category C)
       (let module C = Cartesian.Signature C)
       ⦃ terminal : Terminal (𝒮 .Ob) ⦄ ⦃ products : BinaryProducts (𝒮 .Ob) ⦄
-      (tH : Iso T ⊤ (H.₀ ⊤))
-      (pH : ∀ A B → Iso T (H.₀ A × H.₀ B) (H.₀ (A × B)))
+      (open Morphisms.Bundles T using (_≅_; ≅-is-⇔))
+      (⊤-iso : ⊤ ≅ H.₀ ⊤)
+      (×-iso : ∀ A B → H.₀ A × H.₀ B ≅ H.₀ (A × B))
       where
 
-      open Morphisms.Bundles T using (_≅_)
-      open Morphisms.Signatures 𝒯 using (_⇔_)
       open Morphisms.Reasoning T-is-category
-
-      ⊤-iso : ⊤ ≅ H.₀ ⊤
-      ⊤-iso = record
-        { _⇔_ (tH .proj₁)
-        ; isIso = tH .proj₂
-        }
-
-      ×-iso : ∀ A B → H.₀ A × H.₀ B ≅ H.₀ (A × B)
-      ×-iso A B = record
-        { _⇔_ (p .proj₁)
-        ; isIso = p .proj₂
-        } where p = pH A B
 
       private
         cartesian : Cartesian.Signature (Signatures.category T)
         cartesian = Signatures.cartesian T C
-          record { ⊤-iso = tH .proj₁ }
-          record { ×-iso = λ A B → pH A B .proj₁ }
+          record { ⊤-iso = ≅-is-⇔ ⊤-iso }
+          record { ×-iso = λ A B → ≅-is-⇔ (×-iso A B) }
 
         module S where
           open Category.Signature (Signatures.category T) public
@@ -174,11 +161,14 @@ module Bundles where
     (𝒞 : Cartesian.t o ℓ e)
     (let module 𝒞 = Cartesian.t 𝒞)
     {i} {I : Set i} (U : I → 𝒞.𝒬 .Ob)
-    ⦃ terminal : Terminal (𝒮 𝒞.𝒬 U .Ob) ⦄ ⦃ products : BinaryProducts (𝒮 𝒞.𝒬 U .Ob) ⦄
+    ⦃ terminal : Terminal (𝒬 𝒞.𝒬 U .Ob) ⦄ ⦃ products : BinaryProducts (𝒬 𝒞.𝒬 U .Ob) ⦄
     (let module H = Morphism.t (H 𝒞.𝒬 U))
-    (tH : Iso 𝒞.category ⊤ (H.₀ ⊤))
-    (pH : ∀ A B → Iso 𝒞.category (H.₀ A × H.₀ B) (H.₀ (A × B)))
+    (open Morphisms.Bundles 𝒞.category using (_≅_; ≅-is-⇔))
+    (⊤-iso : ⊤ ≅ H.₀ ⊤)
+    (pH : ∀ A B → H.₀ A × H.₀ B ≅ H.₀ (A × B))
     where
+
+    open Morphisms.Bundles 𝒞.category using (Iso-is-⇔)
 
     private
       cat : Category.t i ℓ e
@@ -188,7 +178,7 @@ module Bundles where
     cartesian = record
       { Category.t cat
       ; cartesian = Signatures.cartesian 𝒞.𝒬 U 𝒞.category 𝒞.cartesian
-          record { ⊤-iso = tH .proj₁ }
-          record { ×-iso = λ A B → pH A B .proj₁ }
-      ; isCartesian = Structures.is-cartesian 𝒞.𝒬 U 𝒞.cartesian 𝒞.isCartesian tH pH
+          record { ⊤-iso = ≅-is-⇔ ⊤-iso }
+          record { ×-iso = λ A B → ≅-is-⇔ (pH A B) }
+      ; isCartesian = Structures.is-cartesian 𝒞.𝒬 U 𝒞.cartesian 𝒞.isCartesian ⊤-iso pH
       }

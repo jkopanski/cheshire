@@ -24,7 +24,7 @@ open ℕ using (_<_; _≤_; _+_)
 open Function using (_∘₂′_)
 open Stream using (_∷_; _[_])
 open At using (_atₛ_)
-open Morphisms.Bundles Setoids.category using (_≅_; Iso)
+open Morphisms.Bundles Setoids.category using (_≅_)
 open Pointwise
   using (Pointwise; head; tail; module ≈-Reasoning)
   renaming (_≈_ to _≈ₛ_)
@@ -93,8 +93,8 @@ terminalH-isIso .isoʳ = go where
   go _ .head = ≡-refl
   go x .tail = go (Stream.tail x)
 
-⊤-iso : Iso ⊤ (H.₀ ⊤)
-⊤-iso = tH.⊤-iso , terminalH-isIso
+⊤-iso : ⊤ ≅ H.₀ ⊤
+⊤-iso = record { from = tH.⊤-iso.from; to = tH.⊤-iso.to; isIso = terminalH-isIso }
 
 productsH : Morphism.BinaryProducts H
 productsH .Morphism.BinaryProducts.×-iso _ _ = record
@@ -133,8 +133,8 @@ productsH-isIso .isoʳ = go where
   go abs .head = ≡-refl
   go abs .tail = go (Stream.tail abs)
 
-×-iso : ∀ A B → Iso (H.₀ A × H.₀ B) (H.₀ (A × B))
-×-iso A B = pH.×-iso A B , productsH-isIso
+×-iso : ∀ A B → H.₀ A × H.₀ B ≅ H.₀ (A × B)
+×-iso A B = record { from = pH.×-iso.from; to = pH.×-iso.to; isIso = productsH-isIso }
 
 Streams : Cartesian.t (𝕃.suc o) o o
 Streams = Sub.Bundles.cartesian Setoids.t U ⊤-iso ×-iso

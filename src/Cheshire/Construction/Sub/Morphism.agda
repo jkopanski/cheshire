@@ -12,7 +12,6 @@ import Cheshire.Prop as Prop
 import Cheshire.Object.Signatures as Object
 import Cheshire.Morphism as Morphisms
 
-open × using (Σ-syntax)
 open Function using (_-⟨_⟩-_)
 open Object
 open Morphisms.Bundles using (Iso)
@@ -22,7 +21,7 @@ private
     o ℓ ℓ′ e : 𝕃.t
 
 𝒬 : (𝒰 : Quiver o ℓ) → (R : HomPred 𝒰 ℓ′) → Quiver o (ℓ ⊔ ℓ′)
-𝒬 𝒰 R = mk⇒ λ X Y → Σ[ f ∈ 𝒰 .Hom X Y ] (R f)
+𝒬 𝒰 R = mk⇒ λ X Y → Σ (𝒰 .Hom X Y) R
 
 module _ (𝒯 : Quiver o ℓ) (R : HomPred 𝒯 ℓ′) where
 
@@ -173,7 +172,7 @@ module Bundles where
     {o ℓ e}
     (𝒞 : Cartesian.t o ℓ e)
     (let module 𝒞 = Cartesian.t 𝒞)
-    {ℓ′} (R : HomPred 𝒞.𝒬 ℓ′)
+    {ℓ′} {R : HomPred 𝒞.𝒬 ℓ′}
     (P : Prop.Category 𝒞.category R) (P′ : Prop.Cartesian 𝒞.cartesian R)
     where
 
