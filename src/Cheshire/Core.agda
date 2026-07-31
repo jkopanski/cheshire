@@ -22,8 +22,8 @@ module Func where
     open Overture using (module ×)
     open Setoid.t S renaming (Carrier to X; _≈_ to eq; isEquivalence to isEq)
 
-    nullary : (ε : X) → S ⟶ₛ S
-    nullary ε = Const.function S S ε
+    nullary : ∀ {S′ : Setoid.t c ℓ} → (ε : X) → S′ ⟶ₛ S
+    nullary ε = Const.function _ S ε
 
     unary : {f : Op₁ X} → Algebra.Congruent₁ eq f → S ⟶ₛ S
     unary {f} f-cong = record { to = f; cong = f-cong }
