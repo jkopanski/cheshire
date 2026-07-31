@@ -87,6 +87,7 @@ import Cheshire.Construction.Sub.Morphism
 import Cheshire.Construction.Sub.Algebraic
 import Cheshire.Construction.Sub
 
+import Cheshire.Instance.Algebraic
 import Cheshire.Instance.Algebraic.Full
 import Cheshire.Instance.One
 import Cheshire.Instance.Setoids
