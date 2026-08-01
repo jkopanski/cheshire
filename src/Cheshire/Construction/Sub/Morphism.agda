@@ -36,7 +36,7 @@ module _ (𝒯 : Quiver o ℓ) (R : HomPred 𝒯 ℓ′) where
 
   private module H = Morphism.t H
 
-  module Signatures {T : Category.Signature 𝒯} (P : Prop.Category T R) where
+  module Signatures {T : Category.Signature 𝒯} (P : Prop.Category.t T R) where
 
     open Category.Signature T
 
@@ -44,11 +44,11 @@ module _ (𝒯 : Quiver o ℓ) (R : HomPred 𝒯 ℓ′) where
     category = record
       { id = id , P.id
       ; _∘_ = λ (g , gᴿ) (f , fᴿ) → g ∘ f , gᴿ P.∘ fᴿ
-      } where module P = Prop.Category P
+      } where module P = Prop.Category.t P
 
     cartesian :
       {C : Cartesian.Signature T}
-      (P : Prop.Cartesian C R) →
+      (P : Prop.Cartesian.t C R) →
       Cartesian.Signature category
     cartesian {C = C} P = record
       { terminal = terminal
@@ -58,7 +58,7 @@ module _ (𝒯 : Quiver o ℓ) (R : HomPred 𝒯 ℓ′) where
       ; π₂ = π₂ , P.π₂
       ; ⟨_,_⟩ = λ (f , fᴿ) (g , gᴿ)  → ⟨ f , g ⟩ , P.⟨ fᴿ , gᴿ ⟩
       } where open Cartesian.Signature C
-              module P = Prop.Cartesian P
+              module P = Prop.Cartesian.t P
 
   module Structures {e} ⦃ eqₜ : Equivalence 𝒯 e ⦄ where
 
@@ -69,7 +69,7 @@ module _ (𝒯 : Quiver o ℓ) (R : HomPred 𝒯 ℓ′) where
     H-is-homomorphism = record { F-resp-≈ = Function.id }
 
 
-    module _ {T : Category.Signature 𝒯} (P : Prop.Category T R) where
+    module _ {T : Category.Signature 𝒯} (P : Prop.Category.t T R) where
 
       private
         category : Category.Signature 𝒮
@@ -94,7 +94,7 @@ module _ (𝒯 : Quiver o ℓ) (R : HomPred 𝒯 ℓ′) where
 
     module _
       {T : Category.Signature 𝒯} {C : Cartesian.Signature T}
-      (P : Prop.Category T R) (P′ : Prop.Cartesian C R)
+      (P : Prop.Category.t T R) (P′ : Prop.Cartesian.t C R)
       {T-is-category : Category.Structure eqₜ T}
       (C-is-cartesian : Cartesian.Structure T-is-category C)
       where
@@ -158,7 +158,7 @@ module Bundles where
     (𝒞 : Category.t o ℓ e)
     (let module 𝒞 = Category.t 𝒞)
     {ℓ′} (R : HomPred 𝒞.𝒬 ℓ′)
-    (P : Prop.Category 𝒞.category R)
+    (P : Prop.Category.t 𝒞.category R)
     where
 
     category : Category.t o (ℓ ⊔ ℓ′) e
@@ -173,7 +173,7 @@ module Bundles where
     (𝒞 : Cartesian.t o ℓ e)
     (let module 𝒞 = Cartesian.t 𝒞)
     {ℓ′} {R : HomPred 𝒞.𝒬 ℓ′}
-    (P : Prop.Category 𝒞.category R) (P′ : Prop.Cartesian 𝒞.cartesian R)
+    (P : Prop.Category.t 𝒞.category R) (P′ : Prop.Cartesian.t 𝒞.cartesian R)
     where
 
     private

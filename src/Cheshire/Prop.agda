@@ -2,5 +2,8 @@
 
 module Cheshire.Prop where
 
-open import Cheshire.Prop.Category public hiding (_∩_; ⋂)
-open import Cheshire.Prop.Cartesian public hiding (_∩_; ⋂)
+module Category where
+  open import Cheshire.Prop.Category renaming (Category to t) public
+
+module Cartesian where
+  open import Cheshire.Prop.Cartesian renaming (Cartesian to t) public
