@@ -89,6 +89,7 @@ import Cheshire.Construction.Sub
 
 import Cheshire.Instance.Algebraic
 import Cheshire.Instance.Algebraic.Full
+import Cheshire.Instance.Algebraic.Module
 import Cheshire.Instance.One
 import Cheshire.Instance.Setoids
 import Cheshire.Instance.Sets

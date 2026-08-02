@@ -223,3 +223,38 @@ module _
                       r ⁂ s
                     ∎
 
+  module Action {j} (J : Set j) (μ : ∀ (A : I) → J → ℐ .Hom A A) where
+
+    R : HomPred ℐ (e ⊔ j)
+    R {A} {B} = HomPred.⋂ I.𝒬 J λ j → Op₁.R (λ i → μ i j)
+
+    P : Prop.Category.t I.category R
+    P = record
+      { id = λ _ → identityˡ ○ (⟺ identityʳ)
+      ; _∘_ = λ {A B C} {g} {f} gᴿ fᴿ j → begin
+          (g ∘ f) ∘ μ A j ≈⟨ pullʳ (fᴿ j) ⟩
+          g ∘ μ B j ∘ f   ≈⟨ pullˡ (gᴿ j) ⟩
+          (μ C j ∘ g) ∘ f ≈⟨ assoc        ⟩
+          μ C j ∘ g ∘ f   ∎
+      }
+
+    module _ (μ× : ∀ {A B : I} → (j : J) → μ (A × B) j I.≈ μ A j ⁂ μ B j) where
+
+      P× : Prop.Cartesian.t I.cartesian R
+      P× = record
+        { ! = λ _ → !-unique₂
+        ; π₁ = λ {A B} j → begin
+            π₁ ∘ μ (A × B) j     ≈⟨ refl⟩∘⟨ μ× j ⟩
+            π₁ ∘ (μ A j ⁂ μ B j) ≈⟨ π₁∘⁂         ⟩
+            μ A j ∘ π₁           ∎
+        ; π₂ = λ {A B} j → begin
+            π₂ ∘ μ (A × B) j     ≈⟨ refl⟩∘⟨ μ× j ⟩
+            π₂ ∘ (μ A j ⁂ μ B j) ≈⟨ π₂∘⁂         ⟩
+            μ B j ∘ π₂           ∎
+        ; ⟨_,_⟩ = λ {A B C} {f g} fᴿ gᴿ j → begin
+            ⟨ f , g ⟩ ∘ μ C j           ≈⟨ ∘-distribʳ-⟨⟩          ⟩
+            ⟨ f ∘ μ C j , g ∘ μ C j ⟩   ≈⟨ ⟨⟩-cong₂ (fᴿ j) (gᴿ j) ⟩
+            ⟨ μ A j ∘ f , μ B j ∘ g ⟩   ≈⟨ ⁂∘⟨⟩                   ⟨
+            (μ A j ⁂ μ B j) ∘ ⟨ f , g ⟩ ≈⟨ μ× j ⟩∘⟨refl           ⟨
+            μ (A × B) j ∘ ⟨ f , g ⟩     ∎
+        }
