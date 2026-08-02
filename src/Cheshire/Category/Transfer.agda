@@ -19,11 +19,15 @@ module _
   {𝒮 : Quiver o′ ℓ′} {S : Category.t 𝒮}
   {𝒯 : Quiver o ℓ}   {T : Category.t 𝒯} ⦃ eqₜ : Equivalence 𝒯 e ⦄
   (is : IsCategory eqₜ T)
-  (F : Morphism.Functor′ eqₜ S T)
+  {F : Morphism.t 𝒮 𝒯}
+  (let eqₛ = Morphism.equivalence eqₜ F)
+  (isF : Morphism.IsFunctor eqₛ eqₜ S T F)
   where
 
   private
-    module F = Morphism.Functor′ F
+    module F where
+      open Morphism.t F public
+      open Morphism.IsFunctor isF public
     module S = Category.t S
     module T where
       open Category.t T public
@@ -32,7 +36,7 @@ module _
 
   open T
 
-  structure : IsCategory F.eqₛ S
+  structure : IsCategory eqₛ S
   structure = record
     { assoc = λ {f = f} {g} {h} → begin
         F.₁ (S [ S [ h ∘ g ] ∘ f ]) ≈⟨ F.resp-∘ ⟩
@@ -61,13 +65,15 @@ module _
 module _
   {𝒮 : Quiver o′ ℓ′} {S : Category.t 𝒮}
   (T : Bundle.Category o ℓ e) (let module T = Bundle.Category T)
-  (F : Morphism.Functor′ T.eq S T.category)
+  {F : Morphism.t 𝒮 T.𝒬}
+  (let eqₛ = Morphism.equivalence T.eq F)
+  (isF : Morphism.IsFunctor eqₛ T.eq S T.category F)
   where
 
   bundle : Bundle.Category o′ ℓ′ e
   bundle = record
     { 𝒬 = 𝒮
     ; category = S
-    ; isCategory = structure T.isCategory F
+    ; isCategory = structure T.isCategory isF
     }
 

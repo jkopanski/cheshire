@@ -26,14 +26,20 @@ module _
   {𝒯 : Quiver o ℓ}   {T′ : Category.t 𝒯} {T : Cartesian.t T′}
   ⦃ eqₜ : Equivalence 𝒯 e ⦄
   {T-is : IsCategory eqₜ T′} (T-isCartesian : IsCartesian T-is T)
-  (F : Morphism.Cartesian′ eqₜ S T)
+  {F : Morphism.t 𝒮 𝒯}
+  (let eqₛ = Morphism.equivalence eqₜ F)
+  (isF : Morphism.IsFunctor eqₛ eqₜ S′ T′ F)
+  (isC : Morphism.IsCartesian eqₛ eqₜ S T F)
   where
 
   private
-    module F = Morphism.Cartesian′ F
+    module F where
+      open Morphism.t F public
+      open Morphism.IsFunctor isF public
+      open Morphism.IsCartesian isC public
     module S where
-      is-category : IsCategory F.eqₛ S′
-      is-category = Transfer.structure T-is record { F }
+      is-category : IsCategory eqₛ S′
+      is-category = Transfer.structure T-is isF
 
       open Category.t S′ public
       open Cartesian.t S public
@@ -95,19 +101,21 @@ module _
 
 module _
   {𝒮 : Quiver o′ ℓ′} {S′ : Category.t 𝒮} {S : Cartesian.t S′}
-  {𝒯 : Quiver o ℓ}   {T′ : Category.t 𝒯} {T : Cartesian.t T′}
   (T : Bundle.Cartesian o ℓ e) (let module T = Bundle.Cartesian T)
-  (F : Morphism.Cartesian′ T.eq S T.cartesian)
+  {F : Morphism.t 𝒮 T.𝒬}
+  (let eqₛ = Morphism.equivalence T.eq F)
+  (isF : Morphism.IsFunctor eqₛ T.eq S′ T.category F)
+  (isC : Morphism.IsCartesian eqₛ T.eq S T.cartesian F)
   where
 
   C : Bundle.Category o′ ℓ′ e
   C = Transfer.bundle
     record { Bundle.Cartesian T }
-    record { Morphism.Cartesian′ F }
+    isF
 
   bundle : Bundle.Cartesian o′ ℓ′ e
   bundle = record
     { Bundle.Category C
     ; cartesian = S
-    ; isCartesian = structure T.isCartesian F
+    ; isCartesian = structure T.isCartesian isF isC
     }
