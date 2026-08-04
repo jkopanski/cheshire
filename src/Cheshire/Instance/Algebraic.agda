@@ -42,26 +42,17 @@ module Magma where
     where module ×-iso = _≅_ (Full.Magma.×-iso A A)
           module A = Algebra.Magma A
 
-  R-∙ : HomPred I.𝒬 ℓ
-  R-∙ {A} {B} f = Op₂.R ∙ {A} {B} f
-    -- CommutativeSquare (∙ A) (f ⁂ f) f (∙ B)
-
   ∙× : ∀ {A B} → ∙ (A × B) ≈ₛ (∙ A ⁂ ∙ B) ∘ interchange
   ∙× {A} {B} _ = Algebra.Magma.refl A , Algebra.Magma.refl B
 
-  P-∙ : Prop.Category.t I.category λ {A B} → R-∙ {A} {B}
   P-∙ = Op₂.P ∙
-
-  P×-∙ : Prop.Cartesian.t I.cartesian λ {A B} → R-∙ {A} {B}
   P×-∙ = Op₂.P× ∙ λ {A B} → ∙× {A} {B}
 
-  R = R-∙
   P = P-∙
   P× = P×-∙
 
   t : Cartesian.t (𝕃.suc ℓ) ℓ ℓ
-  t = Op₂.cartesian ∙ λ {A B} → ∙× {A} {B}
-  -- Subₘ.Bundles.cartesian Full.Magma.t P-∙ P×-∙
+  t = Subₘ.Bundles.cartesian Full.Magma.t P-∙ P×-∙
 
 
 ------------------------------------------------------------------------
@@ -105,42 +96,24 @@ module Monoid where
   ∙ : (A : Algebra.Monoid ℓ ℓ) → I.𝒬 .Hom (A × A) A
   ∙ A = Magma.∙ (Algebra.Monoid.magma A)
 
-  R-∙ : HomPred I.𝒬 ℓ
-  R-∙ {A} {B} = Magma.R-∙ {Algebra.Monoid.magma A} {Algebra.Monoid.magma B} -- Op₂.R ∙ {A} {B}
-
   ∙× : ∀ {A B} → ∙ (A × B) ≈ₛ (∙ A ⁂ ∙ B) ∘ interchange
   ∙× {A} {B} = Magma.∙× {Algebra.Monoid.magma A} {Algebra.Monoid.magma B}
 
-  P-∙ : Prop.Category.t I.category λ {A B} → R-∙ {A} {B}
   P-∙ = Op₂.P ∙
-
-  P×-∙ : Prop.Cartesian.t I.cartesian λ {A B} → R-∙ {A} {B}
   P×-∙ = Op₂.P× ∙ λ {A B} → ∙× {A} {B}
 
   ε : (A : Algebra.Monoid ℓ ℓ) → I.𝒬 .Hom ⊤ A
   ε A = Func.nullary A.setoid A.ε
     where module A = Algebra.Monoid A
 
-  R-ε : HomPred I.𝒬 ℓ
-  R-ε {A} {B} = Op₀.R ε {A} {B}
-
   ε× : ∀ {A B} → ε (A × B) ≈ₛ ⟨ ε A , ε B ⟩
   ε× {A} {B} _ = Algebra.Monoid.refl A , Algebra.Monoid.refl B
 
-  P-ε : Prop.Category.t I.category λ {A B} → R-ε {A} {B}
   P-ε = Op₀.P ε
-
-  P×-ε : Prop.Cartesian.t I.cartesian λ {A B} → R-ε {A} {B}
   P×-ε = Op₀.P× ε λ {A B} → ε× {A} {B}
 
-  R : HomPred I.𝒬 ℓ
-  R {A} {B} = R-∙ {A} {B} Rel₁.∩ R-ε {A} {B}
-
-  P : Prop.Category.t I.category λ {A B} → R {A} {B}
   P = P-∙ ∩ P-ε
     where open Prop.Category using (_∩_)
-
-  P× : Prop.Cartesian.t I.cartesian λ {A B} → R {A} {B}
   P× = P×-∙ ∩ P×-ε
     where open Prop.Cartesian using (_∩_)
 
@@ -161,32 +134,20 @@ module Group where
   ∙ : (A : Algebra.Group ℓ ℓ) → I.𝒬 .Hom (A × A) A
   ∙ A = Magma.∙ (Algebra.Group.magma A)
 
-  R-∙ : HomPred I.𝒬 ℓ
-  R-∙ {A} {B} = Magma.R-∙ {Algebra.Group.magma A} {Algebra.Group.magma B}
-
   ∙× : ∀ {A B} → ∙ (A × B) ≈ₛ (∙ A ⁂ ∙ B) ∘ interchange
   ∙× {A} {B} = Magma.∙× {Algebra.Group.magma A} {Algebra.Group.magma B}
 
-  P-∙ : Prop.Category.t I.category λ {A B} → R-∙ {A} {B}
   P-∙ = Op₂.P ∙
-
-  P×-∙ : Prop.Cartesian.t I.cartesian λ {A B} → R-∙ {A} {B}
   P×-∙ = Op₂.P× ∙ λ {A B} → ∙× {A} {B}
 
   _⁻¹ : (A : Algebra.Group ℓ ℓ) → I.𝒬 .Hom A A
   _⁻¹ A = Func.unary A.setoid A.⁻¹-cong
     where module A = Algebra.Group A
 
-  R-⁻¹ : HomPred I.𝒬 ℓ
-  R-⁻¹ {A} {B} = Op₁.R _⁻¹ {A} {B}
-
   a⁻¹× : ∀ {A B} → (A × B) ⁻¹ ≈ₛ A ⁻¹ ⁂ B ⁻¹
   a⁻¹× {A} {B} _ = Algebra.Group.refl A , Algebra.Group.refl B
 
-  P-⁻¹ : Prop.Category.t I.category λ {A B} → R-⁻¹ {A} {B}
   P-⁻¹ = Op₁.P _⁻¹
-
-  P×-⁻¹ : Prop.Cartesian.t I.cartesian λ {A B} → R-⁻¹ {A} {B}
   P×-⁻¹ = Op₁.P× _⁻¹ λ {A B} → a⁻¹× {A} {B}
 
   ε : (A : Algebra.Group ℓ ℓ) → I.𝒬 .Hom ⊤ A
@@ -196,23 +157,11 @@ module Group where
   ε× : ∀ {A B} → ε (A × B) ≈ₛ ⟨ ε A , ε B ⟩
   ε× {A} {B} _ = Algebra.Group.refl A , Algebra.Group.refl B
 
-  R-ε : HomPred I.𝒬 ℓ
-  R-ε {A} {B} = Op₀.R ε {A} {B}
-
-  P-ε : Prop.Category.t I.category λ {A B} → R-ε {A} {B}
   P-ε = Op₀.P ε
-
-  P×-ε : Prop.Cartesian.t I.cartesian λ {A B} → R-ε {A} {B}
   P×-ε = Op₀.P× ε λ {A B} → ε× {A} {B}
 
-  R : HomPred I.𝒬 ℓ
-  R {A} {B} = R-∙ {A} {B} Rel₁.∩ R-ε {A} {B} Rel₁.∩ R-⁻¹ {A} {B}
-
-  P : Prop.Category.t I.category λ {A B} → R {A} {B}
   P = P-∙ ∩ P-ε ∩ P-⁻¹
     where open Prop.Category using (_∩_)
-
-  P× : Prop.Cartesian.t I.cartesian λ {A B} → R {A} {B}
   P× = P×-∙ ∩ P×-ε ∩ P×-⁻¹
     where open Prop.Cartesian using (_∩_)
 
@@ -232,56 +181,32 @@ module NearSemiring where
   + : (A : Algebra.NearSemiring ℓ ℓ) → I.𝒬 .Hom (A × A) A
   + A = Monoid.∙ (Algebra.NearSemiring.+-monoid A)
 
-  R-+ : HomPred I.𝒬 ℓ
-  R-+ {A} {B} = Monoid.R-∙ {Algebra.NearSemiring.+-monoid A} {Algebra.NearSemiring.+-monoid B}
-
   +× : ∀ {A B} → + (A × B) ≈ₛ (+ A ⁂ + B) ∘ interchange
   +× {A} {B} = Monoid.∙× {Algebra.NearSemiring.+-monoid A} {Algebra.NearSemiring.+-monoid B}
 
-  P-+ : Prop.Category.t I.category λ {A B} → R-+ {A} {B}
   P-+ = Op₂.P +
-
-  P×-+ : Prop.Cartesian.t I.cartesian λ {A B} → R-+ {A} {B}
   P×-+ = Op₂.P× + λ {A B} → +× {A} {B}
 
   0# : (A : Algebra.NearSemiring ℓ ℓ) → I.𝒬 .Hom ⊤ A
   0# A = Monoid.ε (Algebra.NearSemiring.+-monoid A)
 
-  R-0# : HomPred I.𝒬 ℓ
-  R-0# {A} {B} = Op₀.R 0# {A} {B}
-
   0#× : ∀ {A B} → 0# (A × B) ≈ₛ ⟨ 0# A , 0# B ⟩
   0#× {A} {B} _ = Algebra.NearSemiring.refl A , Algebra.NearSemiring.refl B
 
-  P-0# : Prop.Category.t I.category λ {A B} → R-0# {A} {B}
   P-0# = Op₀.P 0#
-
-  P×-0# : Prop.Cartesian.t I.cartesian λ {A B} → R-0# {A} {B}
   P×-0# = Op₀.P× 0# λ {A B} → 0#× {A} {B}
 
   * : (A : Algebra.NearSemiring ℓ ℓ) → I.𝒬 .Hom (A × A) A
   * A = Magma.∙ (Algebra.NearSemiring.*-magma A)
 
-  R-* : HomPred I.𝒬 ℓ
-  R-* {A} {B} = Magma.R-∙ {Algebra.NearSemiring.*-magma A} {Algebra.NearSemiring.*-magma B}
-
   *× : ∀ {A B} → * (A × B) ≈ₛ (* A ⁂ * B) ∘ interchange
   *× {A} {B} = Magma.∙× {Algebra.NearSemiring.*-magma A} {Algebra.NearSemiring.*-magma B}
 
-  P-* : Prop.Category.t I.category λ {A B} → R-* {A} {B}
   P-* = Op₂.P *
-
-  P×-* : Prop.Cartesian.t I.cartesian λ {A B} → R-* {A} {B}
   P×-* = Op₂.P× * λ {A B} → *× {A} {B}
 
-  R : HomPred I.𝒬 ℓ
-  R {A} {B} = R-+ {A} {B} Rel₁.∩ R-0# {A} {B} Rel₁.∩ R-* {A} {B}
-
-  P : Prop.Category.t I.category λ {A B} → R {A} {B}
   P = P-+ ∩ P-0# ∩ P-*
     where open Prop.Category using (_∩_)
-
-  P× : Prop.Cartesian.t I.cartesian λ {A B} → R {A} {B}
   P× = P×-+ ∩ P×-0# ∩ P×-*
     where open Prop.Cartesian using (_∩_)
 
@@ -301,74 +226,43 @@ module Semiring where
   + : (A : Algebra.Semiring ℓ ℓ) → I.𝒬 .Hom (A × A) A
   + A = Monoid.∙ (Algebra.Semiring.+-monoid A)
 
-  R-+ : HomPred I.𝒬 ℓ
-  R-+ {A} {B} = Monoid.R-∙ {Algebra.Semiring.+-monoid A} {Algebra.Semiring.+-monoid B}
-
   +× : ∀ {A B} → + (A × B) ≈ₛ (+ A ⁂ + B) ∘ interchange
   +× {A} {B} = Monoid.∙× {Algebra.Semiring.+-monoid A} {Algebra.Semiring.+-monoid B}
 
-  P-+ : Prop.Category.t I.category λ {A B} → R-+ {A} {B}
   P-+ = Op₂.P +
-
-  P×-+ : Prop.Cartesian.t I.cartesian λ {A B} → R-+ {A} {B}
   P×-+ = Op₂.P× + λ {A B} → +× {A} {B}
 
   0# : (A : Algebra.Semiring ℓ ℓ) → I.𝒬 .Hom ⊤ A
   0# A = Monoid.ε (Algebra.Semiring.+-monoid A)
 
-  R-0# : HomPred I.𝒬 ℓ
-  R-0# {A} {B} = Op₀.R 0# {A} {B}
-
   0#× : ∀ {A B} → 0# (A × B) ≈ₛ ⟨ 0# A , 0# B ⟩
   0#× {A} {B} _ = Algebra.Semiring.refl A , Algebra.Semiring.refl B
 
-  P-0# : Prop.Category.t I.category λ {A B} → R-0# {A} {B}
   P-0# = Op₀.P 0#
-
-  P×-0# : Prop.Cartesian.t I.cartesian λ {A B} → R-0# {A} {B}
   P×-0# = Op₀.P× 0# λ {A B} → 0#× {A} {B}
 
   * : (A : Algebra.Semiring ℓ ℓ) → I.𝒬 .Hom (A × A) A
   * A = Monoid.∙ (Algebra.Semiring.*-monoid A)
 
-  R-* : HomPred I.𝒬 ℓ
-  R-* {A} {B} = Monoid.R-∙ {Algebra.Semiring.*-monoid A} {Algebra.Semiring.*-monoid B}
-
   *× : ∀ {A B} → * (A × B) ≈ₛ (* A ⁂ * B) ∘ interchange
   *× {A} {B} = Monoid.∙× {Algebra.Semiring.*-monoid A} {Algebra.Semiring.*-monoid B}
 
-  P-* : Prop.Category.t I.category λ {A B} → R-* {A} {B}
   P-* = Op₂.P *
-
-  P×-* : Prop.Cartesian.t I.cartesian λ {A B} → R-* {A} {B}
   P×-* = Op₂.P× * λ {A B} → *× {A} {B}
 
   1# : (A : Algebra.Semiring ℓ ℓ) → I.𝒬 .Hom ⊤ A
   1# A = Monoid.ε (Algebra.Semiring.*-monoid A)
 
-  R-1# : HomPred I.𝒬 ℓ
-  R-1# {A} {B} = Op₀.R 1# {A} {B}
-
   1#× : ∀ {A B} → 1# (A × B) ≈ₛ ⟨ 1# A , 1# B ⟩
   1#× {A} {B} _ = Algebra.Semiring.refl A , Algebra.Semiring.refl B
 
-  P-1# : Prop.Category.t I.category λ {A B} → R-1# {A} {B}
   P-1# = Op₀.P 1#
-
-  P×-1# : Prop.Cartesian.t I.cartesian λ {A B} → R-1# {A} {B}
   P×-1# = Op₀.P× 1# λ {A B} → 1#× {A} {B}
 
-  R : HomPred I.𝒬 ℓ
-  R {A} {B} = R-+ {A} {B} Rel₁.∩ R-0# {A} {B} Rel₁.∩ R-* {A} {B}
-
-  P : Prop.Category.t I.category λ {A B} → R {A} {B}
   P = P-+ ∩ P-0# ∩ P-*
     where open Prop.Category using (_∩_)
-
-  P× : Prop.Cartesian.t I.cartesian λ {A B} → R {A} {B}
   P× = P×-+ ∩ P×-0# ∩ P×-*
     where open Prop.Cartesian using (_∩_)
 
   t : Cartesian.t (𝕃.suc ℓ) ℓ ℓ
   t = Subₘ.Bundles.cartesian Full.Semiring.t P P×
-
