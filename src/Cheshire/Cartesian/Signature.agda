@@ -112,14 +112,12 @@ record Cartesian (𝒞 : Category.t 𝒬) : Set (𝕃.levelOfTerm 𝒞) where
   ⊤×- = record
     { F⇒G = record { η = λ _ → π₂ }
     ; F⇐G = record { η = λ _ → ⟨ ! , id ⟩ }
-    ; iso = λ _ → ⊤×A⇔A
     }
 
   -×⊤ : Natural.Isomorphism (-× ⊤) Morphism.id
   -×⊤ = record
     { F⇒G = record { η = λ _ → π₁ }
     ; F⇐G = record { η = λ _ → ⟨ id , ! ⟩ }
-    ; iso = λ _ → A×⊤⇔A
     }
 
   monoidal : Monoidal.t 𝒞
@@ -133,6 +131,5 @@ record Cartesian (𝒞 : Category.t 𝒬) : Set (𝕃.levelOfTerm 𝒞) where
     { braiding = record
       { F⇐G = record { η = λ _ → swap }
       ; F⇒G = record { η = λ _ → swap }
-      ; iso = λ x → record { from = swap; to = swap }
       }
     }

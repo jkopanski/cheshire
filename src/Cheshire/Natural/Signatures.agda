@@ -88,7 +88,10 @@ module _
     module ⇒ = Transformation F⇒G
     module ⇐ = Transformation F⇐G
 
-    field
-      iso : ∀ X → F.₀ X ⇔ G.₀ X
+    iso : ∀ X → F.₀ X ⇔ G.₀ X
+    iso x = record
+      { from = ⇒.η x
+      ; to = ⇐.η x
+      }
 
     module iso X = _⇔_ (iso X)
