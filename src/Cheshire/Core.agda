@@ -57,6 +57,7 @@ private
   variable
     o ℓ : 𝕃.t
 
+infix 10  _[_,_]
 _[_,_] : (𝒬 : Quiver o ℓ) → Rel (𝒬 .Ob) ℓ
 𝒬 [ a , b ] = 𝒬 .Hom a b
 
@@ -86,6 +87,7 @@ open Equivalence ⦃ … ⦄ hiding (setoid) public
 
 {-# DISPLAY Equivalence._≈_ _ f g = f ≈ g #-}
 
+infix 10 _[_≈_]
 _[_≈_] :
   ∀ {𝒬 : Quiver o ℓ} {e} {A B : 𝒬 .Ob } →
   (eq : Equivalence 𝒬 e) → (f g : 𝒬 .Hom A B) → Set e
