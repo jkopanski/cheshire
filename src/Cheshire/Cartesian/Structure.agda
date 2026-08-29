@@ -367,7 +367,6 @@ record IsCartesian
   private
     open Commutation
     open Monoidal.Signature monoidal using (_⊗₀_; _⊗₁_)
-    open Natural using (NaturalIsomorphism)
     open Morphisms.Signatures 𝒬
     cat : Category.t _ _ e
     cat = record { 𝒬 = 𝒬; category = 𝒞′; isCategory = isCategory }
@@ -412,7 +411,7 @@ record IsCartesian
       ; iso = λ _ → _≅_.isIso ⊤×A≅A
       }
 
-    ⊤×--id : NaturalIsomorphism cat (⊤ ×-) Morphism.id
+    ⊤×--id : Natural.Isomorphism cat (⊤ ×-) Morphism.id
     ⊤×--id = record { signature = ⊤×-; structure = ⊤×--id-isIso }
 
     -×⊤-id-isIso : Natural.IsIsomorphism isCategory -×⊤
@@ -429,7 +428,7 @@ record IsCartesian
       ; iso = λ x → _≅_.isIso A×⊤≅A
       }
 
-    -×⊤-id : NaturalIsomorphism cat (-× ⊤) Morphism.id
+    -×⊤-id : Natural.Isomorphism cat (-× ⊤) Morphism.id
     -×⊤-id = record { signature = -×⊤; structure = -×⊤-id-isIso }
 
     pentagon :
@@ -472,9 +471,9 @@ record IsCartesian
     ; unitorʳ = A×⊤≅A
     ; associator = ≅.sym isCategory ×-assoc
     ; unitorˡ-commute-from = project₂
-    ; unitorˡ-commute-to = let open NaturalIsomorphism ⊤×--id in ⇐.commute _
+    ; unitorˡ-commute-to = let open Natural.Isomorphism ⊤×--id in ⇐.commute _
     ; unitorʳ-commute-from = project₁
-    ; unitorʳ-commute-to = let open NaturalIsomorphism -×⊤-id in ⇐.commute _
+    ; unitorʳ-commute-to = let open Natural.Isomorphism -×⊤-id in ⇐.commute _
     ; assoc-commute-from = assocˡ∘⁂
     ; assoc-commute-to = assocʳ∘⁂
     ; triangle = begin
