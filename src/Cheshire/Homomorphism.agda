@@ -7,7 +7,11 @@ module Cheshire.Homomorphism where
 import Data.Product as ×
 open import Relation.Binary.PropositionalEquality.Subst.Properties
   using (module Shorthands; module Transport; module TransportMor; module TransportOverQ)
-import Cheshire.Category.Signature as Category renaming (Category to t)
+import Cheshire.Cartesian.Signature as Cartesian renaming (Cartesian to t)
+
+module Category where
+  open import Cheshire.Category.Signature public renaming (Category to Signature)
+  open import Cheshire.Category.Bundle public renaming (Category to t)
 
 open import Cheshire.Homomorphism.Signatures public
 open import Cheshire.Homomorphism.Structures public
@@ -109,13 +113,32 @@ id-isHomomorphism : {𝒬 : Quiver o ℓ} → ⦃ eq : Equivalence 𝒬 e′ ⦄
 id-isHomomorphism = record { F-resp-≈ = Function.id }
 
 id-isFunctor :
-  {𝒬 : Quiver o ℓ} → (C : Category.t 𝒬) →
+  {𝒬 : Quiver o ℓ} → (C : Category.Signature 𝒬) →
   ⦃ eq : Equivalence 𝒬 e′ ⦄ →
   IsFunctor eq eq C C id
 id-isFunctor _ = record
   { F-resp-id = refl
   ; F-resp-∘ = refl
   }
+
+id-isCartesian :
+  (𝒞 : Category.t o ℓ e) (let module 𝒞 = Category.t 𝒞)
+  (C : Cartesian.t 𝒞.category) →
+  IsCartesian 𝒞.eq 𝒞.eq C C id
+id-isCartesian 𝒞 C = record
+  { ⊤-iso = record
+    { from = 𝒞.id ; to = 𝒞.id
+    ; isIso = record { isoˡ = 𝒞.identityˡ ; isoʳ = 𝒞.identityʳ }
+    }
+  ; ×-iso = λ A B → record
+    { from = 𝒞.id ; to = 𝒞.id
+    ; isIso = record { isoˡ = 𝒞.identityˡ ; isoʳ = 𝒞.identityʳ }
+    }
+  ; F-resp-! = 𝒞.identityˡ
+  ; F-resp-π₁ = 𝒞.identityʳ
+  ; F-resp-π₂ = 𝒞.identityʳ
+  ; F-resp-⟨⟩ = λ _ _ → 𝒞.identityˡ
+  } where module 𝒞 = Category.t 𝒞
 
 module _
   {A : Quiver o ℓ} {B : Quiver o′ ℓ′} {C : Quiver o″ ℓ″}
