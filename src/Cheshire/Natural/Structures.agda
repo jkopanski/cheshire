@@ -1,5 +1,4 @@
 {-# OPTIONS --safe #-}
-
 open import Cheshire.Core
 
 module Cheshire.Natural.Structures where
