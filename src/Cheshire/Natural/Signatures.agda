@@ -28,29 +28,8 @@ module _
 
 private
   variable
-    o ℓ : 𝕃.t
-    C D E : Quiver o ℓ
-
-id : ∀ {F : Morphism C D} {𝒟 : Category D} → Transformation F F
-id {𝒟 = 𝒟} = record { η = λ _ → D.id } where module D = Category 𝒟
-
-_∘ᵥ_ :
-  ∀ {F G H : Morphism C D} {𝒟 : Category D} →
-  Transformation G H → Transformation F G → Transformation F H
-_∘ᵥ_ {𝒟 = 𝒟} X Y = record
-  { η = λ q → 𝒟 [ X.η q ∘ Y.η q ]
-  } where module X = Transformation X
-          module Y = Transformation Y
-
-_∘ₕ_ :
-  ∀ {F G : Morphism C D} {H I : Morphism D E} {ℰ : Category E} →
-  Transformation H I → Transformation F G → Transformation (H ∘F F) (I ∘F G)
-_∘ₕ_ {E = E} {F} {I = I} {ℰ = ℰ} Y X = record
-  { η = λ q → ℰ [ I.₁ (X.η q) ∘ Y.η (F.₀ q) ]
-  } where module X = Transformation X
-          module Y = Transformation Y
-          module F = Morphism F
-          module I = Morphism I
+    o″ ℓ″ : 𝕃.t
+    C D E : Quiver o″ ℓ″
 
 _∘ˡ_ :
   ∀ {G H : Morphism C D} →
@@ -67,6 +46,32 @@ _∘ʳ_ α F = record
   { η = λ X → η (F.₀ X)
   } where module F = Morphism F
           open Transformation α
+
+module Compose (𝒟 : Category D) where
+
+  private module D = Category 𝒟
+
+  id : ∀ {F : Morphism C D} → Transformation F F
+  id = record { η = λ _ → D.id }
+
+  _∘ᵥ_ :
+    ∀ {F G H : Morphism C D} →
+    Transformation G H → Transformation F G → Transformation F H
+  _∘ᵥ_ X Y = record
+    { η = λ q → 𝒟 [ X.η q ∘ Y.η q ]
+    } where module X = Transformation X
+            module Y = Transformation Y
+
+  _∘ₕ_ :
+    ∀ {F G : Morphism C E} {H I : Morphism E D} →
+    Transformation H I → Transformation F G → Transformation (H ∘F F) (I ∘F G)
+  _∘ₕ_ {E = E} {F} {I = I} Y X = record
+    { η = λ q → 𝒟 [ I.₁ (X.η q) ∘ Y.η (F.₀ q) ]
+    } where module X = Transformation X
+            module Y = Transformation Y
+            module F = Morphism F
+            module I = Morphism I
+
 
 module _
   {o ℓ o′ ℓ′ : 𝕃.t}
