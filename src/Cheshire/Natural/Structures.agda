@@ -16,7 +16,7 @@ private
     o o′ ℓ ℓ′ e : 𝕃.t
 
 module _
-  {𝒮 : Quiver o  ℓ } {𝒯 : Quiver o′ ℓ′} {ℱ 𝒢 : Morphism 𝒮 𝒯}
+  {𝒮 : Quiver o ℓ } {𝒯 : Quiver o′ ℓ′} {ℱ 𝒢 : Morphism 𝒮 𝒯}
   -- Is category bundle better here?
   {T : Category.Signature 𝒯}
   {eq : Equivalence 𝒯 e}
@@ -36,6 +36,7 @@ module _
 
     field
       commute : ∀ {X Y : 𝒮 .Ob} (f : 𝒮 .Hom X Y) → η Y ∘ F.₁ f ≈ G.₁ f ∘ η X
+
 
 module _
   {𝒮 : Quiver o  ℓ } {𝒯 : Quiver o′ ℓ′} {ℱ 𝒢 : Morphism 𝒮 𝒯}
